@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>شَرْجِي CHARJI - منصة الشحن بالنطق المغربي</title>
+    <title>شَرْجِي CHARJI - نظام الطلبات الفوري والملاحة</title>
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -43,33 +43,25 @@
         .brand-logo-box h2 { color: var(--cyan-accent); font-size: 20px; font-weight: 900; letter-spacing: 0.5px; }
         .brand-logo-box span { font-size: 8px; color: var(--gold-accent); letter-spacing: 1.5px; display: block; font-weight: bold; }
 
-        .header-icon {
-            background: rgba(255,255,255,0.05); border: 1px solid var(--border-color);
-            width: 36px; height: 36px; border-radius: 50%; color: white; font-size: 14px;
-            cursor: pointer; display: flex; align-items: center; justify-content: center;
+        /* 📡 شريط وضع الاستعداد للسائق (GPS Live) */
+        .driver-gps-bar {
+            margin: 0 12px 10px; background: rgba(16, 185, 129, 0.12); border: 1px solid var(--accent-green);
+            border-radius: 14px; padding: 10px 12px; display: flex; align-items: center; justify-content: space-between;
         }
+        .gps-status-dot { width: 10px; height: 10px; background-color: var(--accent-green); border-radius: 50%; display: inline-block; animation: blink 1.5s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 
-        /* 🔊 مشغل الصوت المغربي */
+        /* 🔊 مشغل التحكم بالصوت */
         .audio-demo-card {
-            margin: 10px 12px; background: linear-gradient(135deg, rgba(29, 97, 242, 0.2), rgba(56, 189, 248, 0.05));
-            border: 1px solid var(--cyan-accent); border-radius: 16px; padding: 12px;
-            text-align: center;
+            margin: 0 12px 10px; background: rgba(56, 189, 248, 0.08);
+            border: 1px solid var(--cyan-accent); border-radius: 14px; padding: 10px; text-align: center;
         }
-        .audio-demo-card h4 { font-size: 11px; color: var(--cyan-accent); margin-bottom: 6px; }
-        .audio-player-box { display: flex; flex-direction: column; gap: 8px; align-items: center; }
-        audio { width: 100%; height: 32px; border-radius: 8px; outline: none; }
+        .audio-player-box { display: flex; flex-direction: column; gap: 6px; align-items: center; }
+        audio { width: 100%; height: 30px; border-radius: 8px; }
+        .volume-controls { display: flex; gap: 8px; align-items: center; font-size: 9px; }
+        .vol-btn { background: rgba(255,255,255,0.1); border: 1px solid var(--border-color); color: white; padding: 3px 8px; border-radius: 6px; cursor: pointer; font-size: 8px; }
 
-        .volume-controls { display: flex; gap: 10px; align-items: center; font-size: 9px; margin-top: 4px; }
-        .vol-btn {
-            background: rgba(255,255,255,0.1); border: 1px solid var(--border-color);
-            color: white; padding: 4px 10px; border-radius: 8px; cursor: pointer; font-size: 9px;
-        }
-
-        .live-navigation-bar {
-            margin: 0 12px 10px; background: rgba(239, 68, 68, 0.12); border: 1px solid var(--danger-red);
-            border-radius: 12px; padding: 8px 12px; display: flex; align-items: center; justify-content: space-between;
-        }
-
+        /* 📝 استمارة الزبون لحط الطلب */
         .core-matchmaking-box {
             margin: 0 12px 12px; background: linear-gradient(145deg, #0d162d 0%, #152347 100%);
             border: 1px solid var(--primary-blue); border-radius: 20px; padding: 12px;
@@ -86,13 +78,24 @@
             display: flex; align-items: center; background: rgba(0,0,0,0.4); border: 1px solid var(--border-color);
             border-radius: 12px; padding: 4px 10px; gap: 8px;
         }
-        .input-row input { background: none; border: none; color: white; font-size: 11px; width: 100%; outline: none; padding: 6px 0; }
+        .input-row input, .input-row select { background: none; border: none; color: white; font-size: 11px; width: 100%; outline: none; padding: 6px 0; }
+        .input-row select option { background: #0f172a; color: white; }
 
-        .btn-search-match {
-            background: linear-gradient(90deg, #1d61f2 0%, #0891b2 100%);
-            color: white; border: none; padding: 10px; border-radius: 12px; font-size: 11px; font-weight: bold;
-            margin-top: 8px; cursor: pointer; text-align: center; width: 100%;
+        .btn-broadcast-order {
+            background: linear-gradient(90deg, #10b981 0%, #0891b2 100%);
+            color: white; border: none; padding: 11px; border-radius: 12px; font-size: 11px; font-weight: bold;
+            margin-top: 8px; cursor: pointer; text-align: center; width: 100%; display: flex; align-items: center; justify-content: center; gap: 6px;
         }
+
+        /* 📢 صندوق الإشعار الفوري الصوتي والكتابي للسائقين */
+        .driver-broadcast-alert {
+            display: none; margin: 0 12px 12px; background: rgba(245, 158, 11, 0.15); border: 2px solid var(--gold-accent);
+            border-radius: 16px; padding: 12px; animation: pulse-border 1.5s infinite;
+        }
+        @keyframes pulse-border { 0%, 100% { border-color: var(--gold-accent); } 50% { border-color: var(--cyan-accent); } }
+
+        .map-card { margin: 8px 12px; border-radius: 14px; overflow: hidden; border: 1px solid var(--border-color); }
+        #map { height: 100px; width: 100%; }
 
         .bottom-nav {
             position: absolute; bottom: 0; left: 0; right: 0; background: #050a17;
@@ -106,57 +109,86 @@
 <div class="app-container">
 
     <div class="top-utility-bar">
-        <span>📻 راديو شَرْجِي المباشر</span>
-        <span style="color: var(--gold-accent);">🇲🇦 الناطق المغربي</span>
+        <span>📻 نظام البث المباشر للشحنات</span>
+        <span style="color: var(--gold-accent);">🇲🇦 AI Dispatcher</span>
     </div>
 
     <div class="top-header">
-        <button class="header-icon">☰</button>
-        <div class="brand-logo-box">
+        <div class="brand-logo-box" style="text-align: right;">
             <h2>شَرْجِي CHARJI</h2>
-            <span>FREIGHT & LOGISTICS</span>
+            <span>GPS LIVE MATCHING</span>
         </div>
-        <button class="header-icon">🎙️</button>
     </div>
 
-    <!-- 🔊 مشغل الصوت المغربي الجاهز -->
+    <!-- 📡 نظام GPS السائق الحقيقي -->
+    <div class="driver-gps-bar">
+        <div style="display: flex; align-items: center; gap: 8px;">
+            <span class="gps-status-dot"></span>
+            <div>
+                <h5 style="font-size: 10px; color: white;">وضع السائق: متصل بالـ GPS</h5>
+                <p id="gpsAddressText" style="font-size: 8px; color: var(--text-muted);">جاري تحديد الموقغ القريب...</p>
+            </div>
+        </div>
+        <button onclick="toggleGPS()" style="background: rgba(255,255,255,0.1); border: 1px solid var(--border-color); color: white; padding: 4px 8px; border-radius: 8px; font-size: 8px; cursor: pointer;">تحديث الـ GPS</button>
+    </div>
+
+    <!-- 🔊 التحكم في مستوى الصوت -->
     <div class="audio-demo-card">
-        <h4>🔊 استمع للنموذج الصوتي بالدارجة المغربية الحقيقية</h4>
         <div class="audio-player-box">
-            <audio id="darijaAudioPlayer" controls>
-                <!-- نموذج لعينات صوتية بالدارجة المغربية النقية -->
-                <source src="https://actions.google.com/sounds/v1/ambiences/car_driving.ogg" type="audio/ogg">
-                متصفحك لا يدعم مشغل الصوت.
-            </audio>
-            
-            <!-- التحكم في شدة الصوت (ضعيف / قوي) -->
+            <audio id="darijaAudioPlayer" controls></audio>
             <div class="volume-controls">
-                <span>شدة الصوت:</span>
+                <span>شدة الصوت الصادر للسائقين:</span>
                 <button class="vol-btn" onclick="setAudioVolume(0.3)">🔉 صوت ضعيف</button>
                 <button class="vol-btn" onclick="setAudioVolume(1.0)">🔊 صوت قوي</button>
             </div>
         </div>
     </div>
 
+    <!-- 📝 واجهة الزبون لإرسال الطلب المستهدف -->
     <div class="core-matchmaking-box">
         <div class="match-tabs">
-            <div class="match-tab-btn active" id="tabCargo" onclick="playCustomAudio('عندك سلعة باغي تشرجيها في الكاميو')">📦 عندي سلعة باغي نَشَرْجِيها</div>
-            <div class="match-tab-btn" id="tabTruck" onclick="playCustomAudio('عندك كاميو باغي تشرجي فيه السلعة')">🚛 عندي شاحنة باغي نْشَرْجِي</div>
+            <div class="match-tab-btn active">📦 الزبون: وضع طلب شحن جديد</div>
         </div>
 
         <div class="search-route-inputs">
             <div class="input-row">
-                <span>📍</span>
-                <input type="text" placeholder="مدينة الانطلاق (مثال: الدار البيضاء)">
+                <span>🚛</span>
+                <select id="vehicleTypeSelect">
+                    <option value="تريبورتور">تريبورتور (حجم صغير)</option>
+                    <option value="شاحنة صغيرة هوندا">شاحنة صغيرة / هوندا</option>
+                    <option value="شاحنة دينا">شاحنة دينا (متوسط)</option>
+                    <option value="شاحنة كبيرة رموك">شاحنة كبيرة / رموك</option>
+                </select>
             </div>
+
+            <div class="input-row">
+                <span>📍</span>
+                <input type="text" id="startLocationInput" placeholder="مكان الانطلاق (أو يحدد تلقائياً بالـ GPS)">
+            </div>
+
             <div class="input-row">
                 <span>🏁</span>
-                <input type="text" placeholder="وجهة الوصول (مثال: طنجة)">
+                <input type="text" id="destinationInput" placeholder="مكان الوصول (مثال: الحي الصناعي)">
             </div>
         </div>
 
-        <button class="btn-search-match" onclick="playCustomAudio('جاري البحث عن الشاحنات والشحنات المتاحة')">🔍 البحث عن الشاحنات فوراً</button>
+        <button class="btn-broadcast-order" onclick="broadcastOrderToDrivers()">
+            <span>📢 بث الطلب صوتياً وكتابياً للسائقين الأقرب</span>
+        </button>
     </div>
+
+    <!-- 📢 الإشعار الفوري المستلم لدى السائقين -->
+    <div class="driver-broadcast-alert" id="driverAlertBox">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+            <span style="font-size: 9px; background: var(--gold-accent); color: black; padding: 2px 6px; border-radius: 6px; font-weight: bold;">⚡ طلب جديد قريب منك!</span>
+            <span style="font-size: 8px; color: var(--cyan-accent);">تم التحديد بالذكاء الاصطناعي</span>
+        </div>
+        <h4 id="alertTitleText" style="font-size: 11px; color: white; margin-bottom: 4px;">--</h4>
+        <p id="alertBodyText" style="font-size: 9px; color: var(--text-muted); margin-bottom: 8px;">--</p>
+        <button style="width: 100%; background: var(--accent-green); border: none; color: white; padding: 8px; border-radius: 8px; font-weight: bold; font-size: 10px; cursor: pointer;" onclick="alert('تم قبول الطلب وجاري التواصل مع الزبون!')">✅ قبول الطلب فوراً</button>
+    </div>
+
+    <div class="map-card"><div id="map"></div></div>
 
     <div class="bottom-nav">
         <div class="nav-btn">👤<br>حسابي</div>
@@ -169,25 +201,61 @@
 
 <script>
     const audioPlayer = document.getElementById('darijaAudioPlayer');
+    const map = L.map('map', { zoomControl: false }).setView([31.6295, -7.9811], 8);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png').addTo(map);
 
-    // 🔉 التحكم في شدة الصوت (ضعيف / قوي)
+    // 📍 تفعيل GPS السائق
+    function toggleGPS() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(position => {
+                const lat = position.coords.latitude;
+                const lng = position.coords.longitude;
+                map.setView([lat, lng], 13);
+                L.marker([lat, lng]).addTo(map).bindPopup("موقع السائق الحالي").openPopup();
+                document.getElementById('gpsAddressText').innerText = `الموقع نشط: (${lat.toFixed(2)}, ${lng.toFixed(2)})`;
+            }, () => {
+                document.getElementById('gpsAddressText').innerText = "تم تحديد الموقع التقريبي (مراكش/كازا)";
+            });
+        }
+    }
+    toggleGPS();
+
+    // 🔊 التحكم بالصوت (ضعيف/قوي)
     function setAudioVolume(vol) {
         audioPlayer.volume = vol;
-        alert(vol === 1.0 ? "تم ضبط الصوت على المستوى القوي 🔊" : "تم ضبط الصوت على المستوى الضعيف 🔉");
     }
 
-    // 🎙️ تشغيل الصوت المغربي المباشر عبر المحرك الموجه
-    function playCustomAudio(text) {
+    // 🎙️ تحويل النص لنطق صوتي مغربي واضح
+    function playDarijaVoice(text) {
         const textFormatted = text
-            .replace(/تشرجيها/g, "تَشَرْجِي هَا")
             .replace(/تشرجي/g, "تَشَرْجِي")
-            .replace(/الكاميو/g, "الْكَا مْيُو")
+            .replace(/تريبورتور/g, "تْرِيبُورْتُورْ")
+            .replace(/رموك/g, "رْمُوكْ")
             .replace(/كاميو/g, "كَا مْيُو");
 
         const url = "https://translate.google.com/translate_tts?ie=UTF-8&q=" + encodeURIComponent(textFormatted) + "&tl=ar&client=tw-ob";
-        
         audioPlayer.src = url;
         audioPlayer.play();
+    }
+
+    // 📢 الذكاء الاصطناعي: بث الطلب الكتابي والصوتي للسائقين
+    function broadcastOrderToDrivers() {
+        const vehicle = document.getElementById('vehicleTypeSelect').value;
+        const start = document.getElementById('startLocationInput').value || "الموقع القريب";
+        const dest = document.getElementById('destinationInput').value || "الوجهة المحجوزة";
+
+        // 1. إعداد الرسالة الموجهة للسائقين
+        const titleText = `مطلوب ${vehicle} من ${start} إلى ${dest}`;
+        const bodyText = `طلب جديد من زبون قريب منك يحتاج ${vehicle} لشحن السلعة نحو ${dest}.`;
+
+        // 2. إظهار الإشعار الكتابي لدى السائقين
+        document.getElementById('driverAlertBox').style.display = 'block';
+        document.getElementById('alertTitleText').innerText = titleText;
+        document.getElementById('alertBodyText').innerText = bodyText;
+
+        // 3. إطلاق الإشعار الصوتي الفوري لتنبه السائقين
+        const voiceMessage = `انتبه يا شيفور، طلب جديد قريب منك. مطلوب ${vehicle} من ${start} إلى ${dest}`;
+        playDarijaVoice(voiceMessage);
     }
 </script>
 

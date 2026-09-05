@@ -16,6 +16,7 @@
             --accent-cyan: #38bdf8;
             --accent-gold: #f59e0b;
             --accent-green: #10b981;
+            --accent-red: #ef4444;
             --text-main: #ffffff;
             --text-muted: #94a3b8;
             --border-color: #1e293b;
@@ -79,13 +80,85 @@
             font-weight: bold;
         }
 
+        /* GPS Prompt Overlay (شاشة المطالبة بتفعيل الموقع) */
+        .gps-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(2, 5, 14, 0.92);
+            backdrop-filter: blur(8px);
+            z-index: 3000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .gps-card {
+            background: var(--card-bg);
+            border: 2px solid var(--accent-cyan);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            max-width: 360px;
+            box-shadow: 0 0 25px rgba(56, 189, 248, 0.3);
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .gps-icon {
+            font-size: 42px;
+            color: var(--accent-gold);
+            animation: pulseGps 1.5s infinite;
+        }
+
+        @keyframes pulseGps {
+            0% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.15); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.8; }
+        }
+
+        /* Live Alert Notification Banner */
+        .live-alert-banner {
+            background: linear-gradient(90deg, #7f1d1d 0%, #b91c1c 100%);
+            border: 1px solid var(--accent-red);
+            border-radius: 12px;
+            margin: 10px 12px 0 12px;
+            padding: 10px 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            box-shadow: 0 0 12px rgba(239, 68, 68, 0.4);
+            animation: pulseBanner 2s infinite;
+        }
+
+        @keyframes pulseBanner {
+            0% { box-shadow: 0 0 5px rgba(239, 68, 68, 0.4); }
+            50% { box-shadow: 0 0 18px rgba(239, 68, 68, 0.8); }
+            100% { box-shadow: 0 0 5px rgba(239, 68, 68, 0.4); }
+        }
+
+        .alert-badge {
+            background-color: var(--accent-red);
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+            padding: 2px 6px;
+            border-radius: 4px;
+            white-space: nowrap;
+        }
+
         /* Radio Banner */
         .radio-banner {
             background: linear-gradient(90deg, #0d162d 0%, #1e1b4b 100%);
             border: 1px solid var(--accent-cyan);
             border-radius: 12px;
-            margin: 12px;
-            padding: 10px 14px;
+            margin: 10px 12px;
+            padding: 8px 12px;
             display: flex;
             align-items: center;
             gap: 12px;
@@ -93,8 +166,8 @@
         }
 
         .radio-pulse {
-            width: 12px;
-            height: 12px;
+            width: 10px;
+            height: 10px;
             background-color: #ef4444;
             border-radius: 50%;
             box-shadow: 0 0 8px #ef4444;
@@ -417,6 +490,20 @@
 </head>
 <body>
 
+<!-- GPS Activation Prompt Modal -->
+<div class="gps-overlay" id="gpsModal">
+    <div class="gps-card">
+        <i class="fa-solid fa-location-crosshairs gps-icon"></i>
+        <h3 style="font-size: 16px; color: var(--accent-cyan);">ضرورة تفعيل موقع الـ GPS</h3>
+        <p style="font-size: 12px; color: var(--text-muted); line-height: 1.5;">
+            تطبيق <strong>شَرْجِي</strong> يحتاج لتحديد موقعك الحالي لربطك فوراً بأقرب السائقين والشحنات المتوفرة في طريقك (مثل شحنات الخضروات بسوق أربعاء الغرب).
+        </p>
+        <button class="btn-action btn-green" style="font-size: 13px; padding: 12px;" onclick="enableGPS()">
+            <i class="fa-solid fa-location-dot"></i> تفعيل الموقع الآن
+        </button>
+    </div>
+</div>
+
 <div class="app-container">
     <!-- Header -->
     <header class="app-header">
@@ -427,6 +514,16 @@
         </div>
         <i class="fa-solid fa-headset" style="color: var(--accent-cyan); cursor: pointer;" onclick="speakText('الدعم والخدمة الفنية')"></i>
     </header>
+
+    <!-- Urgent Notification Alert Banner -->
+    <div class="live-alert-banner" onclick="triggerVegetableAlert()">
+        <span class="alert-badge">⚡ طلب عاجل</span>
+        <div style="flex: 1; font-size: 11px; font-weight: bold;">
+            مطلوب بيكوب الآن: سوق أربعاء الغرب ➔ الدار البيضاء
+            <div style="font-size: 9px; font-weight: normal; color: #fca5a5;">حمولة خضروات طرية • اتصل فوراً</div>
+        </div>
+        <i class="fa-solid fa-bell-concierge" style="color: var(--accent-gold); font-size: 16px;"></i>
+    </div>
 
     <!-- Radio / Announcements Player -->
     <div class="radio-banner" onclick="speakText('راديو شرجي المباشر. عروض خاصة بزيوت المحركات، خصم عشرين بالمائة هذا الأسبوع')">
@@ -458,8 +555,8 @@
 
     <!-- Interactive Live Map -->
     <div class="map-container">
-        <div class="map-overlay-badge" onclick="speakText('ثمانية عشر سائق متوفر حالياً في مسارك')">
-            <i class="fa-solid fa-signal" style="color: var(--accent-green);"></i> 18 سائق متوفر حالياً
+        <div class="map-overlay-badge" id="gpsStatusBadge" onclick="enableGPS()">
+            <i class="fa-solid fa-location-arrow" style="color: var(--accent-gold);"></i> جاري تحديد الموقع...
         </div>
         <div id="map"></div>
     </div>
@@ -481,7 +578,7 @@
                 </div>
             </div>
             <div class="voice-output-box" id="voiceStatus" onclick="speakText(this.innerText)">
-                اضغط على الميكروفون وتكلم: أنا السائق، متواجد في طنجة، طالع للدار البيضاء
+                اضغط وتكلم: خصني بيكوب نشحن الخضرة من سوق أربعاء الغرب بكري للدار البيضاء
             </div>
             <button class="btn-action btn-primary" onclick="confirmPublish()">
                 <i class="fa-solid fa-paper-plane"></i> نشر العرض فوراً
@@ -495,20 +592,20 @@
                 اختر نوع المركبة
             </div>
             <div class="vehicle-options">
-                <div class="vehicle-item selected" onclick="selectVehicle(this, 6, 'ديانا ثلاثة طن ونصف', 'مركبة ديانا ثلاثة طن ونصف، السعر ستة دراهم لكل كيلومتر')">
+                <div class="vehicle-item selected" onclick="selectVehicle(this, 5, 'بيكوب خضروات', 'بيكوب لنقل الخضروات والفواكه، السعر خمسة دراهم لكل كيلومتر')">
                     <i class="fa-solid fa-truck-pickup"></i>
-                    ديانا / 3.5 طن
-                    <div style="color: var(--accent-gold); font-weight: bold;">6 د/كم</div>
+                    بيكوب / الخضرة
+                    <div style="color: var(--accent-gold); font-weight: bold;">5 د/كم</div>
                 </div>
                 <div class="vehicle-item" onclick="selectVehicle(this, 4, 'تريبورتور', 'تْري بُورْتُورْ، السعر أربعة دراهم لكل كيلومتر')">
                     <i class="fa-solid fa-trailer"></i>
                     تريبورتور
                     <div style="color: var(--accent-gold); font-weight: bold;">4 د/كم</div>
                 </div>
-                <div class="vehicle-item" onclick="selectVehicle(this, 10, 'شاحنة كبيرة', 'شاحنة كبيرة، السعر عشرة دراهم لكل كيلومتر')">
+                <div class="vehicle-item" onclick="selectVehicle(this, 6, 'ديانا ثلاثة طن ونصف', 'مركبة ديانا ثلاثة طن ونصف، السعر ستة دراهم لكل كيلومتر')">
                     <i class="fa-solid fa-truck"></i>
-                    شاحنة كبيرة
-                    <div style="color: var(--accent-gold); font-weight: bold;">10 د/كم</div>
+                    ديانا / 3.5 طن
+                    <div style="color: var(--accent-gold); font-weight: bold;">6 د/كم</div>
                 </div>
                 <div class="vehicle-item" onclick="selectVehicle(this, 15, 'رموك عشرون طن', 'رْمُوكْ عشرون طن، السعر خمسة عشر درهما لكل كيلومتر')">
                     <i class="fa-solid fa-truck-moving"></i>
@@ -517,8 +614,8 @@
                 </div>
             </div>
             <div style="background: rgba(16, 185, 129, 0.1); padding: 6px; border-radius: 6px; text-align: center; border: 1px solid var(--accent-green); cursor: pointer;" onclick="speakEstimatedCost()">
-                <div style="font-size: 8px; color: var(--text-muted);">التكلفة التقديرية (تخفيض العودة):</div>
-                <div style="font-size: 14px; font-weight: bold; color: var(--accent-green);" id="estimatedPrice">1,326 درهم</div>
+                <div style="font-size: 8px; color: var(--text-muted);">التكلفة التقديرية (سوق الأربعاء ➔ كازا):</div>
+                <div style="font-size: 14px; font-weight: bold; color: var(--accent-green);" id="estimatedPrice">650 درهم</div>
             </div>
             <button class="btn-action btn-green" onclick="speakText('جاري الاتصال بالسائق المتوفر الآن')">
                 <i class="fa-solid fa-phone"></i> اتصل بالسائق
@@ -532,15 +629,16 @@
         <span style="font-size: 10px; color: var(--accent-cyan);">تحديث مباشر ●</span>
     </div>
 
-    <div class="load-card" onclick="speakText('شحنة من طنجة إلى الدار البيضاء. الثمن ألفين ومائتان درهم. الحمولة اثنا عشر طن مواد بناء، مطلوب شاحنة رْمُوكْ')">
+    <!-- Vegetable Transport Card -->
+    <div class="load-card" style="border: 1px solid var(--accent-gold);" onclick="triggerVegetableAlert()">
         <div class="load-header">
-            <span>طنجة ➔ الدار البيضاء</span>
-            <span style="color: var(--accent-gold);">2,200 د.م</span>
+            <span>سوق أربعاء الغرب ➔ الدار البيضاء</span>
+            <span style="color: var(--accent-gold);">700 د.م</span>
         </div>
-        <div style="color: var(--text-muted); font-size: 10px;">الحمولة: 12 طن مواد بناء • مطلوب رموك</div>
+        <div style="color: #fca5a5; font-size: 10px; font-weight: bold;">🥕 الحمولة: 1.5 طن خضروات طرية • مطلوب بيكوب فوراً</div>
         <div class="load-actions">
-            <button class="btn-sm btn-primary" onclick="event.stopPropagation(); speakText('بدء التفاوض الصوتي')"><i class="fa-solid fa-comments"></i> تفاوض / صوت</button>
-            <button class="btn-sm btn-green" onclick="event.stopPropagation(); speakText('الاتصال الهاتفي بصاحب الشحنة')"><i class="fa-solid fa-phone"></i> اتصل</button>
+            <button class="btn-sm btn-primary" onclick="event.stopPropagation(); speakText('بدء التفاوض الصوتي لشحنة الخضار')"><i class="fa-solid fa-comments"></i> تفاوض / صوت</button>
+            <button class="btn-sm btn-green" onclick="event.stopPropagation(); speakText('الاتصال الهاتفي بصاحب شحنة الخضروات بسوق أربعاء الغرب')"><i class="fa-solid fa-phone"></i> اتصل</button>
         </div>
     </div>
 
@@ -565,13 +663,14 @@
 <!-- Leaflet JS for Map -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-    // Moroccan Darija Pronunciation Dictionary for Speech Synthesis
+    // Moroccan Darija Pronunciation Dictionary
     const pronunciationMap = {
         'تريبورتور': 'تْري بُورْتُورْ',
         'رموك': 'رْمُوكْ',
         'ديباناج': 'دِيبَانَاجْ',
-        'طنجة': 'طَنْجَة',
-        'الدار البيضاء': 'الدار البيضاء'
+        'بيكوب': 'بِيكُوبْ',
+        'الخضرة': 'الخُضْرَة',
+        'سوق أربعاء الغرب': 'سُوقْ أرْبَعَاء الغَرْبْ'
     };
 
     function formatTextForSpeech(text) {
@@ -588,46 +687,88 @@
             window.speechSynthesis.cancel();
             const utterance = new SpeechSynthesisUtterance(formatTextForSpeech(text));
             utterance.lang = 'ar-SA';
-            utterance.rate = 0.85; // Slightly slower pace for clarity
+            utterance.rate = 0.85;
             window.speechSynthesis.speak(utterance);
         }
     }
 
+    // GPS Activation Logic
+    let userMarker = null;
+
+    function enableGPS() {
+        speakText('جاري تفعيل تحديد موقعك عبر نظام الجي بي إيْسْ');
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+                    
+                    document.getElementById('gpsModal').style.display = 'none';
+                    document.getElementById('gpsStatusBadge').innerHTML = '<i class="fa-solid fa-circle" style="color: var(--accent-green);"></i> موقعك مفعّل الآن';
+                    
+                    map.setView([lat, lng], 10);
+                    
+                    if (userMarker) map.removeLayer(userMarker);
+                    userMarker = L.marker([lat, lng]).addTo(map)
+                        .bindPopup("موقعك الحالي").openPopup();
+
+                    speakText('تم تحديد موقعك بنجاح. أنت الآن مرتبط بالخدمة المباشرة');
+                },
+                (error) => {
+                    alert('يرجى تفعيل خدمة GPS من إعدادات الهاتف لتحديد موقعك.');
+                    speakText('يرجى تفعيل خدمة تحديد الموقع من إعدادات الهاتف');
+                }
+            );
+        } else {
+            alert("المتصفح لا يدعم تحديد الموقع.");
+        }
+    }
+
+    // Prompt GPS Voice Notification on Page Load
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            speakText('المرجو الضغط على زر تفعيل الموقع لتحديد أقرب الشحنات إليك');
+        }, 800);
+    });
+
+    // Trigger Specific Vegetable Alert
+    function triggerVegetableAlert() {
+        speakText('تنبيه عاجل! مطلوب شاحنة بيكوب لشحن الخضروات من سوق أربعاء الغرب إلى الدار البيضاء. الثمن سبعمائة درهم');
+    }
+
     // Initialize Map
-    const map = L.map('map', { zoomControl: false }).setView([34.5, -6.5], 6);
+    const map = L.map('map', { zoomControl: false }).setView([34.3, -6.2], 7);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18 }).addTo(map);
 
     const latlngs = [
-        [35.7595, -5.8340], // Tangier
+        [34.8108, -5.9922], // Souk El Arbaa
         [34.0209, -6.8416], // Rabat
         [33.5731, -7.5898]  // Casablanca
     ];
-    L.polyline(latlngs, {color: '#1d61f2', weight: 4}).addTo(map);
+    L.polyline(latlngs, {color: '#ef4444', weight: 4, dashArray: '6, 6'}).addTo(map);
 
-    const marker1 = L.marker([35.7595, -5.8340]).addTo(map);
-    marker1.on('click', () => speakText('نقطة الانطلاق: مدينة طنجة'));
+    const marker1 = L.marker([34.8108, -5.9922]).addTo(map);
+    marker1.on('click', () => speakText('نقطة الشحن: سوق أربعاء الغرب'));
 
     const marker2 = L.marker([33.5731, -7.5898]).addTo(map);
-    marker2.on('click', () => speakText('الوجهة النهائية: مدينة الدار البيضاء'));
+    marker2.on('click', () => speakText('نقطة التفريغ: الدار البيضاء'));
 
     // Dynamic Vehicle Price Calculation Logic
-    const routeDistanceKm = 340; // Tangier to Casablanca ~340 KM
-    const discountRate = 0.65; // Return discount factor (35% OFF)
-    let currentCost = 1326;
+    const routeDistanceKm = 200; // Souk El Arbaa to Casablanca ~200 KM
+    let currentCost = 650;
 
     function selectVehicle(element, ratePerKm, name, speechText) {
         document.querySelectorAll('.vehicle-item').forEach(el => el.classList.remove('selected'));
         element.classList.add('selected');
         
-        // Dynamic price calculation
-        currentCost = Math.round(routeDistanceKm * ratePerKm * discountRate);
+        currentCost = Math.round(routeDistanceKm * ratePerKm * 0.65);
         document.getElementById('estimatedPrice').innerText = currentCost.toLocaleString() + ' درهم';
         
         speakText(speechText);
     }
 
     function speakEstimatedCost() {
-        speakText('التكلفة التقديرية مع تخفيض العودة هي ' + currentCost + ' درهم');
+        speakText('التكلفة التقديرية لشحن الخضار هي ' + currentCost + ' درهم');
     }
 
     // Role Switching Logic
@@ -635,14 +776,14 @@
         document.querySelectorAll('.role-btn').forEach(btn => btn.classList.remove('active'));
         if (role === 'driver') {
             document.getElementById('roleDriver').classList.add('active');
-            speakText('حساب سائق، لدي شاحنة ورحلة العودة');
+            speakText('حساب سائق بيكوب، متوفر لنقل الخضروات والبضائع');
         } else {
             document.getElementById('roleCustomer').classList.add('active');
-            speakText('حساب زبون، أبحث عن شاحنة نقل');
+            speakText('حساب زبون، أبحث عن بيكوب لشحن الخضرة');
         }
     }
 
-    // Voice Recording Logic with Visualizer
+    // Voice Recording Logic
     let isRecording = false;
     function toggleRecord() {
         const statusBox = document.getElementById('voiceStatus');
@@ -655,22 +796,21 @@
             wave.style.display = 'flex';
             statusBox.innerText = 'جاري الاستماع لرسالتك الصوتية...';
             statusBox.style.color = '#10b981';
-            speakText('جاري الاستماع إليك الآن، اتكلم بوضوح');
+            speakText('جاري الاستماع إليك، اتكلم بوضوح');
         } else {
             micBtn.style.background = 'radial-gradient(circle, #ef4444 0%, #b91c1c 100%)';
             wave.style.display = 'none';
-            const resultText = 'تم تسجيل الصوت: أنا السائق، متواجد في طنجة، متوجه للدار البيضاء شحنة خاوية';
+            const resultText = 'تم التسجيل: خاصني بيكوب نشحن الخضرة من سوق أربعاء الغرب بكري للدار البيضاء';
             statusBox.innerText = resultText;
             statusBox.style.color = '#ffffff';
             speakText(resultText);
         }
     }
 
-    // Confirmation Modal before Publishing
     function confirmPublish() {
         const statusText = document.getElementById('voiceStatus').innerText;
-        if (confirm("هل تؤكد نشر العرض التالي؟\n\n" + statusText)) {
-            speakText('تم نشر عرضك بنجاح للجميع');
+        if (confirm("هل تؤكد نشر طلب نقل الخضروات هذا؟\n\n" + statusText)) {
+            speakText('تم نشر طلبك بنجاح، وسيتصل بك سائقو البيكوب فوراً');
         }
     }
 </script>

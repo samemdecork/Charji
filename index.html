@@ -25,360 +25,99 @@
             --glass: rgba(15, 23, 42, 0.75);
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, sans-serif; user-select: none; }
 
-        body {
-            background-color: var(--bg-base);
-            color: var(--text-high);
-            display: flex;
-            justify-content: center;
-            min-height: 100vh;
-        }
+        body { background-color: var(--bg-base); color: var(--text-high); display: flex; justify-content: center; min-height: 100vh; }
 
         .pro-app {
-            width: 100%;
-            max-width: 480px;
-            background: #080d1a;
-            min-height: 100vh;
-            padding-bottom: 90px;
-            position: relative;
-            overflow-x: hidden;
-            border-left: 1px solid var(--border);
-            border-right: 1px solid var(--border);
+            width: 100%; max-width: 480px; background: #080d1a; min-height: 100vh; padding-bottom: 90px;
+            position: relative; overflow-x: hidden; border-left: 1px solid var(--border); border-right: 1px solid var(--border);
         }
 
         /* Pro Glass Header */
         .pro-header {
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            background: var(--glass);
-            backdrop-filter: blur(12px);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 16px;
-            border-bottom: 1px solid var(--border);
+            position: sticky; top: 0; z-index: 1000; background: var(--glass); backdrop-filter: blur(12px);
+            display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--border);
+        }
+        .brand-box { display: flex; align-items: center; gap: 8px; }
+        .brand-logo-icon { width: 32px; height: 32px; background: linear-gradient(135deg, var(--primary), var(--cyan)); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #fff; box-shadow: 0 0 10px var(--primary-glow); }
+        .brand-name { font-size: 17px; font-weight: 800; color: var(--text-high); }
+        .brand-badge { background: rgba(245, 158, 11, 0.15); color: var(--amber); font-size: 9px; padding: 2px 6px; border-radius: 4px; font-weight: 700; border: 1px solid rgba(245, 158, 11, 0.3); }
+
+        /* LIVE RADIO BANNER (Interactive) */
+        .radio-banner {
+            background: linear-gradient(90deg, #1e1b4b 0%, #0f172a 100%);
+            border: 1px solid var(--cyan); border-radius: 12px; margin: 12px; padding: 10px 14px;
+            display: flex; align-items: center; gap: 12px; cursor: pointer; box-shadow: 0 0 15px rgba(6, 182, 212, 0.15);
+        }
+        
+        .play-btn {
+            width: 32px; height: 32px; background: var(--cyan); border-radius: 50%; color: #000;
+            display: flex; justify-content: center; align-items: center; font-size: 14px;
         }
 
-        .brand-box {
-            display: flex;
-            align-items: center;
-            gap: 8px;
+        /* Animated Equalizer */
+        .equalizer {
+            display: flex; align-items: flex-end; gap: 3px; height: 16px; display: none;
         }
-
-        .brand-logo-icon {
-            width: 32px;
-            height: 32px;
-            background: linear-gradient(135deg, var(--primary), var(--cyan));
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-            color: #fff;
-            box-shadow: 0 0 10px var(--primary-glow);
+        .equalizer span {
+            width: 3px; background-color: var(--amber); border-radius: 2px;
+            animation: eq-play 0.5s infinite alternate ease-in-out;
         }
-
-        .brand-name {
-            font-size: 17px;
-            font-weight: 800;
-            letter-spacing: 0.5px;
-            color: var(--text-high);
-        }
-
-        .brand-badge {
-            background: rgba(245, 158, 11, 0.15);
-            color: var(--amber);
-            font-size: 9px;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-weight: 700;
-            border: 1px solid rgba(245, 158, 11, 0.3);
-        }
-
-        /* Floating Walkie-Talkie Button */
-        .walkie-dock {
-            position: fixed;
-            bottom: 84px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 1100;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            pointer-events: none;
-        }
-
-        .walkie-btn {
-            pointer-events: auto;
-            width: 68px;
-            height: 68px;
-            border-radius: 50%;
-            background: linear-gradient(145deg, #1e293b, #0f172a);
-            border: 2px solid var(--cyan);
-            color: var(--cyan);
-            font-size: 26px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.7), 0 0 15px rgba(6, 182, 212, 0.4);
-            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .walkie-btn.transmitting {
-            background: linear-gradient(145deg, #e11d48, #be123c);
-            border-color: #fda4af;
-            color: #fff;
-            transform: scale(1.1);
-            box-shadow: 0 0 30px rgba(225, 29, 72, 0.8);
-        }
-
-        .walkie-label {
-            margin-top: 4px;
-            font-size: 10px;
-            font-weight: bold;
-            color: var(--cyan);
-            background: rgba(15, 23, 42, 0.85);
-            padding: 2px 8px;
-            border-radius: 10px;
-            border: 1px solid var(--border);
-        }
+        .equalizer span:nth-child(2) { animation-delay: 0.2s; }
+        .equalizer span:nth-child(3) { animation-delay: 0.4s; }
+        .equalizer span:nth-child(4) { animation-delay: 0.1s; }
+        @keyframes eq-play { 0% { height: 4px; } 100% { height: 16px; } }
 
         /* Radar Live Map */
-        .radar-card {
-            margin: 12px;
-            background: var(--surface-1);
-            border-radius: 16px;
-            border: 1px solid var(--border);
-            overflow: hidden;
-            position: relative;
-        }
+        .radar-card { margin: 12px; background: var(--surface-1); border-radius: 16px; border: 1px solid var(--border); overflow: hidden; position: relative; }
+        .radar-header { padding: 8px 14px; display: flex; justify-content: space-between; align-items: center; background: rgba(255, 255, 255, 0.02); font-size: 11px; }
+        .radar-status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--emerald); display: inline-block; box-shadow: 0 0 8px var(--emerald); animation: pulseDot 1.4s infinite; }
+        @keyframes pulseDot { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.4); opacity: 0.5; } }
+        .map-box { height: 180px; width: 100%; }
 
-        .radar-header {
-            padding: 8px 14px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(255, 255, 255, 0.02);
-            font-size: 11px;
-        }
-
-        .radar-status-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--emerald);
-            display: inline-block;
-            box-shadow: 0 0 8px var(--emerald);
-            animation: pulseDot 1.4s infinite;
-        }
-
-        @keyframes pulseDot {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.4); opacity: 0.5; }
-        }
-
-        .map-box {
-            height: 200px;
-            width: 100%;
-        }
-
-        /* Live Urgent Offer Banner */
-        .urgent-pill {
-            margin: 0 12px 12px 12px;
-            background: linear-gradient(90deg, rgba(244, 63, 94, 0.15), rgba(245, 158, 11, 0.15));
-            border: 1px solid rgba(244, 63, 94, 0.4);
-            border-radius: 12px;
-            padding: 10px 12px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-        }
-
-        .pill-badge {
-            background: var(--rose);
-            color: white;
-            font-size: 10px;
-            font-weight: 800;
-            padding: 3px 6px;
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        /* Quick Vehicle Grid */
-        .pro-grid-title {
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--text-dim);
-            margin: 0 16px 8px 16px;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .fleet-matrix {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
-            margin: 0 12px 14px 12px;
-        }
-
-        .fleet-box {
-            background: var(--surface-1);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 10px 4px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .fleet-box.selected {
-            border-color: var(--primary);
-            background: rgba(37, 99, 235, 0.12);
-            box-shadow: 0 0 12px rgba(37, 99, 235, 0.3);
-        }
-
-        .fleet-box i {
-            font-size: 18px;
-            color: var(--cyan);
-            margin-bottom: 4px;
-            display: block;
-        }
-
-        .fleet-box span {
-            display: block;
-            font-size: 10px;
-            font-weight: bold;
-        }
-
-        .fleet-box small {
-            font-size: 9px;
-            color: var(--amber);
-            font-weight: 700;
-        }
-
-        /* Voice Live Console */
-        .voice-console {
-            background: var(--surface-1);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            margin: 0 12px 14px 12px;
-            padding: 12px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .console-text {
-            font-size: 11px;
-            color: var(--text-high);
-            background: rgba(0,0,0,0.3);
-            border-radius: 8px;
-            padding: 10px;
-            min-height: 48px;
-            display: flex;
-            align-items: center;
-            border-right: 3px solid var(--cyan);
-        }
-
-        /* Bottom Pro Bar */
-        .pro-navbar {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            max-width: 480px;
-            background: var(--glass);
-            backdrop-filter: blur(16px);
-            border-top: 1px solid var(--border);
-            display: flex;
-            justify-content: space-around;
-            padding: 8px 0;
-            z-index: 1000;
-        }
-
-        .pnav-item {
-            text-align: center;
-            color: var(--text-dim);
-            font-size: 10px;
-            text-decoration: none;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 2px;
-        }
-
-        .pnav-item.active {
-            color: var(--cyan);
-        }
+        /* Vehicle Selector */
+        .fleet-matrix { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 0 12px 14px 12px; }
+        .fleet-box { background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px; padding: 10px 4px; text-align: center; cursor: pointer; transition: all 0.2s ease; }
+        .fleet-box.selected { border-color: var(--primary); background: rgba(37, 99, 235, 0.12); box-shadow: 0 0 12px rgba(37, 99, 235, 0.3); }
+        .fleet-box i { font-size: 18px; color: var(--cyan); margin-bottom: 4px; display: block; }
+        .fleet-box span { display: block; font-size: 10px; font-weight: bold; }
 
         /* GPS Modal Overlay */
-        .gps-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(2, 6, 23, 0.95);
-            backdrop-filter: blur(10px);
-            z-index: 9999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 24px;
-        }
+        .gps-overlay { position: fixed; inset: 0; background: rgba(2, 6, 23, 0.95); backdrop-filter: blur(10px); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 24px; }
+        .gps-modal-card { background: var(--surface-1); border: 1px solid var(--cyan); border-radius: 20px; padding: 24px; text-align: center; width: 100%; max-width: 340px; box-shadow: 0 0 40px rgba(6, 182, 212, 0.25); }
+        .btn-pro { background: linear-gradient(135deg, var(--primary), #1d4ed8); color: white; border: none; border-radius: 10px; padding: 12px; font-size: 12px; font-weight: 700; width: 100%; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 4px 14px var(--primary-glow); }
+        
+        /* Walkie-Talkie Float */
+        .walkie-dock { position: fixed; bottom: 84px; left: 50%; transform: translateX(-50%); z-index: 1100; display: flex; flex-direction: column; align-items: center; }
+        .walkie-btn { width: 68px; height: 68px; border-radius: 50%; background: linear-gradient(145deg, #1e293b, #0f172a); border: 2px solid var(--cyan); color: var(--cyan); font-size: 26px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.7); }
 
-        .gps-modal-card {
-            background: var(--surface-1);
-            border: 1px solid var(--cyan);
-            border-radius: 20px;
-            padding: 24px;
-            text-align: center;
-            width: 100%;
-            max-width: 340px;
-            box-shadow: 0 0 40px rgba(6, 182, 212, 0.25);
-        }
-
-        .btn-pro {
-            background: linear-gradient(135deg, var(--primary), #1d4ed8);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            padding: 12px;
-            font-size: 12px;
-            font-weight: 700;
-            width: 100%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            box-shadow: 0 4px 14px var(--primary-glow);
-        }
+        /* Pro Navbar */
+        .pro-navbar { position: fixed; bottom: 0; width: 100%; max-width: 480px; background: var(--glass); backdrop-filter: blur(16px); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 8px 0; z-index: 1000; }
+        .pnav-item { text-align: center; color: var(--text-dim); font-size: 10px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 2px; }
+        .pnav-item.active { color: var(--cyan); }
     </style>
 </head>
 <body>
+
+<!-- Hidden Audio Element for Background Radio -->
+<!-- استعملت رابط راديو موسيقى هادئة للتجربة، يمكن تبديلو برابط راديو حقيقي لاحقاً -->
+<audio id="bgRadio" loop>
+    <source src="https://stream.zeno.fm/f3yqy0p7m4zuv" type="audio/mpeg">
+</audio>
 
 <!-- GPS Strict Activation Modal -->
 <div class="gps-overlay" id="gpsModal">
     <div class="gps-modal-card">
         <div style="width: 54px; height: 54px; border-radius: 50%; background: rgba(6, 182, 212, 0.1); border: 1px solid var(--cyan); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px auto;">
-            <i class="fa-solid fa-location-crosshairs" style="font-size: 24px; color: var(--cyan);"></i>
+            <i class="fa-solid fa-satellite-dish" style="font-size: 24px; color: var(--cyan);"></i>
         </div>
-        <h3 style="font-size: 16px; margin-bottom: 8px;">تفعيل رادار GPS الاحترافي</h3>
+        <h3 style="font-size: 16px; margin-bottom: 8px;">مرحباً بك في شَرْجِي برو</h3>
         <p style="font-size: 11px; color: var(--text-dim); line-height: 1.6; margin-bottom: 20px;">
-            تطبيق <strong>شَرْجِي برو</strong> يربطك مباشرة بأقرب الشاحنات على مسارك الفعلي لمنع الرجوع فارغاً (Retour à vide).
+            تفعيل الموقع ضروري لبدء النظام، تشغيل الراديو، واستقبال شحنات أربعاء الغرب وكازا.
         </p>
-        <button class="btn-pro" onclick="activateGPS()">
-            <i class="fa-solid fa-bolt"></i> تفعيل الموقع والبدء
+        <button class="btn-pro" onclick="activateAppSequence()">
+            <i class="fa-solid fa-power-off"></i> تفعيل الموقع والبدء
         </button>
     </div>
 </div>
@@ -389,26 +128,27 @@
         <div class="brand-box">
             <div class="brand-logo-icon"><i class="fa-solid fa-truck-fast"></i></div>
             <div>
-                <div style="display:flex; align-items:center; gap:6px;">
-                    <span class="brand-name">شَرْجِي</span>
-                    <span class="brand-badge">PRO v2.4</span>
-                </div>
+                <span class="brand-name">شَرْجِي</span>
+                <span class="brand-badge">PRO v2.4</span>
             </div>
         </div>
-        <div style="display:flex; gap:10px;">
-            <i class="fa-solid fa-headset" style="color: var(--cyan); font-size: 18px; cursor: pointer;" onclick="speakPro('مكتب الدعم الفني شَرْجِي برو جاهز للمساعدة')"></i>
-            <i class="fa-solid fa-bell" style="color: var(--amber); font-size: 18px; cursor: pointer;" onclick="triggerVegetableAlert()"></i>
-        </div>
+        <i class="fa-solid fa-bell" style="color: var(--amber); font-size: 18px; cursor: pointer;"></i>
     </header>
 
-    <!-- Urgent Trip Notification -->
-    <div class="urgent-pill" onclick="triggerVegetableAlert()">
-        <div class="pill-badge"><i class="fa-solid fa-fire"></i> فوري</div>
-        <div style="flex:1;">
-            <div style="font-size: 11px; font-weight: 800;">سوق أربعاء الغرب ➔ الدار البيضاء</div>
-            <div style="font-size: 9px; color: var(--text-dim);">مطلوب بيكوب • 1.5 طن خضر وفواكه طرية • 750 درهم</div>
+    <!-- Interactive Radio Banner -->
+    <div class="radio-banner" onclick="toggleRadio()">
+        <div class="play-btn" id="radioPlayBtn">
+            <i class="fa-solid fa-play" id="radioIcon"></i>
         </div>
-        <i class="fa-solid fa-chevron-left" style="font-size: 12px; color: var(--text-dim);"></i>
+        <div style="flex: 1;">
+            <div style="font-size: 12px; font-weight: bold; color: var(--text-high); display: flex; justify-content: space-between;">
+                📻 راديو الطريق 
+                <div class="equalizer" id="radioWaves">
+                    <span></span><span></span><span></span><span></span>
+                </div>
+            </div>
+            <div style="font-size: 9px; color: var(--text-dim);">موسيقى، حالة الطقس، وعروض المحركات</div>
+        </div>
     </div>
 
     <!-- Live Radar Map Card -->
@@ -418,188 +158,127 @@
                 <span class="radar-status-dot"></span>
                 <strong style="color: var(--text-high);">رادار الشاحنات المباشر</strong>
             </div>
-            <span style="color: var(--cyan); font-size: 10px;" id="driversCount">14 شاحنة قريبة</span>
         </div>
         <div id="map" class="map-box"></div>
     </div>
 
     <!-- Vehicle Selector -->
-    <div class="pro-grid-title">
-        <span>اختر نوع الأسطول</span>
-        <span style="color: var(--cyan); cursor: pointer;" onclick="speakPro('قائمة الأسعار حسب الكيلومتر محدثة')">التسعيرة الذكية</span>
-    </div>
+    <div style="font-size: 12px; font-weight: 700; color: var(--text-dim); margin: 0 16px 8px 16px;">اختر الأسطول</div>
     <div class="fleet-matrix">
-        <div class="fleet-box selected" onclick="selectFleet(this, 'بيكوب', 5)">
-            <i class="fa-solid fa-truck-pickup"></i>
-            <span>بيكوب</span>
-            <small>5 د/كم</small>
-        </div>
-        <div class="fleet-box" onclick="selectFleet(this, 'ديانا 3.5 طن', 7)">
-            <i class="fa-solid fa-truck"></i>
-            <span>ديانا</span>
-            <small>7 د/كم</small>
-        </div>
-        <div class="fleet-box" onclick="selectFleet(this, 'تريبورتور', 4)">
-            <i class="fa-solid fa-trailer"></i>
-            <span>تريبورتور</span>
-            <small>4 د/كم</small>
-        </div>
-        <div class="fleet-box" onclick="selectFleet(this, 'رموك 20 طن', 15)">
-            <i class="fa-solid fa-truck-moving"></i>
-            <span>رْمُوكْ</span>
-            <small>15 د/كم</small>
-        </div>
-    </div>
-
-    <!-- Speech Recognition Live Console -->
-    <div class="voice-console">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-            <span style="font-size: 11px; font-weight: 700; color: var(--text-dim);">
-                <i class="fa-solid fa-satellite-dish" style="color: var(--cyan);"></i> المساعد الصوتي المباشر (AI)
-            </span>
-            <span style="font-size: 9px; color: var(--emerald);" id="micState">جاهز للاستماع</span>
-        </div>
-        <div class="console-text" id="transcriptBox">
-            اضغط باستمرار على زر اللاسلكي وتكلم: "أنا فسوق الأربعاء، باغي نشحن الخضرة لكازا"
-        </div>
-        <button class="btn-pro" onclick="confirmDispatch()">
-            <i class="fa-solid fa-paper-plane"></i> تأكيد وبث الطلب للأسطول
-        </button>
+        <div class="fleet-box selected"><i class="fa-solid fa-truck-pickup"></i><span>بيكوب</span></div>
+        <div class="fleet-box"><i class="fa-solid fa-truck"></i><span>ديانا</span></div>
+        <div class="fleet-box"><i class="fa-solid fa-trailer"></i><span>تريبورتور</span></div>
+        <div class="fleet-box"><i class="fa-solid fa-truck-moving"></i><span>رْمُوكْ</span></div>
     </div>
 
     <!-- Walkie-Talkie Push-to-Talk Float -->
     <div class="walkie-dock">
-        <button class="walkie-btn" id="pttBtn" 
-                onmousedown="startSpeech()" onmouseup="stopSpeech()"
-                ontouchstart="startSpeech()" ontouchend="stopSpeech()">
+        <button class="walkie-btn" onmousedown="speakPro('جاري تسجيل رسالتك الصوتية')">
             <i class="fa-solid fa-microphone-lines"></i>
         </button>
-        <span class="walkie-label">اضغط وتكلم (Walkie)</span>
+        <span style="margin-top: 4px; font-size: 10px; font-weight: bold; color: var(--cyan); background: rgba(15, 23, 42, 0.85); padding: 2px 8px; border-radius: 10px; border: 1px solid var(--border);">
+            اضغط وتكلم (Walkie)
+        </span>
     </div>
 
     <!-- Pro Navbar -->
     <nav class="pro-navbar">
         <div class="pnav-item active"><i class="fa-solid fa-map-location-dot"></i> الرادار</div>
-        <div class="pnav-item" onclick="speakPro('قائمة الشحنات المتاحة')"><i class="fa-solid fa-boxes-stacked"></i> الشحنات</div>
-        <div class="pnav-item" onclick="speakPro('راديو الطريق والمخالفات')"><i class="fa-solid fa-radio"></i> راديو الطريق</div>
-        <div class="pnav-item" onclick="speakPro('الملف المهني للسائق')"><i class="fa-solid fa-id-card"></i> حسابي Pro</div>
+        <div class="pnav-item"><i class="fa-solid fa-boxes-stacked"></i> الشحنات</div>
+        <div class="pnav-item"><i class="fa-solid fa-id-card"></i> حسابي</div>
     </nav>
 </div>
 
 <!-- Leaflet JS -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-    // Text To Speech Pro (Moroccan Dialect Aware)
-    function speakPro(text) {
+    const radioPlayer = document.getElementById('bgRadio');
+    const radioIcon = document.getElementById('radioIcon');
+    const radioWaves = document.getElementById('radioWaves');
+    let isRadioPlaying = false;
+
+    // Text To Speech Pro
+    function speakPro(text, onEndCallback = null) {
         if ('speechSynthesis' in window) {
             window.speechSynthesis.cancel();
             const utter = new SpeechSynthesisUtterance(text);
-            utter.lang = 'ar-SA';
-            utter.rate = 0.88;
+            utter.lang = 'ar-SA'; // Fallback Arabic
+            utter.rate = 0.85;
+            utter.pitch = 0.9;
+            
+            if (onEndCallback) {
+                utter.onend = onEndCallback;
+            }
             window.speechSynthesis.speak(utter);
         }
     }
 
-    // Leaflet Radar Initialization
-    const map = L.map('map', { zoomControl: false }).setView([34.3, -6.3], 7);
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { maxZoom: 18 }).addTo(map);
+    // Main App Boot Sequence (GPS + Welcome + Radio)
+    function activateAppSequence() {
+        // 1. Hide GPS Modal
+        document.getElementById('gpsModal').style.display = 'none';
+        
+        // 2. Set Radio Volume very low so the voice can be heard
+        radioPlayer.volume = 0.15; 
 
-    // Fleet Live Truck Markers
-    const trucks = [
-        { lat: 34.8108, lng: -5.9922, type: 'بيكوب (سوق الأربعاء)' },
-        { lat: 34.2610, lng: -6.5802, type: 'ديانا (القنيطرة)' },
-        { lat: 33.5731, lng: -7.5898, type: 'رموك (الدار البيضاء)' }
-    ];
-
-    trucks.forEach(t => {
-        const marker = L.circleMarker([t.lat, t.lng], {
-            radius: 7,
-            color: '#06b6d4',
-            fillColor: '#2563eb',
-            fillOpacity: 0.9,
-            weight: 2
-        }).addTo(map);
-        marker.bindPopup(`<b>مركبة متوفرة:</b> ${t.type}`);
-    });
-
-    // Real Web Speech Recognition (STT)
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    let recognizer = null;
-
-    if (SpeechRecognition) {
-        recognizer = new SpeechRecognition();
-        recognizer.lang = 'ar-MA'; // Moroccan Arabic Support
-        recognizer.continuous = false;
-        recognizer.interimResults = true;
-
-        recognizer.onresult = (event) => {
-            const transcript = event.results[0][0].transcript;
-            document.getElementById('transcriptBox').innerText = transcript;
-        };
-
-        recognizer.onerror = () => {
-            document.getElementById('micState').innerText = 'تعذر التعرف الصوتي';
-        };
+        // 3. Welcome Voice Speech
+        const welcomeMessage = "مرحباً بكم فـ تطبيق شَرْجِي برو. كنتمنى ليكم نهار زوين، وطريق السلامة. جاري تشغيل الرادار وراديو الطريق.";
+        
+        speakPro(welcomeMessage, () => {
+            // 4. Once speech ends, activate Map GPS and start Radio
+            initGPSMap();
+            playRadio();
+            
+            // Raise volume slightly after speaking
+            setTimeout(() => {
+                radioPlayer.volume = 0.4;
+            }, 1000);
+        });
     }
 
-    function startSpeech() {
-        const btn = document.getElementById('pttBtn');
-        btn.classList.add('transmitting');
-        document.getElementById('micState').innerText = '🔴 جاري الاستماع والبث...';
-        if (recognizer) {
-            try { recognizer.start(); } catch(e){}
+    // Toggle Radio function for the Banner
+    function toggleRadio() {
+        if (isRadioPlaying) {
+            radioPlayer.pause();
+            radioIcon.classList.remove('fa-pause');
+            radioIcon.classList.add('fa-play');
+            radioWaves.style.display = 'none';
+            isRadioPlaying = false;
         } else {
-            document.getElementById('transcriptBox').innerText = "سوق أربعاء الغرب: مطلوب بيكوب فوري لشحن طن ونصف خضر للدار البيضاء";
+            playRadio();
         }
     }
 
-    function stopSpeech() {
-        const btn = document.getElementById('pttBtn');
-        btn.classList.remove('transmitting');
-        document.getElementById('micState').innerText = 'تم الالتقاط بنجاح';
-        if (recognizer) {
-            try { recognizer.stop(); } catch(e){}
+    function playRadio() {
+        radioPlayer.play().then(() => {
+            radioIcon.classList.remove('fa-play');
+            radioIcon.classList.add('fa-pause');
+            radioWaves.style.display = 'flex';
+            isRadioPlaying = true;
+        }).catch(err => {
+            console.log("Radio Playback prevented: ", err);
+        });
+    }
+
+    // Initialize Map Function
+    let map = null;
+    function initGPSMap() {
+        if (!map) {
+            map = L.map('map', { zoomControl: false }).setView([34.3, -6.3], 7);
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { maxZoom: 18 }).addTo(map);
         }
-    }
 
-    // Vehicle Switcher
-    function selectFleet(el, name, price) {
-        document.querySelectorAll('.fleet-box').forEach(b => b.classList.remove('selected'));
-        el.classList.add('selected');
-        speakPro(`تم تحديد ${name}. السعر المرجعي ${price} دراهم لكل كيلومتر`);
-    }
-
-    // Urgent Alert
-    function triggerVegetableAlert() {
-        speakPro('تنبيه فوري! حمولة خضار طرية من سوق أربعاء الغرب إلى الدار البيضاء، مطلوب بيكوب فوراً، الثمن 750 درهم');
-    }
-
-    // GPS Logic
-    function activateGPS() {
         if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                (pos) => {
-                    const lat = pos.coords.latitude;
-                    const lng = pos.coords.longitude;
-                    document.getElementById('gpsModal').style.display = 'none';
-                    map.setView([lat, lng], 11);
-                    L.marker([lat, lng]).addTo(map).bindPopup("<b>موقعك المباشر</b>").openPopup();
-                    speakPro('تم تفعيل الرادار وتحديد موقعك بنجاح');
-                },
-                () => {
-                    document.getElementById('gpsModal').style.display = 'none';
-                    speakPro('تم فتح التطبيق بوضع الخريطة الافتراضية');
-                }
-            );
-        } else {
-            document.getElementById('gpsModal').style.display = 'none';
-        }
-    }
-
-    function confirmDispatch() {
-        const txt = document.getElementById('transcriptBox').innerText;
-        if(confirm("تأكيد بث الطلب التالي على الرادار؟\n\n" + txt)) {
-            speakPro('تم بث طلبك لجميع السائقين في محيط ثلاثين كيلومتر بنجاح');
+            navigator.geolocation.getCurrentPosition((pos) => {
+                const lat = pos.coords.latitude;
+                const lng = pos.coords.longitude;
+                map.setView([lat, lng], 12);
+                L.circleMarker([lat, lng], { radius: 8, color: '#10b981', fillColor: '#10b981', fillOpacity: 0.5 }).addTo(map).bindPopup("<b>أنت هنا</b>").openPopup();
+                
+                // Add some dummy trucks around the user
+                L.marker([lat + 0.02, lng - 0.01]).addTo(map);
+                L.marker([lat - 0.01, lng + 0.02]).addTo(map);
+            });
         }
     }
 </script>

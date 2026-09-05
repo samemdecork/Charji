@@ -188,12 +188,14 @@
             cursor: pointer;
         }
 
-        /* Voice Recorder */
+        /* Voice Recorder & Visualizer Wave */
         .mic-button-wrapper {
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             margin: 8px 0;
+            gap: 8px;
         }
 
         .mic-btn {
@@ -206,6 +208,32 @@
             font-size: 24px;
             cursor: pointer;
             box-shadow: 0 0 12px rgba(239, 68, 68, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .waves {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            height: 20px;
+        }
+
+        .waves span {
+            display: inline-block;
+            width: 4px;
+            height: 8px;
+            background: var(--accent-green);
+            border-radius: 2px;
+            animation: wave 0.4s infinite alternate ease-in-out;
+        }
+
+        .waves span:nth-child(2) { animation-delay: 0.1s; }
+        .waves span:nth-child(3) { animation-delay: 0.2s; }
+        .waves span:nth-child(4) { animation-delay: 0.3s; }
+
+        @keyframes wave {
+            0% { height: 6px; }
+            100% { height: 22px; }
         }
 
         .voice-output-box {
@@ -217,6 +245,10 @@
             text-align: center;
             border: 1px dashed var(--border-color);
             cursor: pointer;
+            min-height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         /* Vehicle Selection Cards */
@@ -234,6 +266,7 @@
             text-align: center;
             cursor: pointer;
             font-size: 10px;
+            transition: 0.2s;
         }
 
         .vehicle-item.selected {
@@ -396,7 +429,7 @@
     </header>
 
     <!-- Radio / Announcements Player -->
-    <div class="radio-banner" onclick="speakText('راديو شرجي المباشر. عروض خاصة بزيوت المحركات، خصم عشرين في المائة هذا الأسبوع')">
+    <div class="radio-banner" onclick="speakText('راديو شرجي المباشر. عروض خاصة بزيوت المحركات، خصم عشرين بالمائة هذا الأسبوع')">
         <div class="radio-pulse"></div>
         <div style="flex: 1;">
             <div style="font-size: 11px; font-weight: bold; color: var(--accent-gold);">📻 راديو شَرْجِي المباشر</div>
@@ -407,14 +440,14 @@
 
     <!-- Role Toggles -->
     <div class="role-selector">
-        <div class="role-btn active" onclick="speakText('حساب سائق، لدي شاحنة ورحلة العودة')">
+        <div class="role-btn active" id="roleDriver" onclick="switchRole('driver')">
             <div>
                 <div style="font-size: 11px; font-weight: bold;">أنا سائق</div>
                 <div style="font-size: 8px; color: var(--text-muted);">لدي شاحنة ورحلة العودة</div>
             </div>
             <i class="fa-solid fa-truck" style="color: var(--accent-cyan);"></i>
         </div>
-        <div class="role-btn" onclick="speakText('حساب زبون، أبحث عن شاحنة نقل')">
+        <div class="role-btn" id="roleCustomer" onclick="switchRole('customer')">
             <div>
                 <div style="font-size: 11px; font-weight: bold;">أنا زبون</div>
                 <div style="font-size: 8px; color: var(--text-muted);">أبحث عن شاحنة نقل</div>
@@ -443,11 +476,14 @@
                 <button class="mic-btn" onclick="toggleRecord()">
                     <i class="fa-solid fa-microphone-lines"></i>
                 </button>
+                <div class="waves" id="voiceWave" style="display: none;">
+                    <span></span><span></span><span></span><span></span>
+                </div>
             </div>
             <div class="voice-output-box" id="voiceStatus" onclick="speakText(this.innerText)">
                 اضغط على الميكروفون وتكلم: أنا السائق، متواجد في طنجة، طالع للدار البيضاء
             </div>
-            <button class="btn-action btn-primary" onclick="speakText('نشر العرض فوراً للزبناء والسائقين')">
+            <button class="btn-action btn-primary" onclick="confirmPublish()">
                 <i class="fa-solid fa-paper-plane"></i> نشر العرض فوراً
             </button>
         </div>
@@ -459,32 +495,32 @@
                 اختر نوع المركبة
             </div>
             <div class="vehicle-options">
-                <div class="vehicle-item selected" onclick="speakText('مركبة ديانا ثلاثة طن ونصف، السعر ستة دراهم لكل كيلومتر')">
+                <div class="vehicle-item selected" onclick="selectVehicle(this, 6, 'ديانا ثلاثة طن ونصف', 'مركبة ديانا ثلاثة طن ونصف، السعر ستة دراهم لكل كيلومتر')">
                     <i class="fa-solid fa-truck-pickup"></i>
                     ديانا / 3.5 طن
                     <div style="color: var(--accent-gold); font-weight: bold;">6 د/كم</div>
                 </div>
-                <div class="vehicle-item" onclick="speakText('تريبورتور، السعر اربعة دراهم لكل كيلومتر')">
+                <div class="vehicle-item" onclick="selectVehicle(this, 4, 'تريبورتور', 'تْري بُورْتُورْ، السعر أربعة دراهم لكل كيلومتر')">
                     <i class="fa-solid fa-trailer"></i>
                     تريبورتور
                     <div style="color: var(--accent-gold); font-weight: bold;">4 د/كم</div>
                 </div>
-                <div class="vehicle-item" onclick="speakText('شاحنة كبيرة، السعر عشرة دراهم لكل كيلومتر')">
+                <div class="vehicle-item" onclick="selectVehicle(this, 10, 'شاحنة كبيرة', 'شاحنة كبيرة، السعر عشرة دراهم لكل كيلومتر')">
                     <i class="fa-solid fa-truck"></i>
                     شاحنة كبيرة
                     <div style="color: var(--accent-gold); font-weight: bold;">10 د/كم</div>
                 </div>
-                <div class="vehicle-item" onclick="speakText('رموك عشرون طن، السعر خمسة عشر درهم لكل كيلومتر')">
+                <div class="vehicle-item" onclick="selectVehicle(this, 15, 'رموك عشرون طن', 'رْمُوكْ عشرون طن، السعر خمسة عشر درهما لكل كيلومتر')">
                     <i class="fa-solid fa-truck-moving"></i>
                     رموك (20 طن)
                     <div style="color: var(--accent-gold); font-weight: bold;">15 د/كم</div>
                 </div>
             </div>
-            <div style="background: rgba(16, 185, 129, 0.1); padding: 6px; border-radius: 6px; text-align: center; border: 1px solid var(--accent-green); cursor: pointer;" onclick="speakText('التكلفة التقديرية مع تخفيض العودة هي الف وثلاثمائة وستة وعشرون درهم')">
+            <div style="background: rgba(16, 185, 129, 0.1); padding: 6px; border-radius: 6px; text-align: center; border: 1px solid var(--accent-green); cursor: pointer;" onclick="speakEstimatedCost()">
                 <div style="font-size: 8px; color: var(--text-muted);">التكلفة التقديرية (تخفيض العودة):</div>
-                <div style="font-size: 14px; font-weight: bold; color: var(--accent-green);">1,326 درهم</div>
+                <div style="font-size: 14px; font-weight: bold; color: var(--accent-green);" id="estimatedPrice">1,326 درهم</div>
             </div>
-            <button class="btn-action btn-green" onclick="speakText('الاتصال بالسائق المتوفر الآن')">
+            <button class="btn-action btn-green" onclick="speakText('جاري الاتصال بالسائق المتوفر الآن')">
                 <i class="fa-solid fa-phone"></i> اتصل بالسائق
             </button>
         </div>
@@ -496,7 +532,7 @@
         <span style="font-size: 10px; color: var(--accent-cyan);">تحديث مباشر ●</span>
     </div>
 
-    <div class="load-card" onclick="speakText('شحنة من طنجة إلى الدار البيضاء. الثمن الفين ومائتان درهم. الحمولة اثنا عشر طن مواد بناء، مطلوب شاحنة رموك')">
+    <div class="load-card" onclick="speakText('شحنة من طنجة إلى الدار البيضاء. الثمن ألفين ومائتان درهم. الحمولة اثنا عشر طن مواد بناء، مطلوب شاحنة رْمُوكْ')">
         <div class="load-header">
             <span>طنجة ➔ الدار البيضاء</span>
             <span style="color: var(--accent-gold);">2,200 د.م</span>
@@ -504,13 +540,13 @@
         <div style="color: var(--text-muted); font-size: 10px;">الحمولة: 12 طن مواد بناء • مطلوب رموك</div>
         <div class="load-actions">
             <button class="btn-sm btn-primary" onclick="event.stopPropagation(); speakText('بدء التفاوض الصوتي')"><i class="fa-solid fa-comments"></i> تفاوض / صوت</button>
-            <button class="btn-sm btn-green" onclick="event.stopPropagation(); speakText('الاتصال الهاتفي بظاحب الشحنة')"><i class="fa-solid fa-phone"></i> اتصل</button>
+            <button class="btn-sm btn-green" onclick="event.stopPropagation(); speakText('الاتصال الهاتفي بصاحب الشحنة')"><i class="fa-solid fa-phone"></i> اتصل</button>
         </div>
     </div>
 
     <!-- Quick Auxiliary Services -->
     <div class="quick-services">
-        <div class="service-btn" onclick="speakText('خدمة ديباناج وقطر الشاحنات')"><i class="fa-solid fa-truck-monster"></i>ديباناج</div>
+        <div class="service-btn" onclick="speakText('خدمة دِيبَانَاجْ وقطر الشاحنات')"><i class="fa-solid fa-truck-monster"></i>ديباناج</div>
         <div class="service-btn" onclick="speakText('خدمة محطات الوقود والتزود بالوقود')"><i class="fa-solid fa-gas-pump"></i>وقود</div>
         <div class="service-btn" onclick="speakText('خدمة ميكانيك وإصلاح الأعطال')"><i class="fa-solid fa-wrench"></i>ميكانيك</div>
         <div class="service-btn" onclick="speakText('خدمة تأمين وحماية الشحن')"><i class="fa-solid fa-shield-halved"></i>تأمين الشحن</div>
@@ -529,25 +565,38 @@
 <!-- Leaflet JS for Map -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-    // Text To Speech Function for Uneducated Users
+    // Moroccan Darija Pronunciation Dictionary for Speech Synthesis
+    const pronunciationMap = {
+        'تريبورتور': 'تْري بُورْتُورْ',
+        'رموك': 'رْمُوكْ',
+        'ديباناج': 'دِيبَانَاجْ',
+        'طنجة': 'طَنْجَة',
+        'الدار البيضاء': 'الدار البيضاء'
+    };
+
+    function formatTextForSpeech(text) {
+        let formatted = text;
+        for (const [key, value] of Object.entries(pronunciationMap)) {
+            formatted = formatted.replace(new RegExp(key, 'g'), value);
+        }
+        return formatted;
+    }
+
+    // Text To Speech Function
     function speakText(text) {
         if ('speechSynthesis' in window) {
-            window.speechSynthesis.cancel(); // Stop any previous speech
-            const utterance = new SpeechSynthesisUtterance(text);
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(formatTextForSpeech(text));
             utterance.lang = 'ar-SA';
-            utterance.rate = 0.9; // Slightly slower for better clarity
+            utterance.rate = 0.85; // Slightly slower pace for clarity
             window.speechSynthesis.speak(utterance);
         }
     }
 
-    // Initialize Leaflet Map
+    // Initialize Map
     const map = L.map('map', { zoomControl: false }).setView([34.5, -6.5], 6);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18 }).addTo(map);
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 18,
-    }).addTo(map);
-
-    // Add Route Polyline
     const latlngs = [
         [35.7595, -5.8340], // Tangier
         [34.0209, -6.8416], // Rabat
@@ -555,35 +604,73 @@
     ];
     L.polyline(latlngs, {color: '#1d61f2', weight: 4}).addTo(map);
 
-    // Interactive Map Markers with Speech
     const marker1 = L.marker([35.7595, -5.8340]).addTo(map);
-    marker1.on('click', function() {
-        speakText('نقطة الانطلاق: مدينة طنجة');
-    });
+    marker1.on('click', () => speakText('نقطة الانطلاق: مدينة طنجة'));
 
     const marker2 = L.marker([33.5731, -7.5898]).addTo(map);
-    marker2.on('click', function() {
-        speakText('الوجهة النهائية: مدينة الدار البيضاء');
-    });
+    marker2.on('click', () => speakText('الوجهة النهائية: مدينة الدار البيضاء'));
 
-    // Voice Recording Logic
+    // Dynamic Vehicle Price Calculation Logic
+    const routeDistanceKm = 340; // Tangier to Casablanca ~340 KM
+    const discountRate = 0.65; // Return discount factor (35% OFF)
+    let currentCost = 1326;
+
+    function selectVehicle(element, ratePerKm, name, speechText) {
+        document.querySelectorAll('.vehicle-item').forEach(el => el.classList.remove('selected'));
+        element.classList.add('selected');
+        
+        // Dynamic price calculation
+        currentCost = Math.round(routeDistanceKm * ratePerKm * discountRate);
+        document.getElementById('estimatedPrice').innerText = currentCost.toLocaleString() + ' درهم';
+        
+        speakText(speechText);
+    }
+
+    function speakEstimatedCost() {
+        speakText('التكلفة التقديرية مع تخفيض العودة هي ' + currentCost + ' درهم');
+    }
+
+    // Role Switching Logic
+    function switchRole(role) {
+        document.querySelectorAll('.role-btn').forEach(btn => btn.classList.remove('active'));
+        if (role === 'driver') {
+            document.getElementById('roleDriver').classList.add('active');
+            speakText('حساب سائق، لدي شاحنة ورحلة العودة');
+        } else {
+            document.getElementById('roleCustomer').classList.add('active');
+            speakText('حساب زبون، أبحث عن شاحنة نقل');
+        }
+    }
+
+    // Voice Recording Logic with Visualizer
     let isRecording = false;
     function toggleRecord() {
         const statusBox = document.getElementById('voiceStatus');
         const micBtn = document.querySelector('.mic-btn');
+        const wave = document.getElementById('voiceWave');
         
         isRecording = !isRecording;
         if(isRecording) {
             micBtn.style.background = 'radial-gradient(circle, #10b981 0%, #047857 100%)';
+            wave.style.display = 'flex';
             statusBox.innerText = 'جاري الاستماع لرسالتك الصوتية...';
             statusBox.style.color = '#10b981';
             speakText('جاري الاستماع إليك الآن، اتكلم بوضوح');
         } else {
             micBtn.style.background = 'radial-gradient(circle, #ef4444 0%, #b91c1c 100%)';
+            wave.style.display = 'none';
             const resultText = 'تم تسجيل الصوت: أنا السائق، متواجد في طنجة، متوجه للدار البيضاء شحنة خاوية';
             statusBox.innerText = resultText;
             statusBox.style.color = '#ffffff';
             speakText(resultText);
+        }
+    }
+
+    // Confirmation Modal before Publishing
+    function confirmPublish() {
+        const statusText = document.getElementById('voiceStatus').innerText;
+        if (confirm("هل تؤكد نشر العرض التالي؟\n\n" + statusText)) {
+            speakText('تم نشر عرضك بنجاح للجميع');
         }
     }
 </script>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>شَرْجِي CHARJI - المنصة الذكية لخدمات النقل واللوجستيك</title>
+    <style>
+        :root {
+            --primary: #1d61f2;
+            --accent: #38bdf8;
+            --dark-bg: #060c1a;
+            --card-bg: #0d162d;
+            --gold: #f59e0b;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
+        body { background: var(--dark-bg); color: #fff; line-height: 1.6; }
+
+        header {
+            padding: 20px 5%; display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1); background: rgba(6, 12, 26, 0.95);
+            position: sticky; top: 0; z-index: 100;
+        }
+        .logo h1 { color: var(--accent); font-size: 24px; font-weight: 900; }
+        .logo span { font-size: 10px; color: var(--gold); letter-spacing: 2px; display: block; }
+
+        .btn-invest {
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            color: #fff; padding: 10px 20px; border-radius: 8px; text-decoration: none;
+            font-weight: bold; font-size: 14px;
+        }
+
+        .hero {
+            padding: 80px 5% 60px; text-align: center; max-width: 900px; margin: 0 auto;
+        }
+        .hero h2 { font-size: 36px; margin-bottom: 20px; color: #fff; }
+        .hero h2 span { color: var(--accent); }
+        .hero p { font-size: 18px; color: #94a3b8; margin-bottom: 30px; }
+
+        .features-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px; padding: 40px 5%; max-width: 1200px; margin: 0 auto;
+        }
+        .feature-card {
+            background: var(--card-bg); padding: 30px; border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.1); text-align: right;
+        }
+        .feature-card h3 { color: var(--accent); font-size: 18px; margin-bottom: 10px; }
+        .feature-card p { color: #94a3b8; font-size: 14px; }
+
+        .investor-pitch {
+            background: linear-gradient(145deg, #0d162d 0%, #152347 100%);
+            margin: 40px 5%; padding: 40px; border-radius: 20px;
+            border: 1px solid var(--primary); text-align: center;
+        }
+        .investor-pitch h3 { font-size: 24px; color: var(--gold); margin-bottom: 15px; }
+
+        footer { text-align: center; padding: 20px; border-top: 1px solid rgba(255,255,255,0.1); color: #64748b; font-size: 12px; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <h1>شَرْجِي CHARJI</h1>
+            <span>FREIGHT & LOGISTICS</span>
+        </div>
+        <a href="#invest" class="btn-invest">تواصل للاستثمار 🤝</a>
+    </header>
+
+    <section class="hero">
+        <h2>المنصة المغربية الذكية للربط المباشر بين <span>الشاحنات والشحنات</span></h2>
+        <p>نحل مشكلة "الرجوع فارغاً" ونوفر لأصحاب البضائع أفضل الأسعار ونظام ملاحة آمن بالتكامل مع إرشادات NARSA.</p>
+    </section>
+
+    <section class="features-grid">
+        <div class="feature-card">
+            <h3>📦 أصحاب البضائع</h3>
+            <p>إمكانية إدخال نوع الشحنة والوزن إما كتابة أو بالصوت بسهولة، والحصول على عروض فورية من السائقين المعتمدين.</p>
+        </div>
+        <div class="feature-card">
+            <h3>🚛 سائقو الشاحنات</h3>
+            <p>تقليل التوقفات والرحلات الفارغة عبر خاصية "راجع خاوي"، وتنبيهات الرادارات والسرعة أثناء الملاحة.</p>
+        </div>
+        <div class="feature-card">
+            <h3>🛡️ معايير السلامة (NARSA)</h3>
+            <p>دمج التوعية بنصائح وإرشادات السلامة الطرقية وتنبيهات الاستراحة المباشرة لضمان رحلات آمنة.</p>
+        </div>
+    </section>
+
+    <section class="investor-pitch" id="invest">
+        <h3>فرصة استثمارية واعدة في سوق اللوجستيك بالمغرب 🇲🇦</h3>
+        <p style="margin-bottom: 20px; color: #cbd5e1;">نبحث عن شركاء ومستثمرين لإطلاق المنصة في مرحلتها الأولى وتوسيع تغطيتها في أهم محاور النقل بالمغرب.</p>
+        <button onclick="alert('شكراً لاهتمامك! يتم تحضير ملف الاستثمار (Pitch Deck)')" class="btn-invest" style="cursor:pointer; font-size: 16px;">تحميل ملف العرض الاستثماري (Pitch Deck)</button>
+    </section>
+
+    <footer>
+        © 2026 جميع الحقوق محفوظة - مشروع شَرْجِي Charji
+    </footer>
+
+</body>
+</html>

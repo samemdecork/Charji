@@ -2,815 +2,604 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>شَرْجِي CHARJI - تطبيق النقل المباشر</title>
-    <!-- Leaflet CSS for Maps -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>شَرْجِي برو | CHARJI PRO - منصة النقل اللوجستي الذكي</title>
+    <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <!-- FontAwesome Icons -->
+    <!-- FontAwesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --bg-dark: #02050e;
-            --card-bg: #0d162d;
-            --primary-blue: #1d61f2;
-            --accent-cyan: #38bdf8;
-            --accent-gold: #f59e0b;
-            --accent-green: #10b981;
-            --accent-red: #ef4444;
-            --text-main: #ffffff;
-            --text-muted: #94a3b8;
-            --border-color: #1e293b;
+            --bg-base: #030712;
+            --surface-1: #0f172a;
+            --surface-2: #1e293b;
+            --primary: #2563eb;
+            --primary-glow: rgba(37, 99, 235, 0.4);
+            --cyan: #06b6d4;
+            --amber: #f59e0b;
+            --emerald: #10b981;
+            --rose: #f43f5e;
+            --text-high: #f8fafc;
+            --text-dim: #94a3b8;
+            --border: rgba(255, 255, 255, 0.08);
+            --glass: rgba(15, 23, 42, 0.75);
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            user-select: none;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            background-color: var(--bg-dark);
-            color: var(--text-main);
+            background-color: var(--bg-base);
+            color: var(--text-high);
             display: flex;
             justify-content: center;
-            padding: 0;
-            margin: 0;
+            min-height: 100vh;
         }
 
-        .app-container {
+        .pro-app {
             width: 100%;
             max-width: 480px;
-            background-color: #070d1e;
+            background: #080d1a;
             min-height: 100vh;
-            padding-bottom: 80px;
+            padding-bottom: 90px;
             position: relative;
-            box-shadow: 0 0 20px rgba(0,0,0,0.8);
+            overflow-x: hidden;
+            border-left: 1px solid var(--border);
+            border-right: 1px solid var(--border);
         }
 
-        /* Header Bar */
-        .app-header {
-            background-color: #0f172a;
-            padding: 12px 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid var(--border-color);
+        /* Pro Glass Header */
+        .pro-header {
             position: sticky;
             top: 0;
             z-index: 1000;
-        }
-
-        .header-title {
-            text-align: center;
-            cursor: pointer;
-        }
-
-        .header-title h1 {
-            font-size: 18px;
-            color: var(--accent-cyan);
-            letter-spacing: 1px;
-        }
-
-        .header-title span {
-            font-size: 10px;
-            color: var(--accent-gold);
-            display: block;
-            font-weight: bold;
-        }
-
-        /* GPS Prompt Overlay (شاشة المطالبة بتفعيل الموقع) */
-        .gps-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(2, 5, 14, 0.92);
-            backdrop-filter: blur(8px);
-            z-index: 3000;
+            background: var(--glass);
+            backdrop-filter: blur(12px);
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
-            padding: 20px;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
         }
 
-        .gps-card {
-            background: var(--card-bg);
-            border: 2px solid var(--accent-cyan);
-            border-radius: 16px;
-            padding: 20px;
-            text-align: center;
-            max-width: 360px;
-            box-shadow: 0 0 25px rgba(56, 189, 248, 0.3);
+        .brand-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .brand-logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--primary), var(--cyan));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: #fff;
+            box-shadow: 0 0 10px var(--primary-glow);
+        }
+
+        .brand-name {
+            font-size: 17px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            color: var(--text-high);
+        }
+
+        .brand-badge {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--amber);
+            font-size: 9px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 700;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        /* Floating Walkie-Talkie Button */
+        .walkie-dock {
+            position: fixed;
+            bottom: 84px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1100;
             display: flex;
             flex-direction: column;
-            gap: 14px;
+            align-items: center;
+            pointer-events: none;
         }
 
-        .gps-icon {
-            font-size: 42px;
-            color: var(--accent-gold);
-            animation: pulseGps 1.5s infinite;
+        .walkie-btn {
+            pointer-events: auto;
+            width: 68px;
+            height: 68px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #1e293b, #0f172a);
+            border: 2px solid var(--cyan);
+            color: var(--cyan);
+            font-size: 26px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.7), 0 0 15px rgba(6, 182, 212, 0.4);
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        @keyframes pulseGps {
-            0% { transform: scale(1); opacity: 0.8; }
-            50% { transform: scale(1.15); opacity: 1; }
-            100% { transform: scale(1); opacity: 0.8; }
+        .walkie-btn.transmitting {
+            background: linear-gradient(145deg, #e11d48, #be123c);
+            border-color: #fda4af;
+            color: #fff;
+            transform: scale(1.1);
+            box-shadow: 0 0 30px rgba(225, 29, 72, 0.8);
         }
 
-        /* Live Alert Notification Banner */
-        .live-alert-banner {
-            background: linear-gradient(90deg, #7f1d1d 0%, #b91c1c 100%);
-            border: 1px solid var(--accent-red);
+        .walkie-label {
+            margin-top: 4px;
+            font-size: 10px;
+            font-weight: bold;
+            color: var(--cyan);
+            background: rgba(15, 23, 42, 0.85);
+            padding: 2px 8px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+        }
+
+        /* Radar Live Map */
+        .radar-card {
+            margin: 12px;
+            background: var(--surface-1);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .radar-header {
+            padding: 8px 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.02);
+            font-size: 11px;
+        }
+
+        .radar-status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--emerald);
+            display: inline-block;
+            box-shadow: 0 0 8px var(--emerald);
+            animation: pulseDot 1.4s infinite;
+        }
+
+        @keyframes pulseDot {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.4); opacity: 0.5; }
+        }
+
+        .map-box {
+            height: 200px;
+            width: 100%;
+        }
+
+        /* Live Urgent Offer Banner */
+        .urgent-pill {
+            margin: 0 12px 12px 12px;
+            background: linear-gradient(90deg, rgba(244, 63, 94, 0.15), rgba(245, 158, 11, 0.15));
+            border: 1px solid rgba(244, 63, 94, 0.4);
             border-radius: 12px;
-            margin: 10px 12px 0 12px;
             padding: 10px 12px;
             display: flex;
             align-items: center;
             gap: 10px;
             cursor: pointer;
-            box-shadow: 0 0 12px rgba(239, 68, 68, 0.4);
-            animation: pulseBanner 2s infinite;
         }
 
-        @keyframes pulseBanner {
-            0% { box-shadow: 0 0 5px rgba(239, 68, 68, 0.4); }
-            50% { box-shadow: 0 0 18px rgba(239, 68, 68, 0.8); }
-            100% { box-shadow: 0 0 5px rgba(239, 68, 68, 0.4); }
-        }
-
-        .alert-badge {
-            background-color: var(--accent-red);
+        .pill-badge {
+            background: var(--rose);
             color: white;
             font-size: 10px;
-            font-weight: bold;
-            padding: 2px 6px;
-            border-radius: 4px;
-            white-space: nowrap;
-        }
-
-        /* Radio Banner */
-        .radio-banner {
-            background: linear-gradient(90deg, #0d162d 0%, #1e1b4b 100%);
-            border: 1px solid var(--accent-cyan);
-            border-radius: 12px;
-            margin: 10px 12px;
-            padding: 8px 12px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            cursor: pointer;
-        }
-
-        .radio-pulse {
-            width: 10px;
-            height: 10px;
-            background-color: #ef4444;
-            border-radius: 50%;
-            box-shadow: 0 0 8px #ef4444;
-            animation: pulse 1.5s infinite;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(0.95); opacity: 0.8; }
-            50% { transform: scale(1.2); opacity: 1; }
-            100% { transform: scale(0.95); opacity: 0.8; }
-        }
-
-        /* User Role Toggle */
-        .role-selector {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin: 0 12px 12px 12px;
-        }
-
-        .role-btn {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 10px;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .role-btn.active {
-            border-color: var(--primary-blue);
-            background-color: rgba(29, 97, 242, 0.15);
-        }
-
-        /* Map Section */
-        .map-container {
-            height: 180px;
-            margin: 0 12px 12px 12px;
-            border-radius: 12px;
-            overflow: hidden;
-            border: 1px solid var(--border-color);
-            position: relative;
-        }
-
-        #map { height: 100%; width: 100%; }
-
-        .map-overlay-badge {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(15, 23, 42, 0.85);
-            backdrop-filter: blur(4px);
-            padding: 6px 10px;
-            border-radius: 8px;
-            font-size: 11px;
-            z-index: 500;
-            border: 1px solid var(--accent-cyan);
-            color: white;
-            cursor: pointer;
-        }
-
-        /* Two Columns Grid Layout */
-        .main-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin: 0 12px;
-        }
-
-        .grid-card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 14px;
-            padding: 12px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .card-title {
-            font-size: 13px;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            color: var(--text-main);
-            cursor: pointer;
-        }
-
-        /* Voice Recorder & Visualizer Wave */
-        .mic-button-wrapper {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            margin: 8px 0;
-            gap: 8px;
-        }
-
-        .mic-btn {
-            width: 64px;
-            height: 64px;
-            border-radius: 50%;
-            background: radial-gradient(circle, #ef4444 0%, #b91c1c 100%);
-            border: none;
-            color: white;
-            font-size: 24px;
-            cursor: pointer;
-            box-shadow: 0 0 12px rgba(239, 68, 68, 0.5);
-            transition: all 0.3s ease;
-        }
-
-        .waves {
+            font-weight: 800;
+            padding: 3px 6px;
+            border-radius: 6px;
             display: flex;
             align-items: center;
             gap: 4px;
-            height: 20px;
         }
 
-        .waves span {
-            display: inline-block;
-            width: 4px;
-            height: 8px;
-            background: var(--accent-green);
-            border-radius: 2px;
-            animation: wave 0.4s infinite alternate ease-in-out;
-        }
-
-        .waves span:nth-child(2) { animation-delay: 0.1s; }
-        .waves span:nth-child(3) { animation-delay: 0.2s; }
-        .waves span:nth-child(4) { animation-delay: 0.3s; }
-
-        @keyframes wave {
-            0% { height: 6px; }
-            100% { height: 22px; }
-        }
-
-        .voice-output-box {
-            background-color: rgba(0,0,0,0.3);
-            border-radius: 8px;
-            padding: 8px;
-            font-size: 10px;
-            color: var(--text-muted);
-            text-align: center;
-            border: 1px dashed var(--border-color);
-            cursor: pointer;
-            min-height: 42px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* Vehicle Selection Cards */
-        .vehicle-options {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 6px;
-        }
-
-        .vehicle-item {
-            background-color: rgba(255,255,255,0.03);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 6px;
-            text-align: center;
-            cursor: pointer;
-            font-size: 10px;
-            transition: 0.2s;
-        }
-
-        .vehicle-item.selected {
-            border-color: var(--primary-blue);
-            background-color: rgba(29, 97, 242, 0.2);
-        }
-
-        .vehicle-item i {
-            font-size: 16px;
-            display: block;
-            margin-bottom: 2px;
-            color: var(--accent-cyan);
-        }
-
-        /* Action Buttons */
-        .btn-action {
-            width: 100%;
-            padding: 10px;
-            border-radius: 8px;
-            border: none;
-            font-weight: bold;
-            font-size: 11px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-        }
-
-        .btn-primary { background-color: var(--primary-blue); color: white; }
-        .btn-green { background-color: var(--accent-green); color: white; }
-
-        /* Available Loads List */
-        .section-title {
-            font-size: 13px;
-            font-weight: bold;
-            margin: 16px 12px 8px 12px;
+        /* Quick Vehicle Grid */
+        .pro-grid-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-dim);
+            margin: 0 16px 8px 16px;
             display: flex;
             justify-content: space-between;
-            color: var(--accent-gold);
-            cursor: pointer;
         }
 
-        .load-card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            padding: 10px;
-            margin: 0 12px 8px 12px;
-            font-size: 11px;
-            cursor: pointer;
-        }
-
-        .load-header {
-            display: flex;
-            justify-content: space-between;
-            font-weight: bold;
-            margin-bottom: 4px;
-        }
-
-        .load-actions {
-            display: flex;
-            gap: 6px;
-            margin-top: 8px;
-        }
-
-        .btn-sm {
-            flex: 1;
-            padding: 6px;
-            font-size: 10px;
-            border-radius: 6px;
-            border: none;
-            cursor: pointer;
-        }
-
-        /* Bottom Services Nav */
-        .quick-services {
+        .fleet-matrix {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 6px;
-            margin: 12px;
+            gap: 8px;
+            margin: 0 12px 14px 12px;
         }
 
-        .service-btn {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 8px;
+        .fleet-box {
+            background: var(--surface-1);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 10px 4px;
             text-align: center;
-            font-size: 9px;
-            color: var(--text-muted);
             cursor: pointer;
+            transition: all 0.2s ease;
         }
 
-        .service-btn i {
-            font-size: 14px;
-            color: var(--accent-cyan);
-            display: block;
+        .fleet-box.selected {
+            border-color: var(--primary);
+            background: rgba(37, 99, 235, 0.12);
+            box-shadow: 0 0 12px rgba(37, 99, 235, 0.3);
+        }
+
+        .fleet-box i {
+            font-size: 18px;
+            color: var(--cyan);
             margin-bottom: 4px;
+            display: block;
         }
 
-        /* Bottom Tab Bar */
-        .navbar {
+        .fleet-box span {
+            display: block;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        .fleet-box small {
+            font-size: 9px;
+            color: var(--amber);
+            font-weight: 700;
+        }
+
+        /* Voice Live Console */
+        .voice-console {
+            background: var(--surface-1);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            margin: 0 12px 14px 12px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .console-text {
+            font-size: 11px;
+            color: var(--text-high);
+            background: rgba(0,0,0,0.3);
+            border-radius: 8px;
+            padding: 10px;
+            min-height: 48px;
+            display: flex;
+            align-items: center;
+            border-right: 3px solid var(--cyan);
+        }
+
+        /* Bottom Pro Bar */
+        .pro-navbar {
             position: fixed;
             bottom: 0;
             width: 100%;
             max-width: 480px;
-            background-color: #0f172a;
-            border-top: 1px solid var(--border-color);
+            background: var(--glass);
+            backdrop-filter: blur(16px);
+            border-top: 1px solid var(--border);
             display: flex;
             justify-content: space-around;
             padding: 8px 0;
             z-index: 1000;
         }
 
-        .nav-item {
+        .pnav-item {
             text-align: center;
-            color: var(--text-muted);
+            color: var(--text-dim);
             font-size: 10px;
             text-decoration: none;
             cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
         }
 
-        .nav-item i {
-            font-size: 16px;
-            display: block;
-            margin-bottom: 2px;
+        .pnav-item.active {
+            color: var(--cyan);
         }
 
-        .nav-item.active {
-            color: var(--accent-cyan);
-        }
-
-        .nav-center-btn {
-            width: 42px;
-            height: 42px;
-            background-color: var(--primary-blue);
-            border-radius: 50%;
+        /* GPS Modal Overlay */
+        .gps-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(2, 6, 23, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 9999;
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 24px;
+        }
+
+        .gps-modal-card {
+            background: var(--surface-1);
+            border: 1px solid var(--cyan);
+            border-radius: 20px;
+            padding: 24px;
+            text-align: center;
+            width: 100%;
+            max-width: 340px;
+            box-shadow: 0 0 40px rgba(6, 182, 212, 0.25);
+        }
+
+        .btn-pro {
+            background: linear-gradient(135deg, var(--primary), #1d4ed8);
             color: white;
-            margin-top: -16px;
-            box-shadow: 0 0 10px rgba(29, 97, 242, 0.6);
+            border: none;
+            border-radius: 10px;
+            padding: 12px;
+            font-size: 12px;
+            font-weight: 700;
+            width: 100%;
             cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            box-shadow: 0 4px 14px var(--primary-glow);
         }
     </style>
 </head>
 <body>
 
-<!-- GPS Activation Prompt Modal -->
+<!-- GPS Strict Activation Modal -->
 <div class="gps-overlay" id="gpsModal">
-    <div class="gps-card">
-        <i class="fa-solid fa-location-crosshairs gps-icon"></i>
-        <h3 style="font-size: 16px; color: var(--accent-cyan);">ضرورة تفعيل موقع الـ GPS</h3>
-        <p style="font-size: 12px; color: var(--text-muted); line-height: 1.5;">
-            تطبيق <strong>شَرْجِي</strong> يحتاج لتحديد موقعك الحالي لربطك فوراً بأقرب السائقين والشحنات المتوفرة في طريقك (مثل شحنات الخضروات بسوق أربعاء الغرب).
+    <div class="gps-modal-card">
+        <div style="width: 54px; height: 54px; border-radius: 50%; background: rgba(6, 182, 212, 0.1); border: 1px solid var(--cyan); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px auto;">
+            <i class="fa-solid fa-location-crosshairs" style="font-size: 24px; color: var(--cyan);"></i>
+        </div>
+        <h3 style="font-size: 16px; margin-bottom: 8px;">تفعيل رادار GPS الاحترافي</h3>
+        <p style="font-size: 11px; color: var(--text-dim); line-height: 1.6; margin-bottom: 20px;">
+            تطبيق <strong>شَرْجِي برو</strong> يربطك مباشرة بأقرب الشاحنات على مسارك الفعلي لمنع الرجوع فارغاً (Retour à vide).
         </p>
-        <button class="btn-action btn-green" style="font-size: 13px; padding: 12px;" onclick="enableGPS()">
-            <i class="fa-solid fa-location-dot"></i> تفعيل الموقع الآن
+        <button class="btn-pro" onclick="activateGPS()">
+            <i class="fa-solid fa-bolt"></i> تفعيل الموقع والبدء
         </button>
     </div>
 </div>
 
-<div class="app-container">
+<div class="pro-app">
     <!-- Header -->
-    <header class="app-header">
-        <i class="fa-solid fa-bars" style="color: white; cursor: pointer;" onclick="speakText('القائمة الرئيسية')"></i>
-        <div class="header-title" onclick="speakText('تطبيق شرجي، وصال للنقل الذكي بصوت واحد')">
-            <h1>شَرْجِي CHARJI</h1>
-            <span>وصال - نقل ذكي بصوت واحد</span>
+    <header class="pro-header">
+        <div class="brand-box">
+            <div class="brand-logo-icon"><i class="fa-solid fa-truck-fast"></i></div>
+            <div>
+                <div style="display:flex; align-items:center; gap:6px;">
+                    <span class="brand-name">شَرْجِي</span>
+                    <span class="brand-badge">PRO v2.4</span>
+                </div>
+            </div>
         </div>
-        <i class="fa-solid fa-headset" style="color: var(--accent-cyan); cursor: pointer;" onclick="speakText('الدعم والخدمة الفنية')"></i>
+        <div style="display:flex; gap:10px;">
+            <i class="fa-solid fa-headset" style="color: var(--cyan); font-size: 18px; cursor: pointer;" onclick="speakPro('مكتب الدعم الفني شَرْجِي برو جاهز للمساعدة')"></i>
+            <i class="fa-solid fa-bell" style="color: var(--amber); font-size: 18px; cursor: pointer;" onclick="triggerVegetableAlert()"></i>
+        </div>
     </header>
 
-    <!-- Urgent Notification Alert Banner -->
-    <div class="live-alert-banner" onclick="triggerVegetableAlert()">
-        <span class="alert-badge">⚡ طلب عاجل</span>
-        <div style="flex: 1; font-size: 11px; font-weight: bold;">
-            مطلوب بيكوب الآن: سوق أربعاء الغرب ➔ الدار البيضاء
-            <div style="font-size: 9px; font-weight: normal; color: #fca5a5;">حمولة خضروات طرية • اتصل فوراً</div>
+    <!-- Urgent Trip Notification -->
+    <div class="urgent-pill" onclick="triggerVegetableAlert()">
+        <div class="pill-badge"><i class="fa-solid fa-fire"></i> فوري</div>
+        <div style="flex:1;">
+            <div style="font-size: 11px; font-weight: 800;">سوق أربعاء الغرب ➔ الدار البيضاء</div>
+            <div style="font-size: 9px; color: var(--text-dim);">مطلوب بيكوب • 1.5 طن خضر وفواكه طرية • 750 درهم</div>
         </div>
-        <i class="fa-solid fa-bell-concierge" style="color: var(--accent-gold); font-size: 16px;"></i>
+        <i class="fa-solid fa-chevron-left" style="font-size: 12px; color: var(--text-dim);"></i>
     </div>
 
-    <!-- Radio / Announcements Player -->
-    <div class="radio-banner" onclick="speakText('راديو شرجي المباشر. عروض خاصة بزيوت المحركات، خصم عشرين بالمائة هذا الأسبوع')">
-        <div class="radio-pulse"></div>
-        <div style="flex: 1;">
-            <div style="font-size: 11px; font-weight: bold; color: var(--accent-gold);">📻 راديو شَرْجِي المباشر</div>
-            <div style="font-size: 9px; color: var(--text-muted);">عروض خاصة بزيوت المحركات - خصم 20% هذا الأسبوع!</div>
+    <!-- Live Radar Map Card -->
+    <div class="radar-card">
+        <div class="radar-header">
+            <div style="display:flex; align-items:center; gap:6px;">
+                <span class="radar-status-dot"></span>
+                <strong style="color: var(--text-high);">رادار الشاحنات المباشر</strong>
+            </div>
+            <span style="color: var(--cyan); font-size: 10px;" id="driversCount">14 شاحنة قريبة</span>
         </div>
-        <i class="fa-solid fa-volume-high" style="color: var(--accent-cyan);"></i>
+        <div id="map" class="map-box"></div>
     </div>
 
-    <!-- Role Toggles -->
-    <div class="role-selector">
-        <div class="role-btn active" id="roleDriver" onclick="switchRole('driver')">
-            <div>
-                <div style="font-size: 11px; font-weight: bold;">أنا سائق</div>
-                <div style="font-size: 8px; color: var(--text-muted);">لدي شاحنة ورحلة العودة</div>
-            </div>
-            <i class="fa-solid fa-truck" style="color: var(--accent-cyan);"></i>
-        </div>
-        <div class="role-btn" id="roleCustomer" onclick="switchRole('customer')">
-            <div>
-                <div style="font-size: 11px; font-weight: bold;">أنا زبون</div>
-                <div style="font-size: 8px; color: var(--text-muted);">أبحث عن شاحنة نقل</div>
-            </div>
-            <i class="fa-solid fa-box-open" style="color: var(--accent-gold);"></i>
-        </div>
+    <!-- Vehicle Selector -->
+    <div class="pro-grid-title">
+        <span>اختر نوع الأسطول</span>
+        <span style="color: var(--cyan); cursor: pointer;" onclick="speakPro('قائمة الأسعار حسب الكيلومتر محدثة')">التسعيرة الذكية</span>
     </div>
-
-    <!-- Interactive Live Map -->
-    <div class="map-container">
-        <div class="map-overlay-badge" id="gpsStatusBadge" onclick="enableGPS()">
-            <i class="fa-solid fa-location-arrow" style="color: var(--accent-gold);"></i> جاري تحديد الموقع...
+    <div class="fleet-matrix">
+        <div class="fleet-box selected" onclick="selectFleet(this, 'بيكوب', 5)">
+            <i class="fa-solid fa-truck-pickup"></i>
+            <span>بيكوب</span>
+            <small>5 د/كم</small>
         </div>
-        <div id="map"></div>
-    </div>
-
-    <!-- Main Functions Grid -->
-    <div class="main-grid">
-        <!-- Voice Action Box -->
-        <div class="grid-card">
-            <div class="card-title" onclick="speakText('سجل رحلتك بصوتك')">
-                <i class="fa-solid fa-microphone" style="color: #ef4444;"></i>
-                سجل رحلتك بصوتك
-            </div>
-            <div class="mic-button-wrapper">
-                <button class="mic-btn" onclick="toggleRecord()">
-                    <i class="fa-solid fa-microphone-lines"></i>
-                </button>
-                <div class="waves" id="voiceWave" style="display: none;">
-                    <span></span><span></span><span></span><span></span>
-                </div>
-            </div>
-            <div class="voice-output-box" id="voiceStatus" onclick="speakText(this.innerText)">
-                اضغط وتكلم: خصني بيكوب نشحن الخضرة من سوق أربعاء الغرب بكري للدار البيضاء
-            </div>
-            <button class="btn-action btn-primary" onclick="confirmPublish()">
-                <i class="fa-solid fa-paper-plane"></i> نشر العرض فوراً
-            </button>
+        <div class="fleet-box" onclick="selectFleet(this, 'ديانا 3.5 طن', 7)">
+            <i class="fa-solid fa-truck"></i>
+            <span>ديانا</span>
+            <small>7 د/كم</small>
         </div>
-
-        <!-- Vehicle & Cost Box -->
-        <div class="grid-card">
-            <div class="card-title" onclick="speakText('اختر نوع المركبة')">
-                <i class="fa-solid fa-truck-ramp-box" style="color: var(--accent-cyan);"></i>
-                اختر نوع المركبة
-            </div>
-            <div class="vehicle-options">
-                <div class="vehicle-item selected" onclick="selectVehicle(this, 5, 'بيكوب خضروات', 'بيكوب لنقل الخضروات والفواكه، السعر خمسة دراهم لكل كيلومتر')">
-                    <i class="fa-solid fa-truck-pickup"></i>
-                    بيكوب / الخضرة
-                    <div style="color: var(--accent-gold); font-weight: bold;">5 د/كم</div>
-                </div>
-                <div class="vehicle-item" onclick="selectVehicle(this, 4, 'تريبورتور', 'تْري بُورْتُورْ، السعر أربعة دراهم لكل كيلومتر')">
-                    <i class="fa-solid fa-trailer"></i>
-                    تريبورتور
-                    <div style="color: var(--accent-gold); font-weight: bold;">4 د/كم</div>
-                </div>
-                <div class="vehicle-item" onclick="selectVehicle(this, 6, 'ديانا ثلاثة طن ونصف', 'مركبة ديانا ثلاثة طن ونصف، السعر ستة دراهم لكل كيلومتر')">
-                    <i class="fa-solid fa-truck"></i>
-                    ديانا / 3.5 طن
-                    <div style="color: var(--accent-gold); font-weight: bold;">6 د/كم</div>
-                </div>
-                <div class="vehicle-item" onclick="selectVehicle(this, 15, 'رموك عشرون طن', 'رْمُوكْ عشرون طن، السعر خمسة عشر درهما لكل كيلومتر')">
-                    <i class="fa-solid fa-truck-moving"></i>
-                    رموك (20 طن)
-                    <div style="color: var(--accent-gold); font-weight: bold;">15 د/كم</div>
-                </div>
-            </div>
-            <div style="background: rgba(16, 185, 129, 0.1); padding: 6px; border-radius: 6px; text-align: center; border: 1px solid var(--accent-green); cursor: pointer;" onclick="speakEstimatedCost()">
-                <div style="font-size: 8px; color: var(--text-muted);">التكلفة التقديرية (سوق الأربعاء ➔ كازا):</div>
-                <div style="font-size: 14px; font-weight: bold; color: var(--accent-green);" id="estimatedPrice">650 درهم</div>
-            </div>
-            <button class="btn-action btn-green" onclick="speakText('جاري الاتصال بالسائق المتوفر الآن')">
-                <i class="fa-solid fa-phone"></i> اتصل بالسائق
-            </button>
+        <div class="fleet-box" onclick="selectFleet(this, 'تريبورتور', 4)">
+            <i class="fa-solid fa-trailer"></i>
+            <span>تريبورتور</span>
+            <small>4 د/كم</small>
+        </div>
+        <div class="fleet-box" onclick="selectFleet(this, 'رموك 20 طن', 15)">
+            <i class="fa-solid fa-truck-moving"></i>
+            <span>رْمُوكْ</span>
+            <small>15 د/كم</small>
         </div>
     </div>
 
-    <!-- Active Orders Feed -->
-    <div class="section-title" onclick="speakText('العروض والشحنات المتاحة حالياً')">
-        <span>🔥 العروض والشحنات المتاحة حالياً</span>
-        <span style="font-size: 10px; color: var(--accent-cyan);">تحديث مباشر ●</span>
-    </div>
-
-    <!-- Vegetable Transport Card -->
-    <div class="load-card" style="border: 1px solid var(--accent-gold);" onclick="triggerVegetableAlert()">
-        <div class="load-header">
-            <span>سوق أربعاء الغرب ➔ الدار البيضاء</span>
-            <span style="color: var(--accent-gold);">700 د.م</span>
+    <!-- Speech Recognition Live Console -->
+    <div class="voice-console">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-size: 11px; font-weight: 700; color: var(--text-dim);">
+                <i class="fa-solid fa-satellite-dish" style="color: var(--cyan);"></i> المساعد الصوتي المباشر (AI)
+            </span>
+            <span style="font-size: 9px; color: var(--emerald);" id="micState">جاهز للاستماع</span>
         </div>
-        <div style="color: #fca5a5; font-size: 10px; font-weight: bold;">🥕 الحمولة: 1.5 طن خضروات طرية • مطلوب بيكوب فوراً</div>
-        <div class="load-actions">
-            <button class="btn-sm btn-primary" onclick="event.stopPropagation(); speakText('بدء التفاوض الصوتي لشحنة الخضار')"><i class="fa-solid fa-comments"></i> تفاوض / صوت</button>
-            <button class="btn-sm btn-green" onclick="event.stopPropagation(); speakText('الاتصال الهاتفي بصاحب شحنة الخضروات بسوق أربعاء الغرب')"><i class="fa-solid fa-phone"></i> اتصل</button>
+        <div class="console-text" id="transcriptBox">
+            اضغط باستمرار على زر اللاسلكي وتكلم: "أنا فسوق الأربعاء، باغي نشحن الخضرة لكازا"
         </div>
+        <button class="btn-pro" onclick="confirmDispatch()">
+            <i class="fa-solid fa-paper-plane"></i> تأكيد وبث الطلب للأسطول
+        </button>
     </div>
 
-    <!-- Quick Auxiliary Services -->
-    <div class="quick-services">
-        <div class="service-btn" onclick="speakText('خدمة دِيبَانَاجْ وقطر الشاحنات')"><i class="fa-solid fa-truck-monster"></i>ديباناج</div>
-        <div class="service-btn" onclick="speakText('خدمة محطات الوقود والتزود بالوقود')"><i class="fa-solid fa-gas-pump"></i>وقود</div>
-        <div class="service-btn" onclick="speakText('خدمة ميكانيك وإصلاح الأعطال')"><i class="fa-solid fa-wrench"></i>ميكانيك</div>
-        <div class="service-btn" onclick="speakText('خدمة تأمين وحماية الشحن')"><i class="fa-solid fa-shield-halved"></i>تأمين الشحن</div>
+    <!-- Walkie-Talkie Push-to-Talk Float -->
+    <div class="walkie-dock">
+        <button class="walkie-btn" id="pttBtn" 
+                onmousedown="startSpeech()" onmouseup="stopSpeech()"
+                ontouchstart="startSpeech()" ontouchend="stopSpeech()">
+            <i class="fa-solid fa-microphone-lines"></i>
+        </button>
+        <span class="walkie-label">اضغط وتكلم (Walkie)</span>
     </div>
 
-    <!-- Bottom Navigation Bar -->
-    <nav class="navbar">
-        <a class="nav-item active" onclick="speakText('الصفحة الرئيسية')"><i class="fa-solid fa-house"></i>الرئيسية</a>
-        <a class="nav-item" onclick="speakText('صفحة الرحلات والمسارات')"><i class="fa-solid fa-route"></i>الرحلات</a>
-        <a class="nav-center-btn" onclick="speakText('إضافة طلب أو عرض جديد')"><i class="fa-solid fa-plus"></i></a>
-        <a class="nav-item" onclick="speakText('قائمة المفضلة')"><i class="fa-solid fa-heart"></i>المفضلة</a>
-        <a class="nav-item" onclick="speakText('الملف الشخصي والحساب')"><i class="fa-solid fa-user"></i>حسابي</a>
+    <!-- Pro Navbar -->
+    <nav class="pro-navbar">
+        <div class="pnav-item active"><i class="fa-solid fa-map-location-dot"></i> الرادار</div>
+        <div class="pnav-item" onclick="speakPro('قائمة الشحنات المتاحة')"><i class="fa-solid fa-boxes-stacked"></i> الشحنات</div>
+        <div class="pnav-item" onclick="speakPro('راديو الطريق والمخالفات')"><i class="fa-solid fa-radio"></i> راديو الطريق</div>
+        <div class="pnav-item" onclick="speakPro('الملف المهني للسائق')"><i class="fa-solid fa-id-card"></i> حسابي Pro</div>
     </nav>
 </div>
 
-<!-- Leaflet JS for Map -->
+<!-- Leaflet JS -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-    // Moroccan Darija Pronunciation Dictionary
-    const pronunciationMap = {
-        'تريبورتور': 'تْري بُورْتُورْ',
-        'رموك': 'رْمُوكْ',
-        'ديباناج': 'دِيبَانَاجْ',
-        'بيكوب': 'بِيكُوبْ',
-        'الخضرة': 'الخُضْرَة',
-        'سوق أربعاء الغرب': 'سُوقْ أرْبَعَاء الغَرْبْ'
-    };
-
-    function formatTextForSpeech(text) {
-        let formatted = text;
-        for (const [key, value] of Object.entries(pronunciationMap)) {
-            formatted = formatted.replace(new RegExp(key, 'g'), value);
-        }
-        return formatted;
-    }
-
-    // Text To Speech Function
-    function speakText(text) {
+    // Text To Speech Pro (Moroccan Dialect Aware)
+    function speakPro(text) {
         if ('speechSynthesis' in window) {
             window.speechSynthesis.cancel();
-            const utterance = new SpeechSynthesisUtterance(formatTextForSpeech(text));
-            utterance.lang = 'ar-SA';
-            utterance.rate = 0.85;
-            window.speechSynthesis.speak(utterance);
+            const utter = new SpeechSynthesisUtterance(text);
+            utter.lang = 'ar-SA';
+            utter.rate = 0.88;
+            window.speechSynthesis.speak(utter);
         }
     }
 
-    // GPS Activation Logic
-    let userMarker = null;
+    // Leaflet Radar Initialization
+    const map = L.map('map', { zoomControl: false }).setView([34.3, -6.3], 7);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { maxZoom: 18 }).addTo(map);
 
-    function enableGPS() {
-        speakText('جاري تفعيل تحديد موقعك عبر نظام الجي بي إيْسْ');
+    // Fleet Live Truck Markers
+    const trucks = [
+        { lat: 34.8108, lng: -5.9922, type: 'بيكوب (سوق الأربعاء)' },
+        { lat: 34.2610, lng: -6.5802, type: 'ديانا (القنيطرة)' },
+        { lat: 33.5731, lng: -7.5898, type: 'رموك (الدار البيضاء)' }
+    ];
+
+    trucks.forEach(t => {
+        const marker = L.circleMarker([t.lat, t.lng], {
+            radius: 7,
+            color: '#06b6d4',
+            fillColor: '#2563eb',
+            fillOpacity: 0.9,
+            weight: 2
+        }).addTo(map);
+        marker.bindPopup(`<b>مركبة متوفرة:</b> ${t.type}`);
+    });
+
+    // Real Web Speech Recognition (STT)
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    let recognizer = null;
+
+    if (SpeechRecognition) {
+        recognizer = new SpeechRecognition();
+        recognizer.lang = 'ar-MA'; // Moroccan Arabic Support
+        recognizer.continuous = false;
+        recognizer.interimResults = true;
+
+        recognizer.onresult = (event) => {
+            const transcript = event.results[0][0].transcript;
+            document.getElementById('transcriptBox').innerText = transcript;
+        };
+
+        recognizer.onerror = () => {
+            document.getElementById('micState').innerText = 'تعذر التعرف الصوتي';
+        };
+    }
+
+    function startSpeech() {
+        const btn = document.getElementById('pttBtn');
+        btn.classList.add('transmitting');
+        document.getElementById('micState').innerText = '🔴 جاري الاستماع والبث...';
+        if (recognizer) {
+            try { recognizer.start(); } catch(e){}
+        } else {
+            document.getElementById('transcriptBox').innerText = "سوق أربعاء الغرب: مطلوب بيكوب فوري لشحن طن ونصف خضر للدار البيضاء";
+        }
+    }
+
+    function stopSpeech() {
+        const btn = document.getElementById('pttBtn');
+        btn.classList.remove('transmitting');
+        document.getElementById('micState').innerText = 'تم الالتقاط بنجاح';
+        if (recognizer) {
+            try { recognizer.stop(); } catch(e){}
+        }
+    }
+
+    // Vehicle Switcher
+    function selectFleet(el, name, price) {
+        document.querySelectorAll('.fleet-box').forEach(b => b.classList.remove('selected'));
+        el.classList.add('selected');
+        speakPro(`تم تحديد ${name}. السعر المرجعي ${price} دراهم لكل كيلومتر`);
+    }
+
+    // Urgent Alert
+    function triggerVegetableAlert() {
+        speakPro('تنبيه فوري! حمولة خضار طرية من سوق أربعاء الغرب إلى الدار البيضاء، مطلوب بيكوب فوراً، الثمن 750 درهم');
+    }
+
+    // GPS Logic
+    function activateGPS() {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    const lat = position.coords.latitude;
-                    const lng = position.coords.longitude;
-                    
+                (pos) => {
+                    const lat = pos.coords.latitude;
+                    const lng = pos.coords.longitude;
                     document.getElementById('gpsModal').style.display = 'none';
-                    document.getElementById('gpsStatusBadge').innerHTML = '<i class="fa-solid fa-circle" style="color: var(--accent-green);"></i> موقعك مفعّل الآن';
-                    
-                    map.setView([lat, lng], 10);
-                    
-                    if (userMarker) map.removeLayer(userMarker);
-                    userMarker = L.marker([lat, lng]).addTo(map)
-                        .bindPopup("موقعك الحالي").openPopup();
-
-                    speakText('تم تحديد موقعك بنجاح. أنت الآن مرتبط بالخدمة المباشرة');
+                    map.setView([lat, lng], 11);
+                    L.marker([lat, lng]).addTo(map).bindPopup("<b>موقعك المباشر</b>").openPopup();
+                    speakPro('تم تفعيل الرادار وتحديد موقعك بنجاح');
                 },
-                (error) => {
-                    alert('يرجى تفعيل خدمة GPS من إعدادات الهاتف لتحديد موقعك.');
-                    speakText('يرجى تفعيل خدمة تحديد الموقع من إعدادات الهاتف');
+                () => {
+                    document.getElementById('gpsModal').style.display = 'none';
+                    speakPro('تم فتح التطبيق بوضع الخريطة الافتراضية');
                 }
             );
         } else {
-            alert("المتصفح لا يدعم تحديد الموقع.");
+            document.getElementById('gpsModal').style.display = 'none';
         }
     }
 
-    // Prompt GPS Voice Notification on Page Load
-    window.addEventListener('load', () => {
-        setTimeout(() => {
-            speakText('المرجو الضغط على زر تفعيل الموقع لتحديد أقرب الشحنات إليك');
-        }, 800);
-    });
-
-    // Trigger Specific Vegetable Alert
-    function triggerVegetableAlert() {
-        speakText('تنبيه عاجل! مطلوب شاحنة بيكوب لشحن الخضروات من سوق أربعاء الغرب إلى الدار البيضاء. الثمن سبعمائة درهم');
-    }
-
-    // Initialize Map
-    const map = L.map('map', { zoomControl: false }).setView([34.3, -6.2], 7);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18 }).addTo(map);
-
-    const latlngs = [
-        [34.8108, -5.9922], // Souk El Arbaa
-        [34.0209, -6.8416], // Rabat
-        [33.5731, -7.5898]  // Casablanca
-    ];
-    L.polyline(latlngs, {color: '#ef4444', weight: 4, dashArray: '6, 6'}).addTo(map);
-
-    const marker1 = L.marker([34.8108, -5.9922]).addTo(map);
-    marker1.on('click', () => speakText('نقطة الشحن: سوق أربعاء الغرب'));
-
-    const marker2 = L.marker([33.5731, -7.5898]).addTo(map);
-    marker2.on('click', () => speakText('نقطة التفريغ: الدار البيضاء'));
-
-    // Dynamic Vehicle Price Calculation Logic
-    const routeDistanceKm = 200; // Souk El Arbaa to Casablanca ~200 KM
-    let currentCost = 650;
-
-    function selectVehicle(element, ratePerKm, name, speechText) {
-        document.querySelectorAll('.vehicle-item').forEach(el => el.classList.remove('selected'));
-        element.classList.add('selected');
-        
-        currentCost = Math.round(routeDistanceKm * ratePerKm * 0.65);
-        document.getElementById('estimatedPrice').innerText = currentCost.toLocaleString() + ' درهم';
-        
-        speakText(speechText);
-    }
-
-    function speakEstimatedCost() {
-        speakText('التكلفة التقديرية لشحن الخضار هي ' + currentCost + ' درهم');
-    }
-
-    // Role Switching Logic
-    function switchRole(role) {
-        document.querySelectorAll('.role-btn').forEach(btn => btn.classList.remove('active'));
-        if (role === 'driver') {
-            document.getElementById('roleDriver').classList.add('active');
-            speakText('حساب سائق بيكوب، متوفر لنقل الخضروات والبضائع');
-        } else {
-            document.getElementById('roleCustomer').classList.add('active');
-            speakText('حساب زبون، أبحث عن بيكوب لشحن الخضرة');
-        }
-    }
-
-    // Voice Recording Logic
-    let isRecording = false;
-    function toggleRecord() {
-        const statusBox = document.getElementById('voiceStatus');
-        const micBtn = document.querySelector('.mic-btn');
-        const wave = document.getElementById('voiceWave');
-        
-        isRecording = !isRecording;
-        if(isRecording) {
-            micBtn.style.background = 'radial-gradient(circle, #10b981 0%, #047857 100%)';
-            wave.style.display = 'flex';
-            statusBox.innerText = 'جاري الاستماع لرسالتك الصوتية...';
-            statusBox.style.color = '#10b981';
-            speakText('جاري الاستماع إليك، اتكلم بوضوح');
-        } else {
-            micBtn.style.background = 'radial-gradient(circle, #ef4444 0%, #b91c1c 100%)';
-            wave.style.display = 'none';
-            const resultText = 'تم التسجيل: خاصني بيكوب نشحن الخضرة من سوق أربعاء الغرب بكري للدار البيضاء';
-            statusBox.innerText = resultText;
-            statusBox.style.color = '#ffffff';
-            speakText(resultText);
-        }
-    }
-
-    function confirmPublish() {
-        const statusText = document.getElementById('voiceStatus').innerText;
-        if (confirm("هل تؤكد نشر طلب نقل الخضروات هذا؟\n\n" + statusText)) {
-            speakText('تم نشر طلبك بنجاح، وسيتصل بك سائقو البيكوب فوراً');
+    function confirmDispatch() {
+        const txt = document.getElementById('transcriptBox').innerText;
+        if(confirm("تأكيد بث الطلب التالي على الرادار؟\n\n" + txt)) {
+            speakPro('تم بث طلبك لجميع السائقين في محيط ثلاثين كيلومتر بنجاح');
         }
     }
 </script>

@@ -345,22 +345,35 @@
 
     let currentAudio = null;
 
-    // 🔊 محرك نطق مباشر يضمن قراءة واضحة وصحيحة للكلمات
+    // 🔊 محرك تحسين النطق المباشر المخصص للدارجة المغربية
     function speakDarija(text) {
         if (currentAudio) {
             currentAudio.pause();
             currentAudio.currentTime = 0;
         }
 
-        const url = "https://translate.google.com/translate_tts?ie=UTF-8&q=" + encodeURIComponent(text) + "&tl=ar&client=tw-ob";
+        // قاموس ضبط الكلمات المغربية وتشكيلها لكي ينطقها المحرك بشكل صحفي وواضح
+        let adjustedText = text
+            .replace(/تشرجي/g, "تَشَرْجِي")
+            .replace(/تشرجيها/g, "تَشَرْجِي هَا")
+            .replace(/كاميو/g, "كَا مْيُو")
+            .replace(/الكاميو/g, "الْكَا مْيُو")
+            .replace(/الكاميونات/g, "الْكَا مْيُوَ نَاتْ")
+            .replace(/شيفور/g, "شِيفُورْ")
+            .replace(/الشيافرية/g, "الشِّيَا فْرِيَّة")
+            .replace(/خاوي/g, "خَاوِي")
+            .replace(/شرجي/g, "شَرْجِي")
+            .replace(/لكازا/g, "لِ الدَّارِ الْبَيْضَاء");
+
+        const url = "https://translate.google.com/translate_tts?ie=UTF-8&q=" + encodeURIComponent(adjustedText) + "&tl=ar&client=tw-ob";
         
         currentAudio = new Audio(url);
         currentAudio.play().catch(() => {
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
-                const msg = new SpeechSynthesisUtterance(text);
-                msg.lang = 'ar-MA';
-                msg.rate = 0.85;
+                const msg = new SpeechSynthesisUtterance(adjustedText);
+                msg.lang = 'ar-SA';
+                msg.rate = 0.8;
                 msg.volume = 1.0;
                 window.speechSynthesis.speak(msg);
             }

@@ -3,10 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>شَرْجِي برو | CHARJI PRO - منصة النقل اللوجستي الذكي</title>
-    <!-- Leaflet CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <!-- FontAwesome 6 -->
+    <title>شَرْجِي برو | التسجيل والعمليات</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -14,7 +11,6 @@
             --surface-1: #0f172a;
             --surface-2: #1e293b;
             --primary: #2563eb;
-            --primary-glow: rgba(37, 99, 235, 0.4);
             --cyan: #06b6d4;
             --amber: #f59e0b;
             --emerald: #10b981;
@@ -22,263 +18,250 @@
             --text-high: #f8fafc;
             --text-dim: #94a3b8;
             --border: rgba(255, 255, 255, 0.08);
-            --glass: rgba(15, 23, 42, 0.75);
+            --ad-bg: #171717;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, sans-serif; user-select: none; }
-
-        body { background-color: var(--bg-base); color: var(--text-high); display: flex; justify-content: center; min-height: 100vh; }
+        body { background-color: var(--bg-base); color: var(--text-high); display: flex; justify-content: center; min-height: 100vh; overflow-x: hidden; }
 
         .pro-app {
             width: 100%; max-width: 480px; background: #080d1a; min-height: 100vh; padding-bottom: 90px;
-            position: relative; overflow-x: hidden; border-left: 1px solid var(--border); border-right: 1px solid var(--border);
+            position: relative; border-left: 1px solid var(--border); border-right: 1px solid var(--border);
+            display: none; /* مخفي في البداية حتى يسجل الدخول */
         }
 
-        /* Pro Glass Header */
+        /* --- Auth / Registration Overlay --- */
+        .auth-overlay {
+            position: fixed; inset: 0; background: var(--bg-base); z-index: 10000;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px;
+        }
+        .auth-logo { font-size: 50px; color: var(--cyan); margin-bottom: 10px; text-shadow: 0 0 20px rgba(6,182,212,0.5); }
+        .auth-card {
+            background: var(--surface-1); border: 1px solid var(--border); border-radius: 20px;
+            padding: 24px; width: 100%; max-width: 360px; text-align: center; margin-bottom: 16px; cursor: pointer;
+            transition: 0.3s;
+        }
+        .auth-card:hover { border-color: var(--cyan); background: rgba(6,182,212,0.05); }
+        .auth-card.driver { border: 2px solid var(--amber); background: rgba(245, 158, 11, 0.05); }
+        .auth-title { font-size: 18px; font-weight: bold; margin-bottom: 8px; }
+        .auth-desc { font-size: 11px; color: var(--text-dim); line-height: 1.6; }
+        .badge-fee { background: rgba(245, 158, 11, 0.2); color: var(--amber); padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: bold; margin-top: 10px; display: inline-block; }
+
+        /* --- Main App Layout --- */
         .pro-header {
-            position: sticky; top: 0; z-index: 1000; background: var(--glass); backdrop-filter: blur(12px);
+            position: sticky; top: 0; z-index: 1000; background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(12px);
             display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--border);
         }
-        .brand-box { display: flex; align-items: center; gap: 8px; }
-        .brand-logo-icon { width: 32px; height: 32px; background: linear-gradient(135deg, var(--primary), var(--cyan)); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #fff; box-shadow: 0 0 10px var(--primary-glow); }
-        .brand-name { font-size: 17px; font-weight: 800; color: var(--text-high); }
-        .brand-badge { background: rgba(245, 158, 11, 0.15); color: var(--amber); font-size: 9px; padding: 2px 6px; border-radius: 4px; font-weight: 700; border: 1px solid rgba(245, 158, 11, 0.3); }
+        .wallet-badge { background: rgba(16, 185, 129, 0.15); color: var(--emerald); border: 1px solid var(--emerald); padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: bold; }
 
-        /* LIVE RADIO BANNER (Interactive) */
-        .radio-banner {
-            background: linear-gradient(90deg, #1e1b4b 0%, #0f172a 100%);
-            border: 1px solid var(--cyan); border-radius: 12px; margin: 12px; padding: 10px 14px;
-            display: flex; align-items: center; gap: 12px; cursor: pointer; box-shadow: 0 0 15px rgba(6, 182, 212, 0.15);
+        /* 1. Ad Banner Space */
+        .ad-space {
+            margin: 16px; background: var(--ad-bg); border: 1px dashed var(--amber); border-radius: 12px;
+            height: 90px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            position: relative; overflow: hidden; cursor: pointer;
         }
-        
-        .play-btn {
-            width: 32px; height: 32px; background: var(--cyan); border-radius: 50%; color: #000;
-            display: flex; justify-content: center; align-items: center; font-size: 14px;
+        .ad-tag { position: absolute; top: 0; right: 0; background: var(--amber); color: #000; font-size: 9px; font-weight: bold; padding: 2px 8px; border-bottom-left-radius: 8px; }
+        .ad-content { font-size: 14px; font-weight: bold; color: var(--text-high); }
+        .ad-sub { font-size: 10px; color: var(--text-dim); margin-top: 4px; }
+
+        /* 2. Microphone / Voice Console */
+        .voice-console {
+            background: var(--surface-1); border: 1px solid var(--border); border-radius: 16px;
+            margin: 0 16px 16px 16px; padding: 20px; display: flex; flex-direction: column; align-items: center; gap: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .mic-btn {
+            width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(145deg, #1e293b, #0f172a);
+            border: 3px solid var(--cyan); color: var(--cyan); font-size: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 0 20px rgba(6, 182, 212, 0.3); transition: 0.2s;
+        }
+        .mic-btn:active { transform: scale(0.95); background: var(--rose); border-color: var(--rose); color: white; box-shadow: 0 0 30px rgba(244, 63, 94, 0.6); }
+        .transcript-box {
+            width: 100%; background: rgba(0,0,0,0.4); border-radius: 8px; padding: 12px; font-size: 11px;
+            color: var(--text-dim); text-align: center; border-right: 3px solid var(--cyan); min-height: 40px;
         }
 
-        /* Animated Equalizer */
-        .equalizer {
-            display: flex; align-items: flex-end; gap: 3px; height: 16px; display: none;
+        /* 3. Orders List */
+        .section-title { font-size: 13px; font-weight: bold; color: var(--text-high); margin: 0 16px 10px 16px; display: flex; justify-content: space-between; }
+        .order-card {
+            background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px;
+            margin: 0 16px 12px 16px; padding: 14px; border-right: 4px solid var(--amber);
         }
-        .equalizer span {
-            width: 3px; background-color: var(--amber); border-radius: 2px;
-            animation: eq-play 0.5s infinite alternate ease-in-out;
-        }
-        .equalizer span:nth-child(2) { animation-delay: 0.2s; }
-        .equalizer span:nth-child(3) { animation-delay: 0.4s; }
-        .equalizer span:nth-child(4) { animation-delay: 0.1s; }
-        @keyframes eq-play { 0% { height: 4px; } 100% { height: 16px; } }
-
-        /* Radar Live Map */
-        .radar-card { margin: 12px; background: var(--surface-1); border-radius: 16px; border: 1px solid var(--border); overflow: hidden; position: relative; }
-        .radar-header { padding: 8px 14px; display: flex; justify-content: space-between; align-items: center; background: rgba(255, 255, 255, 0.02); font-size: 11px; }
-        .radar-status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--emerald); display: inline-block; box-shadow: 0 0 8px var(--emerald); animation: pulseDot 1.4s infinite; }
-        @keyframes pulseDot { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.4); opacity: 0.5; } }
-        .map-box { height: 180px; width: 100%; }
-
-        /* Vehicle Selector */
-        .fleet-matrix { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 0 12px 14px 12px; }
-        .fleet-box { background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px; padding: 10px 4px; text-align: center; cursor: pointer; transition: all 0.2s ease; }
-        .fleet-box.selected { border-color: var(--primary); background: rgba(37, 99, 235, 0.12); box-shadow: 0 0 12px rgba(37, 99, 235, 0.3); }
-        .fleet-box i { font-size: 18px; color: var(--cyan); margin-bottom: 4px; display: block; }
-        .fleet-box span { display: block; font-size: 10px; font-weight: bold; }
-
-        /* GPS Modal Overlay */
-        .gps-overlay { position: fixed; inset: 0; background: rgba(2, 6, 23, 0.95); backdrop-filter: blur(10px); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 24px; }
-        .gps-modal-card { background: var(--surface-1); border: 1px solid var(--cyan); border-radius: 20px; padding: 24px; text-align: center; width: 100%; max-width: 340px; box-shadow: 0 0 40px rgba(6, 182, 212, 0.25); }
-        .btn-pro { background: linear-gradient(135deg, var(--primary), #1d4ed8); color: white; border: none; border-radius: 10px; padding: 12px; font-size: 12px; font-weight: 700; width: 100%; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 4px 14px var(--primary-glow); }
-        
-        /* Walkie-Talkie Float */
-        .walkie-dock { position: fixed; bottom: 84px; left: 50%; transform: translateX(-50%); z-index: 1100; display: flex; flex-direction: column; align-items: center; }
-        .walkie-btn { width: 68px; height: 68px; border-radius: 50%; background: linear-gradient(145deg, #1e293b, #0f172a); border: 2px solid var(--cyan); color: var(--cyan); font-size: 26px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.7); }
+        .order-header { display: flex; justify-content: space-between; font-weight: bold; font-size: 12px; margin-bottom: 6px; }
+        .order-price { color: var(--emerald); font-size: 14px; }
+        .order-details { font-size: 10px; color: var(--text-dim); margin-bottom: 10px; }
+        .btn-action { background: var(--primary); color: white; border: none; padding: 8px 12px; border-radius: 8px; font-size: 11px; font-weight: bold; cursor: pointer; width: 100%; display: flex; justify-content: center; gap: 8px; align-items: center; }
 
         /* Pro Navbar */
-        .pro-navbar { position: fixed; bottom: 0; width: 100%; max-width: 480px; background: var(--glass); backdrop-filter: blur(16px); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 8px 0; z-index: 1000; }
-        .pnav-item { text-align: center; color: var(--text-dim); font-size: 10px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 2px; }
+        .pro-navbar { position: fixed; bottom: 0; width: 100%; max-width: 480px; background: rgba(15, 23, 42, 0.95); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 10px 0; z-index: 1000; }
+        .pnav-item { text-align: center; color: var(--text-dim); font-size: 10px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; }
         .pnav-item.active { color: var(--cyan); }
     </style>
 </head>
 <body>
 
-<!-- Hidden Audio Element for Background Radio -->
-<!-- استعملت رابط راديو موسيقى هادئة للتجربة، يمكن تبديلو برابط راديو حقيقي لاحقاً -->
+<!-- Hidden Audio for Background Radio -->
 <audio id="bgRadio" loop>
     <source src="https://stream.zeno.fm/f3yqy0p7m4zuv" type="audio/mpeg">
 </audio>
 
-<!-- GPS Strict Activation Modal -->
-<div class="gps-overlay" id="gpsModal">
-    <div class="gps-modal-card">
-        <div style="width: 54px; height: 54px; border-radius: 50%; background: rgba(6, 182, 212, 0.1); border: 1px solid var(--cyan); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px auto;">
-            <i class="fa-solid fa-satellite-dish" style="font-size: 24px; color: var(--cyan);"></i>
-        </div>
-        <h3 style="font-size: 16px; margin-bottom: 8px;">مرحباً بك في شَرْجِي برو</h3>
-        <p style="font-size: 11px; color: var(--text-dim); line-height: 1.6; margin-bottom: 20px;">
-            تفعيل الموقع ضروري لبدء النظام، تشغيل الراديو، واستقبال شحنات أربعاء الغرب وكازا.
-        </p>
-        <button class="btn-pro" onclick="activateAppSequence()">
-            <i class="fa-solid fa-power-off"></i> تفعيل الموقع والبدء
-        </button>
+<!-- 1. Authentication / Registration Overlay -->
+<div class="auth-overlay" id="authScreen">
+    <div class="auth-logo"><i class="fa-solid fa-truck-fast"></i></div>
+    <h1 style="font-size: 20px; margin-bottom: 24px;">مرحباً بك في شَرْجِي برو</h1>
+    
+    <!-- Driver Registration Choice -->
+    <div class="auth-card driver" onclick="loginAs('driver')">
+        <i class="fa-solid fa-steering-wheel" style="font-size: 24px; color: var(--amber); margin-bottom: 10px;"></i>
+        <div class="auth-title">تسجيل كسائق مهني</div>
+        <div class="auth-desc">استفد من شحنات يومية، رادار مباشر، وتجنب الرجوع فارغاً.</div>
+        <div class="badge-fee">رسوم اشتراك + عمولة 10% على الرحلة</div>
+    </div>
+
+    <!-- Customer Registration Choice -->
+    <div class="auth-card" onclick="loginAs('customer')">
+        <i class="fa-solid fa-box-open" style="font-size: 24px; color: var(--cyan); margin-bottom: 10px;"></i>
+        <div class="auth-title">تسجيل كزبون / شركة</div>
+        <div class="auth-desc">ابحث عن شاحنات بيكوب، ديانا، أو رموك بأفضل الأسعار.</div>
+        <div style="font-size: 10px; color: var(--emerald); margin-top: 10px; font-weight: bold;">تسجيل مجاني 100%</div>
     </div>
 </div>
 
-<div class="pro-app">
+<!-- 2. Main Application -->
+<div class="pro-app" id="mainApp">
     <!-- Header -->
     <header class="pro-header">
-        <div class="brand-box">
-            <div class="brand-logo-icon"><i class="fa-solid fa-truck-fast"></i></div>
-            <div>
-                <span class="brand-name">شَرْجِي</span>
-                <span class="brand-badge">PRO v2.4</span>
-            </div>
+        <div style="display:flex; align-items:center; gap:8px;">
+            <i class="fa-solid fa-truck-fast" style="color: var(--cyan); font-size: 20px;"></i>
+            <span style="font-weight: 900; font-size: 16px;">شَرْجِي</span>
         </div>
-        <i class="fa-solid fa-bell" style="color: var(--amber); font-size: 18px; cursor: pointer;"></i>
+        <!-- Wallet/Commission Indicator -->
+        <div class="wallet-badge" id="walletBadge">
+            <i class="fa-solid fa-wallet"></i> الرصيد: 0 د.م
+        </div>
     </header>
 
-    <!-- Interactive Radio Banner -->
-    <div class="radio-banner" onclick="toggleRadio()">
-        <div class="play-btn" id="radioPlayBtn">
-            <i class="fa-solid fa-play" id="radioIcon"></i>
-        </div>
-        <div style="flex: 1;">
-            <div style="font-size: 12px; font-weight: bold; color: var(--text-high); display: flex; justify-content: space-between;">
-                📻 راديو الطريق 
-                <div class="equalizer" id="radioWaves">
-                    <span></span><span></span><span></span><span></span>
-                </div>
-            </div>
-            <div style="font-size: 9px; color: var(--text-dim);">موسيقى، حالة الطقس، وعروض المحركات</div>
-        </div>
+    <!-- SECTION 1: Ad Space (الفوق) -->
+    <div class="ad-space" onclick="speakPro('للإعلان معنا، المرجو التواصل مع الإدارة')">
+        <div class="ad-tag">مساحة إعلانية</div>
+        <i class="fa-solid fa-gas-pump" style="color: var(--rose); font-size: 20px; margin-bottom: 4px;"></i>
+        <div class="ad-content">زيوت محركات طوطال</div>
+        <div class="ad-sub">خصم 15% لسائقي شَرْجِي برو هذا الأسبوع!</div>
     </div>
 
-    <!-- Live Radar Map Card -->
-    <div class="radar-card">
-        <div class="radar-header">
-            <div style="display:flex; align-items:center; gap:6px;">
-                <span class="radar-status-dot"></span>
-                <strong style="color: var(--text-high);">رادار الشاحنات المباشر</strong>
-            </div>
+    <!-- SECTION 2: Microphone & Voice Console (الوسط) -->
+    <div class="voice-console">
+        <div style="font-size: 12px; font-weight: bold; color: var(--cyan);">
+            <i class="fa-solid fa-walkie-talkie"></i> اضغط وتكلم مباشرة
         </div>
-        <div id="map" class="map-box"></div>
-    </div>
-
-    <!-- Vehicle Selector -->
-    <div style="font-size: 12px; font-weight: 700; color: var(--text-dim); margin: 0 16px 8px 16px;">اختر الأسطول</div>
-    <div class="fleet-matrix">
-        <div class="fleet-box selected"><i class="fa-solid fa-truck-pickup"></i><span>بيكوب</span></div>
-        <div class="fleet-box"><i class="fa-solid fa-truck"></i><span>ديانا</span></div>
-        <div class="fleet-box"><i class="fa-solid fa-trailer"></i><span>تريبورتور</span></div>
-        <div class="fleet-box"><i class="fa-solid fa-truck-moving"></i><span>رْمُوكْ</span></div>
-    </div>
-
-    <!-- Walkie-Talkie Push-to-Talk Float -->
-    <div class="walkie-dock">
-        <button class="walkie-btn" onmousedown="speakPro('جاري تسجيل رسالتك الصوتية')">
-            <i class="fa-solid fa-microphone-lines"></i>
+        
+        <button class="mic-btn" onmousedown="startRecording()" onmouseup="stopRecording()" ontouchstart="startRecording()" ontouchend="stopRecording()">
+            <i class="fa-solid fa-microphone"></i>
         </button>
-        <span style="margin-top: 4px; font-size: 10px; font-weight: bold; color: var(--cyan); background: rgba(15, 23, 42, 0.85); padding: 2px 8px; border-radius: 10px; border: 1px solid var(--border);">
-            اضغط وتكلم (Walkie)
-        </span>
+        
+        <div class="transcript-box" id="transcript">
+            (مثال: أنا فسوق الأربعاء، خاصني بيكوب لكازا)
+        </div>
+    </div>
+
+    <!-- SECTION 3: Live Orders (لتحت) -->
+    <div class="section-title">
+        <span><i class="fa-solid fa-list"></i> الطلبات المتاحة الآن</span>
+        <span style="color: var(--amber); font-size: 10px;">تحديث مباشر</span>
+    </div>
+
+    <div class="order-card">
+        <div class="order-header">
+            <span>سوق أربعاء الغرب <i class="fa-solid fa-arrow-left" style="font-size: 10px; margin: 0 4px; color: var(--text-dim);"></i> الدار البيضاء</span>
+            <span class="order-price">750 د.م</span>
+        </div>
+        <div class="order-details">
+            <i class="fa-solid fa-carrot" style="color: var(--amber);"></i> 1.5 طن خضر وفواكه طرية • مطلوب بيكوب
+        </div>
+        <button class="btn-action" onclick="acceptOrder()">
+            <i class="fa-solid fa-handshake"></i> قبول الطلب وخصم العمولة
+        </button>
+    </div>
+
+    <div class="order-card" style="border-right-color: var(--cyan);">
+        <div class="order-header">
+            <span>طنجة الميناء <i class="fa-solid fa-arrow-left" style="font-size: 10px; margin: 0 4px; color: var(--text-dim);"></i> القنيطرة</span>
+            <span class="order-price">1,200 د.م</span>
+        </div>
+        <div class="order-details">
+            <i class="fa-solid fa-pallet" style="color: var(--cyan);"></i> مواد بناء • مطلوب ديانا 3.5 طن
+        </div>
+        <button class="btn-action" onclick="acceptOrder()">
+            <i class="fa-solid fa-handshake"></i> قبول الطلب وخصم العمولة
+        </button>
     </div>
 
     <!-- Pro Navbar -->
     <nav class="pro-navbar">
-        <div class="pnav-item active"><i class="fa-solid fa-map-location-dot"></i> الرادار</div>
-        <div class="pnav-item"><i class="fa-solid fa-boxes-stacked"></i> الشحنات</div>
-        <div class="pnav-item"><i class="fa-solid fa-id-card"></i> حسابي</div>
+        <div class="pnav-item active"><i class="fa-solid fa-microphone"></i> الراديو/الطلب</div>
+        <div class="pnav-item"><i class="fa-solid fa-map"></i> الرادار</div>
+        <div class="pnav-item"><i class="fa-solid fa-wallet"></i> المداخيل</div>
+        <div class="pnav-item"><i class="fa-solid fa-user"></i> حسابي</div>
     </nav>
 </div>
 
-<!-- Leaflet JS -->
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
     const radioPlayer = document.getElementById('bgRadio');
-    const radioIcon = document.getElementById('radioIcon');
-    const radioWaves = document.getElementById('radioWaves');
-    let isRadioPlaying = false;
 
-    // Text To Speech Pro
-    function speakPro(text, onEndCallback = null) {
+    // Text To Speech Setup
+    function speakPro(text, callback) {
         if ('speechSynthesis' in window) {
             window.speechSynthesis.cancel();
             const utter = new SpeechSynthesisUtterance(text);
-            utter.lang = 'ar-SA'; // Fallback Arabic
+            utter.lang = 'ar-SA';
             utter.rate = 0.85;
-            utter.pitch = 0.9;
-            
-            if (onEndCallback) {
-                utter.onend = onEndCallback;
-            }
+            if (callback) utter.onend = callback;
             window.speechSynthesis.speak(utter);
         }
     }
 
-    // Main App Boot Sequence (GPS + Welcome + Radio)
-    function activateAppSequence() {
-        // 1. Hide GPS Modal
-        document.getElementById('gpsModal').style.display = 'none';
-        
-        // 2. Set Radio Volume very low so the voice can be heard
-        radioPlayer.volume = 0.15; 
+    // Auth Logic
+    function loginAs(role) {
+        // Hide auth, show app
+        document.getElementById('authScreen').style.display = 'none';
+        document.getElementById('mainApp').style.display = 'block';
 
-        // 3. Welcome Voice Speech
-        const welcomeMessage = "مرحباً بكم فـ تطبيق شَرْجِي برو. كنتمنى ليكم نهار زوين، وطريق السلامة. جاري تشغيل الرادار وراديو الطريق.";
-        
-        speakPro(welcomeMessage, () => {
-            // 4. Once speech ends, activate Map GPS and start Radio
-            initGPSMap();
-            playRadio();
-            
-            // Raise volume slightly after speaking
-            setTimeout(() => {
-                radioPlayer.volume = 0.4;
-            }, 1000);
-        });
-    }
-
-    // Toggle Radio function for the Banner
-    function toggleRadio() {
-        if (isRadioPlaying) {
-            radioPlayer.pause();
-            radioIcon.classList.remove('fa-pause');
-            radioIcon.classList.add('fa-play');
-            radioWaves.style.display = 'none';
-            isRadioPlaying = false;
+        let welcomeMsg = "";
+        if (role === 'driver') {
+            document.getElementById('walletBadge').innerHTML = '<i class="fa-solid fa-wallet"></i> الرصيد: -50 د.م (الاشتراك)';
+            document.getElementById('walletBadge').style.color = 'var(--rose)';
+            document.getElementById('walletBadge').style.borderColor = 'var(--rose)';
+            welcomeMsg = "مرحباً بك أخي السائق. تم تسجيل الدخول بنجاح. راديو الطريق يعمل الآن، المرجو شحن رصيدك لتلقي الطلبات.";
         } else {
-            playRadio();
+            document.getElementById('walletBadge').style.display = 'none';
+            welcomeMsg = "مرحباً بك كزبون. يمكنك الآن طلب شاحنة بيكوب أو رموك بصوتك مجاناً.";
         }
-    }
 
-    function playRadio() {
-        radioPlayer.play().then(() => {
-            radioIcon.classList.remove('fa-play');
-            radioIcon.classList.add('fa-pause');
-            radioWaves.style.display = 'flex';
-            isRadioPlaying = true;
-        }).catch(err => {
-            console.log("Radio Playback prevented: ", err);
+        // Speak welcome, then play background radio
+        radioPlayer.volume = 0.15;
+        speakPro(welcomeMsg, () => {
+            radioPlayer.play().catch(e => console.log("Radio auto-play blocked by browser."));
+            setTimeout(() => { radioPlayer.volume = 0.3; }, 1000);
         });
     }
 
-    // Initialize Map Function
-    let map = null;
-    function initGPSMap() {
-        if (!map) {
-            map = L.map('map', { zoomControl: false }).setView([34.3, -6.3], 7);
-            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { maxZoom: 18 }).addTo(map);
-        }
+    // Mic Logic
+    function startRecording() {
+        document.querySelector('.mic-btn').style.background = 'var(--rose)';
+        document.getElementById('transcript').innerText = "جاري الاستماع... تكلم الآن";
+        document.getElementById('transcript').style.color = "var(--emerald)";
+    }
 
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition((pos) => {
-                const lat = pos.coords.latitude;
-                const lng = pos.coords.longitude;
-                map.setView([lat, lng], 12);
-                L.circleMarker([lat, lng], { radius: 8, color: '#10b981', fillColor: '#10b981', fillOpacity: 0.5 }).addTo(map).bindPopup("<b>أنت هنا</b>").openPopup();
-                
-                // Add some dummy trucks around the user
-                L.marker([lat + 0.02, lng - 0.01]).addTo(map);
-                L.marker([lat - 0.01, lng + 0.02]).addTo(map);
-            });
+    function stopRecording() {
+        document.querySelector('.mic-btn').style.background = 'linear-gradient(145deg, #1e293b, #0f172a)';
+        document.getElementById('transcript').innerText = "تم تسجيل طلبك: خاصني بيكوب من سوق الأربعاء لكازا.";
+        document.getElementById('transcript').style.color = "var(--text-high)";
+        speakPro("تم تسجيل طلبك وسيتم نشره للسائقين.");
+    }
+
+    // Accept Order Logic (Commission deduction demo)
+    function acceptOrder() {
+        if(confirm("هل أنت متأكد من قبول هذا الطلب؟ سيتم خصم 10% كعمولة للتطبيق من رصيدك.")) {
+            speakPro("تم قبول الطلب بنجاح، تم خصم العمولة. طريق السلامة.");
         }
     }
 </script>

@@ -3,100 +3,503 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>شَرْجِي CHARJI - المنصة الذكية لخدمات النقل واللوجستيك</title>
+    <title>شَرْجِي CHARJI - منصة الشحن والملاحة الآمنة</title>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
     <style>
         :root {
-            --primary: #1d61f2;
-            --accent: #38bdf8;
-            --dark-bg: #060c1a;
+            --bg-main: #060c1a;
             --card-bg: #0d162d;
-            --gold: #f59e0b;
+            --primary-blue: #1d61f2;
+            --cyan-accent: #38bdf8;
+            --accent-green: #10b981;
+            --danger-red: #ef4444;
+            --gold-accent: #f59e0b;
+            --purple-accent: #a855f7;
+            --text-main: #ffffff;
+            --text-muted: #94a3b8;
+            --border-color: rgba(255, 255, 255, 0.12);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
-        body { background: var(--dark-bg); color: #fff; line-height: 1.6; }
+        body { background-color: #02050e; color: var(--text-main); display: flex; justify-content: center; padding: 10px 0; }
 
-        header {
-            padding: 20px 5%; display: flex; justify-content: space-between; align-items: center;
-            border-bottom: 1px solid rgba(255,255,255,0.1); background: rgba(6, 12, 26, 0.95);
-            position: sticky; top: 0; z-index: 100;
-        }
-        .logo h1 { color: var(--accent); font-size: 24px; font-weight: 900; }
-        .logo span { font-size: 10px; color: var(--gold); letter-spacing: 2px; display: block; }
-
-        .btn-invest {
-            background: linear-gradient(90deg, var(--primary), var(--accent));
-            color: #fff; padding: 10px 20px; border-radius: 8px; text-decoration: none;
-            font-weight: bold; font-size: 14px;
+        .app-container {
+            width: 100%; max-width: 440px; background: var(--bg-main);
+            border-radius: 36px; overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9);
+            position: relative; padding-bottom: 75px; border: 1px solid var(--border-color);
         }
 
-        .hero {
-            padding: 80px 5% 60px; text-align: center; max-width: 900px; margin: 0 auto;
+        /* شريط المساعد الصوتي والراديو */
+        .top-utility-bar {
+            background: #0f172a; border-bottom: 1px solid var(--border-color);
+            padding: 6px 14px; display: flex; align-items: center; justify-content: space-between;
+            font-size: 10px; color: var(--cyan-accent); font-weight: bold;
         }
-        .hero h2 { font-size: 36px; margin-bottom: 20px; color: #fff; }
-        .hero h2 span { color: var(--accent); }
-        .hero p { font-size: 18px; color: #94a3b8; margin-bottom: 30px; }
 
-        .features-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px; padding: 40px 5%; max-width: 1200px; margin: 0 auto;
-        }
-        .feature-card {
-            background: var(--card-bg); padding: 30px; border-radius: 16px;
-            border: 1px solid rgba(255,255,255,0.1); text-align: right;
-        }
-        .feature-card h3 { color: var(--accent); font-size: 18px; margin-bottom: 10px; }
-        .feature-card p { color: #94a3b8; font-size: 14px; }
+        .top-header { padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; }
+        .brand-logo-box { text-align: center; }
+        .brand-logo-box h2 { color: var(--cyan-accent); font-size: 20px; font-weight: 900; letter-spacing: 0.5px; }
+        .brand-logo-box span { font-size: 8px; color: var(--gold-accent); letter-spacing: 1.5px; display: block; font-weight: bold; }
 
-        .investor-pitch {
-            background: linear-gradient(145deg, #0d162d 0%, #152347 100%);
-            margin: 40px 5%; padding: 40px; border-radius: 20px;
-            border: 1px solid var(--primary); text-align: center;
+        .header-icon {
+            background: rgba(255,255,255,0.05); border: 1px solid var(--border-color);
+            width: 36px; height: 36px; border-radius: 50%; color: white; font-size: 14px;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
         }
-        .investor-pitch h3 { font-size: 24px; color: var(--gold); margin-bottom: 15px; }
 
-        footer { text-align: center; padding: 20px; border-top: 1px solid rgba(255,255,255,0.1); color: #64748b; font-size: 12px; }
+        /* 🚨 شريط تنبيهات الملاحة المباشرة أثناء السياقة */
+        .live-navigation-bar {
+            margin: 0 12px 10px; background: rgba(239, 68, 68, 0.12); border: 1px solid var(--danger-red);
+            border-radius: 12px; padding: 8px 12px; display: flex; align-items: center; justify-content: space-between;
+            animation: pulse-border 2s infinite;
+        }
+
+        @keyframes pulse-border {
+            0% { border-color: rgba(239, 68, 68, 0.4); }
+            50% { border-color: var(--danger-red); }
+            100% { border-color: rgba(239, 68, 68, 0.4); }
+        }
+
+        .nav-alert-content { display: flex; align-items: center; gap: 8px; }
+        .nav-alert-icon { font-size: 18px; }
+        .nav-alert-text h5 { font-size: 10px; color: #fca5a5; font-weight: bold; }
+        .nav-alert-text p { font-size: 8px; color: var(--text-muted); }
+
+        .speed-limit-badge {
+            background: #ffffff; color: #000; border: 2px solid var(--danger-red);
+            width: 26px; height: 26px; border-radius: 50%; font-size: 10px; font-weight: 900;
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+
+        /* 🛡️ قسم إرشادات السلامة الطرقية مع شعار NARSA */
+        .narsa-safety-banner {
+            margin: 0 12px 12px; background: rgba(255, 255, 255, 0.95);
+            border: 1px solid #1d61f2; border-radius: 14px; padding: 8px 12px;
+            display: flex; align-items: center; justify-content: space-between; gap: 10px; cursor: pointer;
+        }
+        .narsa-logo-img {
+            height: 38px; width: auto; object-fit: contain; flex-shrink: 0;
+        }
+        .safety-text-box { flex: 1; }
+        .safety-text-box h4 { font-size: 9px; color: #0f172a; font-weight: 900; }
+        .safety-text-box p { font-size: 8px; color: #334155; font-weight: bold; margin-top: 2px; }
+
+        /* 🔴 المحرك الرئيسي: البحث والربط بين صاحب الشحنة وصاحب الشاحنة */
+        .core-matchmaking-box {
+            margin: 0 12px 12px; background: linear-gradient(145deg, #0d162d 0%, #152347 100%);
+            border: 1px solid var(--primary-blue); border-radius: 20px; padding: 12px;
+            box-shadow: 0 8px 20px rgba(29, 97, 242, 0.15);
+        }
+        .match-tabs { display: flex; gap: 6px; margin-bottom: 10px; }
+        .match-tab-btn {
+            flex: 1; padding: 8px 4px; border-radius: 10px; font-size: 10px; font-weight: bold;
+            text-align: center; cursor: pointer; border: 1px solid var(--border-color); background: rgba(255,255,255,0.03); color: var(--text-muted);
+        }
+        .match-tab-btn.active { background: var(--primary-blue); color: white; border-color: var(--cyan-accent); }
+
+        .search-route-inputs { display: flex; flex-direction: column; gap: 8px; }
+        
+        .input-row {
+            display: flex; align-items: center; background: rgba(0,0,0,0.4); border: 1px solid var(--border-color);
+            border-radius: 12px; padding: 4px 10px; gap: 8px; transition: border-color 0.3s;
+        }
+        .input-row:focus-within { border-color: var(--cyan-accent); }
+        .input-row input { background: none; border: none; color: white; font-size: 11px; width: 100%; outline: none; padding: 6px 0; }
+        
+        .voice-field-btn {
+            background: rgba(56, 189, 248, 0.12); border: 1px solid rgba(56, 189, 248, 0.3);
+            width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center;
+            justify-content: center; font-size: 12px; cursor: pointer; color: var(--cyan-accent);
+            flex-shrink: 0; transition: all 0.2s ease;
+        }
+
+        .btn-search-match {
+            background: linear-gradient(90deg, #1d61f2 0%, #0891b2 100%);
+            color: white; border: none; padding: 10px; border-radius: 12px; font-size: 11px; font-weight: bold;
+            margin-top: 8px; cursor: pointer; text-align: center; width: 100%;
+        }
+
+        /* زر "راجع خاوي" */
+        .return-empty-banner {
+            margin: 0 12px 10px; background: rgba(245, 158, 11, 0.12); border: 1px solid var(--gold-accent);
+            border-radius: 14px; padding: 10px; display: flex; align-items: center; justify-content: space-between; cursor: pointer;
+        }
+
+        /* تغذية العروض والشحنات الحية */
+        .feed-section-title { font-size: 11px; font-weight: bold; color: var(--cyan-accent); margin: 10px 12px 6px; display: flex; justify-content: space-between; }
+
+        .trip-notification-card {
+            background: var(--card-bg); margin: 0 12px 8px; padding: 10px;
+            border-radius: 14px; border: 1px solid var(--border-color);
+        }
+        .trip-header-info { display: flex; gap: 10px; align-items: center; }
+
+        .in-app-communication-row {
+            display: grid; grid-template-columns: 1fr 1fr 1.2fr; gap: 6px; margin-top: 8px; padding-top: 8px;
+            border-top: 1px dashed var(--border-color);
+        }
+        .btn-inapp-chat {
+            background: rgba(56, 189, 248, 0.15); color: var(--cyan-accent); border: 1px solid var(--cyan-accent);
+            padding: 6px; border-radius: 8px; font-size: 9px; font-weight: bold; cursor: pointer;
+        }
+        .btn-inapp-call {
+            background: rgba(16, 185, 129, 0.15); color: var(--accent-green); border: 1px solid var(--accent-green);
+            padding: 6px; border-radius: 8px; font-size: 9px; font-weight: bold; cursor: pointer;
+        }
+        .btn-confirm-deal {
+            background: var(--accent-green); color: white; border: none;
+            padding: 6px; border-radius: 8px; font-size: 9px; font-weight: bold; cursor: pointer;
+        }
+
+        /* 🔻 الأجزاء الثانوية أسفل الصفحة 🔻 */
+        .secondary-features-footer {
+            margin-top: 16px; padding-top: 12px; border-top: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(0, 0, 0, 0.2);
+        }
+        .secondary-title { font-size: 9px; font-weight: bold; color: var(--text-muted); margin: 0 12px 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        /* خدمات الطريق */
+        .road-services-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 0 12px 10px; }
+        .service-btn-card {
+            background: var(--card-bg); border: 1px solid var(--border-color);
+            border-radius: 10px; padding: 6px 2px; text-align: center; cursor: pointer;
+        }
+        .service-btn-card .icon { font-size: 14px; }
+        .service-btn-card .label { font-size: 8px; color: var(--text-muted); display: block; margin-top: 2px; }
+
+        /* سوق المعدات وآلات الحفر */
+        .secondary-cards-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 0 12px 10px; }
+        .sec-box-card {
+            background: var(--card-bg); border: 1px solid var(--border-color);
+            border-radius: 12px; padding: 8px; cursor: pointer;
+        }
+
+        .map-card { margin: 8px 12px; border-radius: 14px; overflow: hidden; border: 1px solid var(--border-color); }
+        #map { height: 80px; width: 100%; }
+
+        .bottom-nav {
+            position: absolute; bottom: 0; left: 0; right: 0; background: #050a17;
+            border-top: 1px solid var(--border-color); display: flex; justify-content: space-around; padding: 8px 0;
+        }
+        .nav-btn { text-align: center; color: var(--text-muted); font-size: 9px; cursor: pointer; }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="logo">
-            <h1>شَرْجِي CHARJI</h1>
+<div class="app-container">
+
+    <!-- شريط الراديو والمساعد الصوتي -->
+    <div class="top-utility-bar">
+        <span onclick="speakText('راديو شَرْجِي مباشر')">📻 راديو شَرْجِي</span>
+        <span style="color: var(--gold-accent); cursor: pointer;" onclick="explainWholePage()">🔊 مساعد صوتی</span>
+    </div>
+
+    <!-- الهيدر والبراند -->
+    <div class="top-header">
+        <button class="header-icon" onclick="speakText('القائمة')">☰</button>
+        <div class="brand-logo-box" onclick="speakText('شَرْجِي - منصة الشحن والنقل المباشر')">
+            <h2>شَرْجِي CHARJI</h2>
             <span>FREIGHT & LOGISTICS</span>
         </div>
-        <a href="#invest" class="btn-invest">تواصل للاستثمار 🤝</a>
-    </header>
+        <button class="header-icon" onclick="startVoiceAI()">🎙️</button>
+    </div>
 
-    <section class="hero">
-        <h2>المنصة المغربية الذكية للربط المباشر بين <span>الشاحنات والشحنات</span></h2>
-        <p>نحل مشكلة "الرجوع فارغاً" ونوفر لأصحاب البضائع أفضل الأسعار ونظام ملاحة آمن بالتكامل مع إرشادات NARSA.</p>
-    </section>
-
-    <section class="features-grid">
-        <div class="feature-card">
-            <h3>📦 أصحاب البضائع</h3>
-            <p>إمكانية إدخال نوع الشحنة والوزن إما كتابة أو بالصوت بسهولة، والحصول على عروض فورية من السائقين المعتمدين.</p>
+    <!-- 🚨 تنبيه الملاحة المباشر أثناء السياقة -->
+    <div class="live-navigation-bar" onclick="readNavAlert()">
+        <div class="nav-alert-content">
+            <div class="nav-alert-icon">⚠️</div>
+            <div class="nav-alert-text">
+                <h5 id="navAlertTitle">تنبيه ملاحة: رادار ثابث بعد 1.5 كم</h5>
+                <p id="navAlertSub">طريق السيار الدار البيضاء - الرباط • انتبه للسرعة</p>
+            </div>
         </div>
-        <div class="feature-card">
-            <h3>🚛 سائقو الشاحنات</h3>
-            <p>تقليل التوقفات والرحلات الفارغة عبر خاصية "راجع خاوي"، وتنبيهات الرادارات والسرعة أثناء الملاحة.</p>
-        </div>
-        <div class="feature-card">
-            <h3>🛡️ معايير السلامة (NARSA)</h3>
-            <p>دمج التوعية بنصائح وإرشادات السلامة الطرقية وتنبيهات الاستراحة المباشرة لضمان رحلات آمنة.</p>
-        </div>
-    </section>
+        <div class="speed-limit-badge" id="speedBadge">100</div>
+    </div>
 
-    <section class="investor-pitch" id="invest">
-        <h3>فرصة استثمارية واعدة في سوق اللوجستيك بالمغرب 🇲🇦</h3>
-        <p style="margin-bottom: 20px; color: #cbd5e1;">نبحث عن شركاء ومستثمرين لإطلاق المنصة في مرحلتها الأولى وتوسيع تغطيتها في أهم محاور النقل بالمغرب.</p>
-        <button onclick="alert('شكراً لاهتمامك! يتم تحضير ملف الاستثمار (Pitch Deck)')" class="btn-invest" style="cursor:pointer; font-size: 16px;">تحميل ملف العرض الاستثماري (Pitch Deck)</button>
-    </section>
+    <!-- 🛡️ بطاقة التوعية بالسلامة الطرقية مع شعار NARSA -->
+    <div class="narsa-safety-banner" onclick="readSafetyTip()">
+        <img src="https://i.ibb.co/L5kL22G/narsa-logo.jpg" alt="NARSA Logo" class="narsa-logo-img" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Logo_NARSA.png/320px-Logo_NARSA.png'">
+        <div class="safety-text-box">
+            <h4 id="safetyTitle">إرشاد السلامة الطرقية (NARSA)</h4>
+            <p id="safetySub">خذ استراحة لمدة 15 دقيقة بعد كل ساعتي سياقة متواصلة.</p>
+        </div>
+        <span style="font-size: 14px; color: #1d61f2;">🔊</span>
+    </div>
 
-    <footer>
-        © 2026 جميع الحقوق محفوظة - مشروع شَرْجِي Charji
-    </footer>
+    <!-- 1. المحرك الرئيسي: ربط صاحب السلعة بـ صاحب الشاحنة -->
+    <div class="core-matchmaking-box">
+        <div class="match-tabs">
+            <div class="match-tab-btn active" id="tabCargo" onclick="switchRole('cargo')">📦 عندي سلعة باغي نَشَرْجِيها</div>
+            <div class="match-tab-btn" id="tabTruck" onclick="switchRole('truck')">🚛 عندي شاحنة باغي نْشَرْجِي</div>
+        </div>
+
+        <div class="search-route-inputs">
+            <!-- مدينة الانطلاق -->
+            <div class="input-row">
+                <span>📍</span>
+                <input type="text" id="startLocationInput" placeholder="مدينة الانطلاق (مثال: الدار البيضاء)">
+                <button class="voice-field-btn" title="تسجيل صوتي للانطلاق" onclick="recordFieldVoice('startLocationInput', 'مدينة الانطلاق')">🎙️</button>
+            </div>
+
+            <!-- وجهة الوصول -->
+            <div class="input-row">
+                <span>🏁</span>
+                <input type="text" id="destinationInput" placeholder="وجهة الوصول (مثال: طنجة)">
+                <button class="voice-field-btn" title="تسجيل صوتي للوجهة" onclick="recordFieldVoice('destinationInput', 'وجهة الوصول')">🎙️</button>
+            </div>
+
+            <!-- نوع السلعة والوزن -->
+            <div class="input-row" id="typeRow">
+                <span>⚖️</span>
+                <input type="text" id="cargoDetailsInput" placeholder="نوع السلعة والوزن (مثال: 5 طن خشب)">
+                <button class="voice-field-btn" title="تسجيل صوتي لنوع السلعة" onclick="recordFieldVoice('cargoDetailsInput', 'نوع السلعة والوزن')">🎙️</button>
+            </div>
+        </div>
+
+        <button class="btn-search-match" onclick="searchMatches()">🔍 البحث عن الشاحنات / الشحنات المتاحة فوراً</button>
+    </div>
+
+    <!-- زر السائقين: "راجع خاوي" -->
+    <div class="return-empty-banner" onclick="postReturnEmpty()">
+        <div style="display: flex; align-items: center; gap: 8px;">
+            <div style="font-size: 20px;">🔄</div>
+            <div>
+                <h4 style="color: var(--gold-accent); font-size: 10px;">أنت سائق وراجع خاوي؟</h4>
+                <span style="font-size: 8px; color: var(--text-muted);">انشر مسارك وشَرْجِي رحلة الرجوع بتخفيض</span>
+            </div>
+        </div>
+        <span style="background: var(--gold-accent); color: black; font-size: 8px; padding: 3px 6px; border-radius: 6px; font-weight: bold;">نشر الآن</span>
+    </div>
+
+    <!-- تغذية الطلبات الحية -->
+    <div class="feed-section-title">
+        <span>🔥 العروض والشحنات المتاحة حالياً</span>
+        <span style="font-size: 8px; color: var(--text-muted);">تحديث مباشر 🟢</span>
+    </div>
+
+    <div id="tripsFeed">
+        <!-- عرض 1 -->
+        <div class="trip-notification-card">
+            <div class="trip-header-info">
+                <div style="font-size: 22px;">📦</div>
+                <div style="flex: 1;">
+                    <div style="font-size: 10px; font-weight: bold;">طنجة ➔ الدار البيضاء (مطلوب شاحنة رموك)</div>
+                    <div style="font-size: 9px; color: var(--accent-green);">📦 الحمولة: 12 طن مواد بناء • السعر المقترح: 2200 د.م</div>
+                </div>
+            </div>
+            <div class="in-app-communication-row">
+                <button class="btn-inapp-chat" onclick="speakText('فتح الدردشة')">💬 تفاوض / صوت</button>
+                <button class="btn-inapp-call" onclick="speakText('اتصال بالمستخدم')">📞 اتصال</button>
+                <button class="btn-confirm-deal" onclick="speakText('تأكيد شَرْجِي السلعة')">🤝 الاتفاق والتأكيد</button>
+            </div>
+        </div>
+
+        <!-- عرض 2 (راجع خاوي) -->
+        <div class="trip-notification-card" style="border-color: rgba(245, 158, 11, 0.4);">
+            <div class="trip-header-info">
+                <div style="font-size: 22px;">🚛</div>
+                <div style="flex: 1;">
+                    <div style="font-size: 10px; font-weight: bold; color: var(--gold-accent);">أكادير ➔ مراكش (شاحنة دينا - راجع خاوي)</div>
+                    <div style="font-size: 9px; color: var(--text-main);">🏷️ تخفيض 30% • جاهز للشحن الآن</div>
+                </div>
+            </div>
+            <div class="in-app-communication-row">
+                <button class="btn-inapp-chat" onclick="speakText('تفاوض مع السائق')">💬 تفاوض / صوت</button>
+                <button class="btn-inapp-call" onclick="speakText('اتصال بالسائق')">📞 اتصال</button>
+                <button class="btn-confirm-deal" onclick="speakText('حجز الشاحنة')">🤝 حجز الرحلة</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 🔻 الأجزاء الثانوية (في أسفل الصفحة) 🔻 -->
+    <div class="secondary-features-footer">
+        
+        <div class="secondary-title">🛠️ خدمات مساعدة وإضافية</div>
+
+        <!-- خدمات الطريق السريعة -->
+        <div class="road-services-grid">
+            <div class="service-btn-card" onclick="findNearestService('ديباناج')">
+                <div class="icon">🚨</div>
+                <span class="label">ديباناج</span>
+            </div>
+            <div class="service-btn-card" onclick="findNearestService('محطة وقود')">
+                <div class="icon">⛽</div>
+                <span class="label">وقود</span>
+            </div>
+            <div class="service-btn-card" onclick="findNearestService('ميكانيك')">
+                <div class="icon">🔧</div>
+                <span class="label">ميكانيك</span>
+            </div>
+            <div class="service-btn-card" onclick="findNearestService('باحة استراحة')">
+                <div class="icon">☕</div>
+                <span class="label">استراحة</span>
+            </div>
+        </div>
+
+        <!-- سوق المعدات وآلات الحفر -->
+        <div class="secondary-cards-row">
+            <div class="sec-box-card" onclick="openMarketplace()">
+                <div style="font-size: 9px; font-weight: bold; color: var(--purple-accent);">🛒 سوق البيع والشراء</div>
+                <div style="font-size: 8px; color: var(--text-muted); margin-top: 2px;">شاحنات، قطع غيار، ومعدات</div>
+            </div>
+            <div class="sec-box-card" onclick="openMachinery()">
+                <div style="font-size: 9px; font-weight: bold; color: var(--gold-accent);">🚜 آلات الحفر والرفع</div>
+                <div style="font-size: 8px; color: var(--text-muted); margin-top: 2px;">بوكلان، كلاك، ورافعات الأورش</div>
+            </div>
+        </div>
+
+        <div class="map-card"><div id="map"></div></div>
+
+    </div>
+
+    <!-- شريط التنقل السفلي -->
+    <div class="bottom-nav">
+        <div class="nav-btn" onclick="speakText('حسابي')">👤<br>حسابي</div>
+        <div class="nav-btn" onclick="speakText('طلباتي')">📋<br>طلباتي</div>
+        <div class="nav-btn" style="color:var(--cyan-accent)">🏠<br>الرئيسية</div>
+        <div class="nav-btn" onclick="speakText('النقل المباشر')">🚚<br>النقلات</div>
+    </div>
+
+</div>
+
+<script>
+    const map = L.map('map', { zoomControl: false }).setView([31.6295, -7.9811], 8);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png').addTo(map);
+
+    function speakText(text) {
+        window.speechSynthesis.cancel();
+        const msg = new SpeechSynthesisUtterance(text);
+        msg.lang = 'ar-MA';
+        msg.rate = 0.88;
+        window.speechSynthesis.speak(msg);
+    }
+
+    const navAlerts = [
+        { title: "تنبيه ملاحة: رادار ثابث بعد 1.5 كم", sub: "طريق السيار الدار البيضاء - الرباط • السرعة المحددة 100 كم/س", speed: "100" },
+        { title: "أعمال صيانة على الطريق بعد 3 كم", sub: "التزام المسار الأيمن وتخفيف السرعة إلى 60 كم/س", speed: "60" },
+        { title: "تنبيه: ضباب كثيف في المنعرجات", sub: "طريق المنعرجات الجبلية • شغل أضواء الضباب", speed: "40" }
+    ];
+
+    const safetyTips = [
+        { title: "إرشاد NARSA للسلامة الطرقية", sub: "خذ استراحة لمدة 15 دقيقة بعد كل ساعتي سياقة متواصلة." },
+        { title: "الربط المحكم للحمولة (NARSA)", sub: "تأكد من تثبيت الحبال والأشرطة قبل انطلاق الشاحنة لسلامة الجميع." },
+        { title: "مسافة الأمان واجبة (NARSA)", sub: "اترك مسافة لا تقل عن 50 متراً بينك وبين الشاحنة التي أمامك." }
+    ];
+
+    let currentAlertIdx = 0;
+    let currentTipIdx = 0;
+
+    function readNavAlert() {
+        const alertObj = navAlerts[currentAlertIdx];
+        speakText(alertObj.title + ". " + alertObj.sub);
+    }
+
+    function readSafetyTip() {
+        const tipObj = safetyTips[currentTipIdx];
+        speakText(tipObj.title + ". " + tipObj.sub);
+    }
+
+    setInterval(() => {
+        currentAlertIdx = (currentAlertIdx + 1) % navAlerts.length;
+        document.getElementById('navAlertTitle').innerText = navAlerts[currentAlertIdx].title;
+        document.getElementById('navAlertSub').innerText = navAlerts[currentAlertIdx].sub;
+        document.getElementById('speedBadge').innerText = navAlerts[currentAlertIdx].speed;
+
+        currentTipIdx = (currentTipIdx + 1) % safetyTips.length;
+        document.getElementById('safetyTitle').innerText = safetyTips[currentTipIdx].title;
+        document.getElementById('safetySub').innerText = safetyTips[currentTipIdx].sub;
+    }, 8000);
+
+    function recordFieldVoice(inputId, fieldName) {
+        const inputField = document.getElementById(inputId);
+        speakText("تحدث الآن لإدخال " + fieldName);
+
+        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            const recognition = new SpeechRecognition();
+            recognition.lang = 'ar-MA';
+            recognition.interimResults = false;
+
+            recognition.onstart = function() {
+                inputField.placeholder = "جاري الاستماع... 🔴";
+            };
+
+            recognition.onresult = function(event) {
+                const textResult = event.results[0][0].transcript;
+                inputField.value = textResult;
+                speakText("تم تسجيل: " + textResult);
+            };
+
+            recognition.onerror = function() {
+                inputField.placeholder = "خطأ، حاول مرة أخرى";
+                speakText("لم أستطع الاستماع بوضوح، أعد المحاولة");
+            };
+
+            recognition.onend = function() {
+                if(!inputField.value) {
+                    inputField.placeholder = fieldName;
+                }
+            };
+
+            recognition.start();
+        } else {
+            alert("خاصية التعرف على الصوت المباشر تحتاج متصفحاً أحدث مثل Chrome أو Edge.");
+            const manualText = prompt("أدخل " + fieldName + " بصوتك أو كتابة:");
+            if(manualText) inputField.value = manualText;
+        }
+    }
+
+    function switchRole(role) {
+        document.getElementById('tabCargo').classList.remove('active');
+        document.getElementById('tabTruck').classList.remove('active');
+        
+        if(role === 'cargo') {
+            document.getElementById('tabCargo').classList.add('active');
+            speakText("تم اختيار: البحث عن شاحنة لنقل سلعتك");
+        } else {
+            document.getElementById('tabTruck').classList.add('active');
+            speakText("تم اختيار: البحث عن شحنات لشاحنتك");
+        }
+    }
+
+    function searchMatches() {
+        const start = document.getElementById('startLocationInput').value;
+        const dest = document.getElementById('destinationInput').value;
+        speakText("تطبيق شَرْجِي يجري البحث عن العروض بين " + (start || 'الانطلاق') + " و " + (dest || 'الوجهة'));
+        alert("🔍 تطبيق شَرْجِي: جاري البحث والربط المباشر بين الشاحنات والشحنات المتاحة...");
+    }
+
+    function postReturnEmpty() {
+        speakText("فتح نموذج نشر رحلة الرجوع فارغ عبر تطبيق شَرْجِي");
+        alert("🔄 أدخل تفاصيل رحلة الرجوع وشَرْجِي شاحناك بسرعة!");
+    }
+
+    function startVoiceAI() {
+        speakText("المساعد الصوتي لتطبيق شَرْجِي جاهز، اختر الخانة المراد تعبئتها");
+    }
+
+    function findNearestService(service) {
+        speakText("البحث عن أقرب " + service);
+        alert("📍 جاري تحديد أقرب " + service + " لك عبر الخريطة...");
+    }
+
+    function openMarketplace() {
+        speakText("فتح سوق البيع والشراء الخاص بالقطع والشاحنات");
+        alert("🛒 الانتقال إلى سوق المستعمل والقطع...");
+    }
+
+    function openMachinery() {
+        speakText("فتح قسم آلات الحفر والرفع للأورش");
+        alert("🚜 الانتقال إلى قسم طلبات بوكلان وكلاك الأورش...");
+    }
+
+    function explainWholePage() {
+        speakText("تطبيق شَرْجِي يوفر الملاحة المباشرة بالتكامل مع إرشادات السلامة الطرقية لنارسا (NARSA).");
+    }
+</script>
 
 </body>
 </html>

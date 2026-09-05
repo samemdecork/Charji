@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>شَرْجِي CHARJI - نظام الطلبات الفوري والملاحة</title>
+    <title>شَرْجِي CHARJI - المنصة الشاملة للنقل والملاحة</title>
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -43,7 +43,13 @@
         .brand-logo-box h2 { color: var(--cyan-accent); font-size: 20px; font-weight: 900; letter-spacing: 0.5px; }
         .brand-logo-box span { font-size: 8px; color: var(--gold-accent); letter-spacing: 1.5px; display: block; font-weight: bold; }
 
-        /* 📡 شريط وضع الاستعداد للسائق (GPS Live) */
+        .header-icon {
+            background: rgba(255,255,255,0.05); border: 1px solid var(--border-color);
+            width: 36px; height: 36px; border-radius: 50%; color: white; font-size: 14px;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+        }
+
+        /* 📡 شريط وضع الـ GPS للسائقين */
         .driver-gps-bar {
             margin: 0 12px 10px; background: rgba(16, 185, 129, 0.12); border: 1px solid var(--accent-green);
             border-radius: 14px; padding: 10px 12px; display: flex; align-items: center; justify-content: space-between;
@@ -51,7 +57,26 @@
         .gps-status-dot { width: 10px; height: 10px; background-color: var(--accent-green); border-radius: 50%; display: inline-block; animation: blink 1.5s infinite; }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 
-        /* 🔊 مشغل التحكم بالصوت */
+        /* ⚠️ شريط الرادار والملاحة */
+        .live-navigation-bar {
+            margin: 0 12px 10px; background: rgba(239, 68, 68, 0.12); border: 1px solid var(--danger-red);
+            border-radius: 12px; padding: 8px 12px; display: flex; align-items: center; justify-content: space-between;
+            cursor: pointer;
+        }
+        .speed-limit-badge {
+            background: #ffffff; color: #000; border: 2px solid var(--danger-red);
+            width: 26px; height: 26px; border-radius: 50%; font-size: 10px; font-weight: 900;
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+
+        /* 🛡️ بنر نارسا السلامة الطرقية */
+        .narsa-safety-banner {
+            margin: 0 12px 10px; background: rgba(255, 255, 255, 0.95);
+            border: 1px solid #1d61f2; border-radius: 14px; padding: 8px 12px;
+            display: flex; align-items: center; justify-content: space-between; gap: 10px; cursor: pointer;
+        }
+
+        /* 🔊 مشغل الصوت المستقر بلمسة واحدة */
         .audio-demo-card {
             margin: 0 12px 10px; background: rgba(56, 189, 248, 0.08);
             border: 1px solid var(--cyan-accent); border-radius: 14px; padding: 10px; text-align: center;
@@ -61,7 +86,7 @@
         .volume-controls { display: flex; gap: 8px; align-items: center; font-size: 9px; }
         .vol-btn { background: rgba(255,255,255,0.1); border: 1px solid var(--border-color); color: white; padding: 3px 8px; border-radius: 6px; cursor: pointer; font-size: 8px; }
 
-        /* 📝 استمارة الزبون لحط الطلب */
+        /* 📝 استمارة الطلب بالذكاء الاصطناعي */
         .core-matchmaking-box {
             margin: 0 12px 12px; background: linear-gradient(145deg, #0d162d 0%, #152347 100%);
             border: 1px solid var(--primary-blue); border-radius: 20px; padding: 12px;
@@ -87,12 +112,27 @@
             margin-top: 8px; cursor: pointer; text-align: center; width: 100%; display: flex; align-items: center; justify-content: center; gap: 6px;
         }
 
-        /* 📢 صندوق الإشعار الفوري الصوتي والكتابي للسائقين */
+        /* 📢 صندوق الإشعار الفوري للسائقين */
         .driver-broadcast-alert {
             display: none; margin: 0 12px 12px; background: rgba(245, 158, 11, 0.15); border: 2px solid var(--gold-accent);
             border-radius: 16px; padding: 12px; animation: pulse-border 1.5s infinite;
         }
         @keyframes pulse-border { 0%, 100% { border-color: var(--gold-accent); } 50% { border-color: var(--cyan-accent); } }
+
+        .return-empty-banner {
+            margin: 0 12px 10px; background: rgba(245, 158, 11, 0.12); border: 1px solid var(--gold-accent);
+            border-radius: 14px; padding: 10px; display: flex; align-items: center; justify-content: space-between; cursor: pointer;
+        }
+
+        /* 🛠️ خدمات المساعدة على الطريق */
+        .road-services-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 0 12px 10px; }
+        .service-btn-card {
+            background: var(--card-bg); border: 1px solid var(--border-color);
+            border-radius: 10px; padding: 6px 2px; text-align: center; cursor: pointer;
+        }
+
+        .secondary-cards-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 0 12px 10px; }
+        .sec-box-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 8px; cursor: pointer; }
 
         .map-card { margin: 8px 12px; border-radius: 14px; overflow: hidden; border: 1px solid var(--border-color); }
         #map { height: 100px; width: 100%; }
@@ -114,25 +154,48 @@
     </div>
 
     <div class="top-header">
-        <div class="brand-logo-box" style="text-align: right;">
+        <button class="header-icon">☰</button>
+        <div class="brand-logo-box">
             <h2>شَرْجِي CHARJI</h2>
             <span>GPS LIVE MATCHING</span>
         </div>
+        <button class="header-icon">🎙️</button>
     </div>
 
-    <!-- 📡 نظام GPS السائق الحقيقي -->
+    <!-- 📡 وضع السائق متصل بالـ GPS -->
     <div class="driver-gps-bar">
         <div style="display: flex; align-items: center; gap: 8px;">
             <span class="gps-status-dot"></span>
             <div>
                 <h5 style="font-size: 10px; color: white;">وضع السائق: متصل بالـ GPS</h5>
-                <p id="gpsAddressText" style="font-size: 8px; color: var(--text-muted);">جاري تحديد الموقغ القريب...</p>
+                <p id="gpsAddressText" style="font-size: 8px; color: var(--text-muted);">جاري تحديد الموقع القريب...</p>
             </div>
         </div>
         <button onclick="toggleGPS()" style="background: rgba(255,255,255,0.1); border: 1px solid var(--border-color); color: white; padding: 4px 8px; border-radius: 8px; font-size: 8px; cursor: pointer;">تحديث الـ GPS</button>
     </div>
 
-    <!-- 🔊 التحكم في مستوى الصوت -->
+    <!-- ⚠️ تنبيهات الملاحة والحوادث -->
+    <div class="live-navigation-bar" onclick="readNavAlert()">
+        <div style="display: flex; align-items: center; gap: 8px;">
+            <span style="font-size: 18px;">⚠️</span>
+            <div>
+                <h5 id="navAlertTitle" style="font-size: 10px; color: #fca5a5; font-weight: bold;">تنبيه ملاحة: رادار ثابت بعد 1.5 كم</h5>
+                <p id="navAlertSub" style="font-size: 8px; color: var(--text-muted);">طريق السيار الدار البيضاء - الرباط</p>
+            </div>
+        </div>
+        <div class="speed-limit-badge" id="speedBadge">100</div>
+    </div>
+
+    <!-- 🛡️ إرشادات والسلامة NARSA -->
+    <div class="narsa-safety-banner" onclick="readSafetyTip()">
+        <div style="flex: 1;">
+            <h4 id="safetyTitle" style="font-size: 9px; color: #0f172a; font-weight: 900;">إرشاد السلامة الطرقية (NARSA)</h4>
+            <p id="safetySub" style="font-size: 8px; color: #334155; font-weight: bold;">خذ استراحة لمدة 15 دقيقة بعد كل ساعتي سياقة.</p>
+        </div>
+        <span style="font-size: 14px; color: #1d61f2;">🔊</span>
+    </div>
+
+    <!-- 🔊 مشغل الصوتيات القابل للتحكم -->
     <div class="audio-demo-card">
         <div class="audio-player-box">
             <audio id="darijaAudioPlayer" controls></audio>
@@ -144,10 +207,10 @@
         </div>
     </div>
 
-    <!-- 📝 واجهة الزبون لإرسال الطلب المستهدف -->
+    <!-- 📝 استمارة بث الطلب الصوتي والكتابي -->
     <div class="core-matchmaking-box">
         <div class="match-tabs">
-            <div class="match-tab-btn active">📦 الزبون: وضع طلب شحن جديد</div>
+            <div class="match-tab-btn active">📦 وضع طلب شحن ونشره للسائقين</div>
         </div>
 
         <div class="search-route-inputs">
@@ -163,7 +226,7 @@
 
             <div class="input-row">
                 <span>📍</span>
-                <input type="text" id="startLocationInput" placeholder="مكان الانطلاق (أو يحدد تلقائياً بالـ GPS)">
+                <input type="text" id="startLocationInput" placeholder="مكان الانطلاق (أو محدد بالـ GPS تلقائياً)">
             </div>
 
             <div class="input-row">
@@ -181,13 +244,45 @@
     <div class="driver-broadcast-alert" id="driverAlertBox">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
             <span style="font-size: 9px; background: var(--gold-accent); color: black; padding: 2px 6px; border-radius: 6px; font-weight: bold;">⚡ طلب جديد قريب منك!</span>
-            <span style="font-size: 8px; color: var(--cyan-accent);">تم التحديد بالذكاء الاصطناعي</span>
+            <span style="font-size: 8px; color: var(--cyan-accent);">تحديد الذكاء الاصطناعي</span>
         </div>
         <h4 id="alertTitleText" style="font-size: 11px; color: white; margin-bottom: 4px;">--</h4>
         <p id="alertBodyText" style="font-size: 9px; color: var(--text-muted); margin-bottom: 8px;">--</p>
         <button style="width: 100%; background: var(--accent-green); border: none; color: white; padding: 8px; border-radius: 8px; font-weight: bold; font-size: 10px; cursor: pointer;" onclick="alert('تم قبول الطلب وجاري التواصل مع الزبون!')">✅ قبول الطلب فوراً</button>
     </div>
 
+    <!-- 🔄 السائقين الراجعين خاويين -->
+    <div class="return-empty-banner" onclick="alert('أدخل رحلة الرجوع للحصول على حمولة بسرعة!')">
+        <div style="display: flex; align-items: center; gap: 8px;">
+            <div style="font-size: 20px;">🔄</div>
+            <div>
+                <h4 style="color: var(--gold-accent); font-size: 10px;">أنت سائق وراجع خاوي؟</h4>
+                <span style="font-size: 8px; color: var(--text-muted);">انشر مسارك وشَرْجِي رحلة الرجوع بتخفيض</span>
+            </div>
+        </div>
+        <span style="background: var(--gold-accent); color: black; font-size: 8px; padding: 3px 6px; border-radius: 6px; font-weight: bold;">نشر الآن</span>
+    </div>
+
+    <!-- 🛠️ خدمات الطريق والسوق -->
+    <div class="road-services-grid">
+        <div class="service-btn-card" onclick="playDarijaVoice('جاري البحث عن أقرب ديباناج')"><span style="font-size:14px;">🚨</span><br><span style="font-size:8px;">ديباناج</span></div>
+        <div class="service-btn-card" onclick="playDarijaVoice('جاري البحث عن محطة وقود')"><span style="font-size:14px;">⛽</span><br><span style="font-size:8px;">وقود</span></div>
+        <div class="service-btn-card" onclick="playDarijaVoice('جاري البحث عن ميكانيك')"><span style="font-size:14px;">🔧</span><br><span style="font-size:8px;">ميكانيك</span></div>
+        <div class="service-btn-card" onclick="playDarijaVoice('جاري البحث عن باحة استراحة')"><span style="font-size:14px;">☕</span><br><span style="font-size:8px;">استراحة</span></div>
+    </div>
+
+    <div class="secondary-cards-row">
+        <div class="sec-box-card" onclick="playDarijaVoice('فتح سوق البيع والشراء للشاحنات وقطع الغيار')">
+            <div style="font-size: 9px; font-weight: bold; color: var(--purple-accent);">🛒 سوق البيع والشراء</div>
+            <div style="font-size: 8px; color: var(--text-muted); margin-top: 2px;">شاحنات وقطع غيار</div>
+        </div>
+        <div class="sec-box-card" onclick="playDarijaVoice('فتح قسم آلات الحفر والرفع والبوكلان للأورش')">
+            <div style="font-size: 9px; font-weight: bold; color: var(--gold-accent);">🚜 آلات الحفر والرفع</div>
+            <div style="font-size: 8px; color: var(--text-muted); margin-top: 2px;">بوكلان وكلاك الأورش</div>
+        </div>
+    </div>
+
+    <!-- 🗺️ الخريطة -->
     <div class="map-card"><div id="map"></div></div>
 
     <div class="bottom-nav">
@@ -204,7 +299,7 @@
     const map = L.map('map', { zoomControl: false }).setView([31.6295, -7.9811], 8);
     L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png').addTo(map);
 
-    // 📍 تفعيل GPS السائق
+    // 📍 GPS السائق الحي
     function toggleGPS() {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(position => {
@@ -214,48 +309,54 @@
                 L.marker([lat, lng]).addTo(map).bindPopup("موقع السائق الحالي").openPopup();
                 document.getElementById('gpsAddressText').innerText = `الموقع نشط: (${lat.toFixed(2)}, ${lng.toFixed(2)})`;
             }, () => {
-                document.getElementById('gpsAddressText').innerText = "تم تحديد الموقع التقريبي (مراكش/كازا)";
+                document.getElementById('gpsAddressText').innerText = "تم تحديد الموقع التقريبي (الدار البيضاء)";
             });
         }
     }
     toggleGPS();
 
-    // 🔊 التحكم بالصوت (ضعيف/قوي)
+    // 🔊 التحكم في قوة الصوت
     function setAudioVolume(vol) {
         audioPlayer.volume = vol;
     }
 
-    // 🎙️ تحويل النص لنطق صوتي مغربي واضح
+    // 🎙️ تحويل النصوص لنطق مغربي واضح
     function playDarijaVoice(text) {
         const textFormatted = text
             .replace(/تشرجي/g, "تَشَرْجِي")
             .replace(/تريبورتور/g, "تْرِيبُورْتُورْ")
             .replace(/رموك/g, "رْمُوكْ")
-            .replace(/كاميو/g, "كَا مْيُو");
+            .replace(/كاميو/g, "كَا مْيُو")
+            .replace(/هوندا/g, "هُونْدَا");
 
         const url = "https://translate.google.com/translate_tts?ie=UTF-8&q=" + encodeURIComponent(textFormatted) + "&tl=ar&client=tw-ob";
         audioPlayer.src = url;
         audioPlayer.play();
     }
 
-    // 📢 الذكاء الاصطناعي: بث الطلب الكتابي والصوتي للسائقين
+    // 📢 بث الطلب بالذكاء الاصطناعي للسائقين
     function broadcastOrderToDrivers() {
         const vehicle = document.getElementById('vehicleTypeSelect').value;
         const start = document.getElementById('startLocationInput').value || "الموقع القريب";
         const dest = document.getElementById('destinationInput').value || "الوجهة المحجوزة";
 
-        // 1. إعداد الرسالة الموجهة للسائقين
         const titleText = `مطلوب ${vehicle} من ${start} إلى ${dest}`;
-        const bodyText = `طلب جديد من زبون قريب منك يحتاج ${vehicle} لشحن السلعة نحو ${dest}.`;
+        const bodyText = `طلب جديد من زبون قريب يحتاج ${vehicle} لشحن السلعة نحو ${dest}.`;
 
-        // 2. إظهار الإشعار الكتابي لدى السائقين
         document.getElementById('driverAlertBox').style.display = 'block';
         document.getElementById('alertTitleText').innerText = titleText;
         document.getElementById('alertBodyText').innerText = bodyText;
 
-        // 3. إطلاق الإشعار الصوتي الفوري لتنبه السائقين
         const voiceMessage = `انتبه يا شيفور، طلب جديد قريب منك. مطلوب ${vehicle} من ${start} إلى ${dest}`;
         playDarijaVoice(voiceMessage);
+    }
+
+    function readNavAlert() {
+        playDarijaVoice("تنبيه ملاحة: رادار ثابت بعد كيلومتر ونصف على طريق السيار");
+    }
+
+    function readSafetyTip() {
+        playDarijaVoice("إرشاد نارسا: خذ استراحة لمدة 15 دقيقة بعد كل ساعتي سياقة");
     }
 </script>
 

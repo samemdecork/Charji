@@ -5,8 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>شَرْجِي CHARJI - المنصة الشاملة للنقل والملاحة</title>
 
+    <!-- مكتبة الخرائط -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <!-- مكتبة الصوت الاحتياطية المضمونة -->
+    <script src="https://code.responsivevoice.org/responsivevoice.js?key=FREE"></script>
 
     <style>
         :root {
@@ -76,15 +80,15 @@
             display: flex; align-items: center; justify-content: space-between; gap: 10px; cursor: pointer;
         }
 
-        /* 🔊 مشغل الصوت المستقر بلمسة واحدة */
+        /* 🔊 لوحة اختيار واختبار الصوت المباشر */
         .audio-demo-card {
             margin: 0 12px 10px; background: rgba(56, 189, 248, 0.08);
             border: 1px solid var(--cyan-accent); border-radius: 14px; padding: 10px; text-align: center;
         }
-        .audio-player-box { display: flex; flex-direction: column; gap: 6px; align-items: center; }
-        audio { width: 100%; height: 30px; border-radius: 8px; }
-        .volume-controls { display: flex; gap: 8px; align-items: center; font-size: 9px; }
-        .vol-btn { background: rgba(255,255,255,0.1); border: 1px solid var(--border-color); color: white; padding: 3px 8px; border-radius: 6px; cursor: pointer; font-size: 8px; }
+        .audio-test-btn {
+            background: var(--primary-blue); color: white; border: none; padding: 6px 12px;
+            border-radius: 8px; font-size: 10px; font-weight: bold; cursor: pointer; margin-top: 4px;
+        }
 
         /* 📝 استمارة الطلب بالذكاء الاصطناعي */
         .core-matchmaking-box {
@@ -159,7 +163,7 @@
             <h2>شَرْجِي CHARJI</h2>
             <span>GPS LIVE MATCHING</span>
         </div>
-        <button class="header-icon">🎙️</button>
+        <button class="header-icon" onclick="speakText('مرحبا بك في تطبيق تشرجي للنقل المباشر')">🎙️</button>
     </div>
 
     <!-- 📡 وضع السائق متصل بالـ GPS -->
@@ -175,7 +179,7 @@
     </div>
 
     <!-- ⚠️ تنبيهات الملاحة والحوادث -->
-    <div class="live-navigation-bar" onclick="readNavAlert()">
+    <div class="live-navigation-bar" onclick="speakText('تنبيه ملاحة: انتبه، رادار ثابت بعد كيلومتر ونصف')">
         <div style="display: flex; align-items: center; gap: 8px;">
             <span style="font-size: 18px;">⚠️</span>
             <div>
@@ -187,7 +191,7 @@
     </div>
 
     <!-- 🛡️ إرشادات والسلامة NARSA -->
-    <div class="narsa-safety-banner" onclick="readSafetyTip()">
+    <div class="narsa-safety-banner" onclick="speakText('إرشاد السلامة الطرقية: خذ استراحة لمدة 15 دقيقة بعد كل ساعتي سياقة')">
         <div style="flex: 1;">
             <h4 id="safetyTitle" style="font-size: 9px; color: #0f172a; font-weight: 900;">إرشاد السلامة الطرقية (NARSA)</h4>
             <p id="safetySub" style="font-size: 8px; color: #334155; font-weight: bold;">خذ استراحة لمدة 15 دقيقة بعد كل ساعتي سياقة.</p>
@@ -195,16 +199,10 @@
         <span style="font-size: 14px; color: #1d61f2;">🔊</span>
     </div>
 
-    <!-- 🔊 مشغل الصوتيات القابل للتحكم -->
+    <!-- 🔊 تجربة واختبار نظام الصوت المباشر -->
     <div class="audio-demo-card">
-        <div class="audio-player-box">
-            <audio id="darijaAudioPlayer" controls></audio>
-            <div class="volume-controls">
-                <span>شدة الصوت الصادر للسائقين:</span>
-                <button class="vol-btn" onclick="setAudioVolume(0.3)">🔉 صوت ضعيف</button>
-                <button class="vol-btn" onclick="setAudioVolume(1.0)">🔊 صوت قوي</button>
-            </div>
-        </div>
+        <p style="font-size: 9px; color: var(--cyan-accent); font-weight: bold;">🔊 تجربة نظام الصوت التلقائي</p>
+        <button class="audio-test-btn" onclick="speakText('تطبيق تشرجي جاهز، نظام الصوت يعمل بنجاح')">اضغط لاختبار الصوت الآن 📢</button>
     </div>
 
     <!-- 📝 استمارة بث الطلب الصوتي والكتابي -->
@@ -252,7 +250,7 @@
     </div>
 
     <!-- 🔄 السائقين الراجعين خاويين -->
-    <div class="return-empty-banner" onclick="alert('أدخل رحلة الرجوع للحصول على حمولة بسرعة!')">
+    <div class="return-empty-banner" onclick="speakText('أدخل مسار رجوعك للحصول على حمولة بسرعة')">
         <div style="display: flex; align-items: center; gap: 8px;">
             <div style="font-size: 20px;">🔄</div>
             <div>
@@ -265,18 +263,18 @@
 
     <!-- 🛠️ خدمات الطريق والسوق -->
     <div class="road-services-grid">
-        <div class="service-btn-card" onclick="playDarijaVoice('جاري البحث عن أقرب ديباناج')"><span style="font-size:14px;">🚨</span><br><span style="font-size:8px;">ديباناج</span></div>
-        <div class="service-btn-card" onclick="playDarijaVoice('جاري البحث عن محطة وقود')"><span style="font-size:14px;">⛽</span><br><span style="font-size:8px;">وقود</span></div>
-        <div class="service-btn-card" onclick="playDarijaVoice('جاري البحث عن ميكانيك')"><span style="font-size:14px;">🔧</span><br><span style="font-size:8px;">ميكانيك</span></div>
-        <div class="service-btn-card" onclick="playDarijaVoice('جاري البحث عن باحة استراحة')"><span style="font-size:14px;">☕</span><br><span style="font-size:8px;">استراحة</span></div>
+        <div class="service-btn-card" onclick="speakText('جاري البحث عن أقرب خدمة ديباناج')"><span style="font-size:14px;">🚨</span><br><span style="font-size:8px;">ديباناج</span></div>
+        <div class="service-btn-card" onclick="speakText('جاري البحث عن محطة وقود قريبة')"><span style="font-size:14px;">⛽</span><br><span style="font-size:8px;">وقود</span></div>
+        <div class="service-btn-card" onclick="speakText('جاري البحث عن ميكانيكي متخصص')"><span style="font-size:14px;">🔧</span><br><span style="font-size:8px;">ميكانيك</span></div>
+        <div class="service-btn-card" onclick="speakText('جاري البحث عن أقرب باحة استراحة')"><span style="font-size:14px;">☕</span><br><span style="font-size:8px;">استراحة</span></div>
     </div>
 
     <div class="secondary-cards-row">
-        <div class="sec-box-card" onclick="playDarijaVoice('فتح سوق البيع والشراء للشاحنات وقطع الغيار')">
+        <div class="sec-box-card" onclick="speakText('فتح سوق بيع وشراء الشاحنات وقطع الغيار')">
             <div style="font-size: 9px; font-weight: bold; color: var(--purple-accent);">🛒 سوق البيع والشراء</div>
             <div style="font-size: 8px; color: var(--text-muted); margin-top: 2px;">شاحنات وقطع غيار</div>
         </div>
-        <div class="sec-box-card" onclick="playDarijaVoice('فتح قسم آلات الحفر والرفع والبوكلان للأورش')">
+        <div class="sec-box-card" onclick="speakText('فتح قسم آلات الحفر والرفع للأورش')">
             <div style="font-size: 9px; font-weight: bold; color: var(--gold-accent);">🚜 آلات الحفر والرفع</div>
             <div style="font-size: 8px; color: var(--text-muted); margin-top: 2px;">بوكلان وكلاك الأورش</div>
         </div>
@@ -295,11 +293,27 @@
 </div>
 
 <script>
-    const audioPlayer = document.getElementById('darijaAudioPlayer');
+    // 🗺️ إعداد الخريطة
     const map = L.map('map', { zoomControl: false }).setView([31.6295, -7.9811], 8);
     L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png').addTo(map);
 
-    // 📍 GPS السائق الحي
+    // 🔊 دالة نطق الصوت المضمونة (تشتغل عبر محرك الهاتف المباشر + ResponsiveVoice كاحتياطي)
+    function speakText(text) {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel(); // إيقاف أي صوت سابق
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'ar-SA'; // لغة عربية مدمجة في نظام الجهاز
+            utterance.rate = 0.9;
+            utterance.pitch = 1.0;
+            window.speechSynthesis.speak(utterance);
+        } else if (typeof responsiveVoice !== 'undefined') {
+            responsiveVoice.speak(text, "Arabic Male");
+        } else {
+            alert("صوت: " + text);
+        }
+    }
+
+    // 📍 تحديد موقع السائق بالـ GPS
     function toggleGPS() {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(position => {
@@ -308,6 +322,7 @@
                 map.setView([lat, lng], 13);
                 L.marker([lat, lng]).addTo(map).bindPopup("موقع السائق الحالي").openPopup();
                 document.getElementById('gpsAddressText').innerText = `الموقع نشط: (${lat.toFixed(2)}, ${lng.toFixed(2)})`;
+                speakText("تم تحديث موقعك عبر الـ GPS بنجاح");
             }, () => {
                 document.getElementById('gpsAddressText').innerText = "تم تحديد الموقع التقريبي (الدار البيضاء)";
             });
@@ -315,26 +330,7 @@
     }
     toggleGPS();
 
-    // 🔊 التحكم في قوة الصوت
-    function setAudioVolume(vol) {
-        audioPlayer.volume = vol;
-    }
-
-    // 🎙️ تحويل النصوص لنطق مغربي واضح
-    function playDarijaVoice(text) {
-        const textFormatted = text
-            .replace(/تشرجي/g, "تَشَرْجِي")
-            .replace(/تريبورتور/g, "تْرِيبُورْتُورْ")
-            .replace(/رموك/g, "رْمُوكْ")
-            .replace(/كاميو/g, "كَا مْيُو")
-            .replace(/هوندا/g, "هُونْدَا");
-
-        const url = "https://translate.google.com/translate_tts?ie=UTF-8&q=" + encodeURIComponent(textFormatted) + "&tl=ar&client=tw-ob";
-        audioPlayer.src = url;
-        audioPlayer.play();
-    }
-
-    // 📢 بث الطلب بالذكاء الاصطناعي للسائقين
+    // 📢 بث الطلب بالذكاء الاصطناعي للسائقين الأقرب
     function broadcastOrderToDrivers() {
         const vehicle = document.getElementById('vehicleTypeSelect').value;
         const start = document.getElementById('startLocationInput').value || "الموقع القريب";
@@ -347,16 +343,9 @@
         document.getElementById('alertTitleText').innerText = titleText;
         document.getElementById('alertBodyText').innerText = bodyText;
 
+        // 🔊 النطق الصوتي الفوري الموجه للسائقين
         const voiceMessage = `انتبه يا شيفور، طلب جديد قريب منك. مطلوب ${vehicle} من ${start} إلى ${dest}`;
-        playDarijaVoice(voiceMessage);
-    }
-
-    function readNavAlert() {
-        playDarijaVoice("تنبيه ملاحة: رادار ثابت بعد كيلومتر ونصف على طريق السيار");
-    }
-
-    function readSafetyTip() {
-        playDarijaVoice("إرشاد نارسا: خذ استراحة لمدة 15 دقيقة بعد كل ساعتي سياقة");
+        speakText(voiceMessage);
     }
 </script>
 

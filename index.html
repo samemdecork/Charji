@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>شَرْجِي برو | التسجيل والعمليات</title>
+    <title>شَرْجِي برو | منصة النقل والأشغال الشاملة</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -15,6 +15,7 @@
             --amber: #f59e0b;
             --emerald: #10b981;
             --rose: #f43f5e;
+            --purple: #8b5cf6;
             --text-high: #f8fafc;
             --text-dim: #94a3b8;
             --border: rgba(255, 255, 255, 0.08);
@@ -27,69 +28,57 @@
         .pro-app {
             width: 100%; max-width: 480px; background: #080d1a; min-height: 100vh; padding-bottom: 90px;
             position: relative; border-left: 1px solid var(--border); border-right: 1px solid var(--border);
-            display: none; /* مخفي في البداية حتى يسجل الدخول */
+            display: none; /* مخفي حتى التسجيل */
         }
 
         /* --- Auth / Registration Overlay --- */
-        .auth-overlay {
-            position: fixed; inset: 0; background: var(--bg-base); z-index: 10000;
-            display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px;
-        }
+        .auth-overlay { position: fixed; inset: 0; background: var(--bg-base); z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px; }
         .auth-logo { font-size: 50px; color: var(--cyan); margin-bottom: 10px; text-shadow: 0 0 20px rgba(6,182,212,0.5); }
-        .auth-card {
-            background: var(--surface-1); border: 1px solid var(--border); border-radius: 20px;
-            padding: 24px; width: 100%; max-width: 360px; text-align: center; margin-bottom: 16px; cursor: pointer;
-            transition: 0.3s;
-        }
+        .auth-card { background: var(--surface-1); border: 1px solid var(--border); border-radius: 20px; padding: 20px; width: 100%; max-width: 360px; text-align: center; margin-bottom: 12px; cursor: pointer; transition: 0.3s; }
         .auth-card:hover { border-color: var(--cyan); background: rgba(6,182,212,0.05); }
         .auth-card.driver { border: 2px solid var(--amber); background: rgba(245, 158, 11, 0.05); }
-        .auth-title { font-size: 18px; font-weight: bold; margin-bottom: 8px; }
-        .auth-desc { font-size: 11px; color: var(--text-dim); line-height: 1.6; }
-        .badge-fee { background: rgba(245, 158, 11, 0.2); color: var(--amber); padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: bold; margin-top: 10px; display: inline-block; }
+        .auth-title { font-size: 16px; font-weight: bold; margin-bottom: 6px; }
+        .auth-desc { font-size: 11px; color: var(--text-dim); line-height: 1.4; }
+        .badge-fee { background: rgba(245, 158, 11, 0.2); color: var(--amber); padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: bold; margin-top: 8px; display: inline-block; }
 
         /* --- Main App Layout --- */
-        .pro-header {
-            position: sticky; top: 0; z-index: 1000; background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(12px);
-            display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--border);
-        }
+        .pro-header { position: sticky; top: 0; z-index: 1000; background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(12px); display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--border); }
         .wallet-badge { background: rgba(16, 185, 129, 0.15); color: var(--emerald); border: 1px solid var(--emerald); padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: bold; }
 
         /* 1. Ad Banner Space */
-        .ad-space {
-            margin: 16px; background: var(--ad-bg); border: 1px dashed var(--amber); border-radius: 12px;
-            height: 90px; display: flex; flex-direction: column; align-items: center; justify-content: center;
-            position: relative; overflow: hidden; cursor: pointer;
-        }
+        .ad-space { margin: 12px 16px; background: var(--ad-bg); border: 1px dashed var(--amber); border-radius: 12px; height: 85px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden; cursor: pointer; box-shadow: 0 4px 15px rgba(245,158,11,0.1); }
         .ad-tag { position: absolute; top: 0; right: 0; background: var(--amber); color: #000; font-size: 9px; font-weight: bold; padding: 2px 8px; border-bottom-left-radius: 8px; }
         .ad-content { font-size: 14px; font-weight: bold; color: var(--text-high); }
         .ad-sub { font-size: 10px; color: var(--text-dim); margin-top: 4px; }
 
         /* 2. Microphone / Voice Console */
-        .voice-console {
-            background: var(--surface-1); border: 1px solid var(--border); border-radius: 16px;
-            margin: 0 16px 16px 16px; padding: 20px; display: flex; flex-direction: column; align-items: center; gap: 16px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-        .mic-btn {
-            width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(145deg, #1e293b, #0f172a);
-            border: 3px solid var(--cyan); color: var(--cyan); font-size: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 0 20px rgba(6, 182, 212, 0.3); transition: 0.2s;
-        }
+        .voice-console { background: var(--surface-1); border: 1px solid var(--border); border-radius: 16px; margin: 0 16px 16px 16px; padding: 16px; display: flex; flex-direction: column; align-items: center; gap: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        .mic-btn { width: 70px; height: 70px; border-radius: 50%; background: linear-gradient(145deg, #1e293b, #0f172a); border: 3px solid var(--cyan); color: var(--cyan); font-size: 28px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 0 20px rgba(6, 182, 212, 0.3); transition: 0.2s; }
         .mic-btn:active { transform: scale(0.95); background: var(--rose); border-color: var(--rose); color: white; box-shadow: 0 0 30px rgba(244, 63, 94, 0.6); }
-        .transcript-box {
-            width: 100%; background: rgba(0,0,0,0.4); border-radius: 8px; padding: 12px; font-size: 11px;
-            color: var(--text-dim); text-align: center; border-right: 3px solid var(--cyan); min-height: 40px;
-        }
+        .transcript-box { width: 100%; background: rgba(0,0,0,0.4); border-radius: 8px; padding: 10px; font-size: 10px; color: var(--text-dim); text-align: center; border-right: 3px solid var(--cyan); min-height: 35px; }
 
-        /* 3. Orders List */
-        .section-title { font-size: 13px; font-weight: bold; color: var(--text-high); margin: 0 16px 10px 16px; display: flex; justify-content: space-between; }
-        .order-card {
-            background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px;
-            margin: 0 16px 12px 16px; padding: 14px; border-right: 4px solid var(--amber);
-        }
-        .order-header { display: flex; justify-content: space-between; font-weight: bold; font-size: 12px; margin-bottom: 6px; }
-        .order-price { color: var(--emerald); font-size: 14px; }
-        .order-details { font-size: 10px; color: var(--text-dim); margin-bottom: 10px; }
-        .btn-action { background: var(--primary); color: white; border: none; padding: 8px 12px; border-radius: 8px; font-size: 11px; font-weight: bold; cursor: pointer; width: 100%; display: flex; justify-content: center; gap: 8px; align-items: center; }
+        /* 3. Comprehensive Services Grid (The Super App Core) */
+        .section-title { font-size: 13px; font-weight: bold; color: var(--text-high); margin: 0 16px 10px 16px; display: flex; justify-content: space-between; align-items: center; }
+        .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 0 16px 16px 16px; }
+        .service-box { background: var(--surface-2); border: 1px solid var(--border); border-radius: 12px; padding: 12px 6px; text-align: center; cursor: pointer; transition: 0.2s; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; }
+        .service-box:hover, .service-box:active { border-color: var(--cyan); background: rgba(6, 182, 212, 0.1); }
+        .service-box i { font-size: 22px; }
+        .service-box span { font-size: 9px; font-weight: bold; color: var(--text-high); }
+        
+        /* Service Colors */
+        .color-machinery { color: var(--amber); } /* طراكس كلاك */
+        .color-portechar { color: var(--rose); } /* بورت شار */
+        .color-workers { color: var(--cyan); } /* عمال الهدم */
+        .color-debris { color: #a8a29e; } /* نقل الردمة */
+        .color-market { color: var(--purple); } /* سوق السائقين */
+        .color-freight { color: var(--emerald); } /* نقل البضائع */
+
+        /* 4. Live Orders Feed */
+        .order-card { background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px; margin: 0 16px 12px 16px; padding: 12px; border-right: 4px solid var(--amber); }
+        .order-header { display: flex; justify-content: space-between; font-weight: bold; font-size: 11px; margin-bottom: 6px; }
+        .order-price { color: var(--emerald); font-size: 13px; }
+        .order-details { font-size: 10px; color: var(--text-dim); margin-bottom: 10px; line-height: 1.5; }
+        .btn-action { background: var(--primary); color: white; border: none; padding: 8px; border-radius: 8px; font-size: 11px; font-weight: bold; cursor: pointer; width: 100%; display: flex; justify-content: center; gap: 8px; align-items: center; }
 
         /* Pro Navbar */
         .pro-navbar { position: fixed; bottom: 0; width: 100%; max-width: 480px; background: rgba(15, 23, 42, 0.95); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 10px 0; z-index: 1000; }
@@ -107,97 +96,147 @@
 <!-- 1. Authentication / Registration Overlay -->
 <div class="auth-overlay" id="authScreen">
     <div class="auth-logo"><i class="fa-solid fa-truck-fast"></i></div>
-    <h1 style="font-size: 20px; margin-bottom: 24px;">مرحباً بك في شَرْجِي برو</h1>
+    <h1 style="font-size: 18px; margin-bottom: 20px;">شَرْجِي برو | المنصة الشاملة</h1>
     
-    <!-- Driver Registration Choice -->
-    <div class="auth-card driver" onclick="loginAs('driver')">
-        <i class="fa-solid fa-steering-wheel" style="font-size: 24px; color: var(--amber); margin-bottom: 10px;"></i>
-        <div class="auth-title">تسجيل كسائق مهني</div>
-        <div class="auth-desc">استفد من شحنات يومية، رادار مباشر، وتجنب الرجوع فارغاً.</div>
-        <div class="badge-fee">رسوم اشتراك + عمولة 10% على الرحلة</div>
+    <!-- Driver / Service Provider Choice -->
+    <div class="auth-card driver" onclick="loginAs('provider')">
+        <i class="fa-solid fa-hard-hat" style="font-size: 24px; color: var(--amber); margin-bottom: 10px;"></i>
+        <div class="auth-title">تسجيل كمزود خدمة / سائق</div>
+        <div class="auth-desc">شاحنات، طراكس، بورت شار، أو عامل حر. استقبال الطلبات المباشرة.</div>
+        <div class="badge-fee">رسوم اشتراك + عمولة 10% على العمليات</div>
     </div>
 
     <!-- Customer Registration Choice -->
     <div class="auth-card" onclick="loginAs('customer')">
-        <i class="fa-solid fa-box-open" style="font-size: 24px; color: var(--cyan); margin-bottom: 10px;"></i>
-        <div class="auth-title">تسجيل كزبون / شركة</div>
-        <div class="auth-desc">ابحث عن شاحنات بيكوب، ديانا، أو رموك بأفضل الأسعار.</div>
-        <div style="font-size: 10px; color: var(--emerald); margin-top: 10px; font-weight: bold;">تسجيل مجاني 100%</div>
+        <i class="fa-solid fa-building-user" style="font-size: 24px; color: var(--cyan); margin-bottom: 10px;"></i>
+        <div class="auth-title">تسجيل كزبون / شركة بناء</div>
+        <div class="auth-desc">طلب نقل، كراء آلات، إفراغ الردمة وعمال الهدم بصوتك فقط.</div>
+        <div style="font-size: 10px; color: var(--emerald); margin-top: 10px; font-weight: bold;">تسجيل واستعمال مجاني</div>
     </div>
 </div>
 
-<!-- 2. Main Application -->
+<!-- 2. Main Super App -->
 <div class="pro-app" id="mainApp">
     <!-- Header -->
     <header class="pro-header">
         <div style="display:flex; align-items:center; gap:8px;">
-            <i class="fa-solid fa-truck-fast" style="color: var(--cyan); font-size: 20px;"></i>
-            <span style="font-weight: 900; font-size: 16px;">شَرْجِي</span>
+            <i class="fa-solid fa-layer-group" style="color: var(--cyan); font-size: 18px;"></i>
+            <span style="font-weight: 900; font-size: 15px;">شَرْجِي برو</span>
         </div>
-        <!-- Wallet/Commission Indicator -->
         <div class="wallet-badge" id="walletBadge">
             <i class="fa-solid fa-wallet"></i> الرصيد: 0 د.م
         </div>
     </header>
 
-    <!-- SECTION 1: Ad Space (الفوق) -->
-    <div class="ad-space" onclick="speakPro('للإعلان معنا، المرجو التواصل مع الإدارة')">
+    <!-- SECTION 1: Ad Space -->
+    <div class="ad-space" onclick="speakPro('إشهار: شركة كاطربيلار، تخفيض على قطع غيار الطراكس والكلاك هذا الشهر')">
         <div class="ad-tag">مساحة إعلانية</div>
-        <i class="fa-solid fa-gas-pump" style="color: var(--rose); font-size: 20px; margin-bottom: 4px;"></i>
-        <div class="ad-content">زيوت محركات طوطال</div>
-        <div class="ad-sub">خصم 15% لسائقي شَرْجِي برو هذا الأسبوع!</div>
+        <i class="fa-solid fa-gears" style="color: var(--amber); font-size: 22px; margin-bottom: 4px;"></i>
+        <div class="ad-content">CAT - قطع غيار الآلات</div>
+        <div class="ad-sub">تخفيض 15% لمستعملي شَرْجِي برو!</div>
     </div>
 
-    <!-- SECTION 2: Microphone & Voice Console (الوسط) -->
+    <!-- SECTION 2: Voice Console -->
     <div class="voice-console">
-        <div style="font-size: 12px; font-weight: bold; color: var(--cyan);">
-            <i class="fa-solid fa-walkie-talkie"></i> اضغط وتكلم مباشرة
+        <div style="font-size: 11px; font-weight: bold; color: var(--cyan);">
+            <i class="fa-solid fa-walkie-talkie"></i> اطلب أي خدمة بصوتك (نقل، كراء، هدم...)
         </div>
-        
         <button class="mic-btn" onmousedown="startRecording()" onmouseup="stopRecording()" ontouchstart="startRecording()" ontouchend="stopRecording()">
             <i class="fa-solid fa-microphone"></i>
         </button>
-        
         <div class="transcript-box" id="transcript">
-            (مثال: أنا فسوق الأربعاء، خاصني بيكوب لكازا)
+            (مثال: بغيت بورت شار باش ننقل طراكس من كازا لرباط، و 4 دالخدامة للهدم)
         </div>
     </div>
 
-    <!-- SECTION 3: Live Orders (لتحت) -->
+    <!-- SECTION 3: The Super App Grid (الخدمات الشاملة) -->
     <div class="section-title">
-        <span><i class="fa-solid fa-list"></i> الطلبات المتاحة الآن</span>
-        <span style="color: var(--amber); font-size: 10px;">تحديث مباشر</span>
+        <span><i class="fa-solid fa-shapes"></i> الخدمات المتوفرة</span>
+    </div>
+    <div class="services-grid">
+        <!-- Heavy Machinery -->
+        <div class="service-box" onclick="speakPro('قسم كراء الآلات الكبيرة، طراكس، كلاك، و نيفلوز')">
+            <i class="fa-solid fa-tractor color-machinery"></i>
+            <span>كراء الآلات الكبيرة</span>
+        </div>
+        <!-- Heavy Transport (Porte-char) -->
+        <div class="service-box" onclick="speakPro('طلب شاحنات بورت شار لنقل الآلات الثقيلة')">
+            <i class="fa-solid fa-truck-moving color-portechar"></i>
+            <span>نقل الآلات (بورت شار)</span>
+        </div>
+        <!-- Demolition Workers -->
+        <div class="service-box" onclick="speakPro('توفير عمال محترفين للهدم والأشغال الشاقة')">
+            <i class="fa-solid fa-helmet-safety color-workers"></i>
+            <span>عمال الهدم</span>
+        </div>
+        <!-- Debris Removal -->
+        <div class="service-box" onclick="speakPro('شاحنات نقل وإفراغ الردمة ومخلفات البناء في المطرح العمومي')">
+            <i class="fa-solid fa-dumpster color-debris"></i>
+            <span>إفراغ الردمة</span>
+        </div>
+        <!-- Regular Freight -->
+        <div class="service-box" onclick="speakPro('نقل البضائع والخضروات عبر البيكوب، ديانا والرموك')">
+            <i class="fa-solid fa-boxes-packing color-freight"></i>
+            <span>نقل البضائع</span>
+        </div>
+        <!-- Drivers Marketplace -->
+        <div class="service-box" onclick="speakPro('سوق السائقين، بيع وشراء قطع الغيار، الزيوت، ومستلزمات الشاحنات')">
+            <i class="fa-solid fa-shop color-market"></i>
+            <span>سوق السائقين</span>
+        </div>
     </div>
 
-    <div class="order-card">
+    <!-- SECTION 4: Live Orders (طلبات المارشي) -->
+    <div class="section-title">
+        <span><i class="fa-solid fa-satellite-dish"></i> رادار الطلبات المباشرة</span>
+        <span style="color: var(--amber); font-size: 10px;"><i class="fa-solid fa-circle-dot fa-fade"></i> مباشر</span>
+    </div>
+
+    <!-- Order 1: Heavy Transport -->
+    <div class="order-card" style="border-right-color: var(--rose);">
         <div class="order-header">
-            <span>سوق أربعاء الغرب <i class="fa-solid fa-arrow-left" style="font-size: 10px; margin: 0 4px; color: var(--text-dim);"></i> الدار البيضاء</span>
-            <span class="order-price">750 د.م</span>
+            <span>الدار البيضاء (سيدي معروف) <i class="fa-solid fa-arrow-left" style="font-size: 10px; margin: 0 4px; color: var(--text-dim);"></i> بوزنيقة</span>
+            <span class="order-price">1,800 د.م</span>
         </div>
         <div class="order-details">
-            <i class="fa-solid fa-carrot" style="color: var(--amber);"></i> 1.5 طن خضر وفواكه طرية • مطلوب بيكوب
+            <i class="fa-solid fa-truck-moving" style="color: var(--rose);"></i> <strong>مطلوب بورت شار:</strong> لنقل آلة طراكس (Trax). الانطلاق فوري.
         </div>
-        <button class="btn-action" onclick="acceptOrder()">
-            <i class="fa-solid fa-handshake"></i> قبول الطلب وخصم العمولة
+        <button class="btn-action" onclick="acceptOrder('بورت شار')">
+            <i class="fa-solid fa-handshake"></i> قبول الطلب (عمولة 180 درهم)
         </button>
     </div>
 
+    <!-- Order 2: Demolition & Debris -->
     <div class="order-card" style="border-right-color: var(--cyan);">
         <div class="order-header">
-            <span>طنجة الميناء <i class="fa-solid fa-arrow-left" style="font-size: 10px; margin: 0 4px; color: var(--text-dim);"></i> القنيطرة</span>
-            <span class="order-price">1,200 د.م</span>
+            <span>الرباط (حي الرياض) <i class="fa-solid fa-arrow-left" style="font-size: 10px; margin: 0 4px; color: var(--text-dim);"></i> المطرح العمومي</span>
+            <span class="order-price">1,500 د.م</span>
         </div>
         <div class="order-details">
-            <i class="fa-solid fa-pallet" style="color: var(--cyan);"></i> مواد بناء • مطلوب ديانا 3.5 طن
+            <i class="fa-solid fa-hammer" style="color: var(--cyan);"></i> <strong>مطلوب عمال وشاحنة:</strong> 3 عمال للهدم + شاحنة لإفراغ الردمة.
         </div>
-        <button class="btn-action" onclick="acceptOrder()">
-            <i class="fa-solid fa-handshake"></i> قبول الطلب وخصم العمولة
+        <button class="btn-action" onclick="acceptOrder('الهدم والردمة')">
+            <i class="fa-solid fa-handshake"></i> قبول الطلب (عمولة 150 درهم)
+        </button>
+    </div>
+
+    <!-- Order 3: Market -->
+    <div class="order-card" style="border-right-color: var(--purple);">
+        <div class="order-header">
+            <span>سوق السائقين (إعلان بيع)</span>
+            <span class="order-price">800 د.م</span>
+        </div>
+        <div class="order-details">
+            <i class="fa-solid fa-shop" style="color: var(--purple);"></i> <strong>بيع:</strong> 2 روائض (بنوّات) ديانا حالة جيدة للبيع فمدينة طنجة.
+        </div>
+        <button class="btn-action" style="background: var(--surface-2); color: var(--purple); border: 1px solid var(--purple);" onclick="speakPro('جاري الاتصال بالبائع')">
+            <i class="fa-solid fa-phone"></i> اتصل بالبائع
         </button>
     </div>
 
     <!-- Pro Navbar -->
     <nav class="pro-navbar">
-        <div class="pnav-item active"><i class="fa-solid fa-microphone"></i> الراديو/الطلب</div>
+        <div class="pnav-item active"><i class="fa-solid fa-house"></i> الرئيسية</div>
         <div class="pnav-item"><i class="fa-solid fa-map"></i> الرادار</div>
         <div class="pnav-item"><i class="fa-solid fa-wallet"></i> المداخيل</div>
         <div class="pnav-item"><i class="fa-solid fa-user"></i> حسابي</div>
@@ -221,22 +260,20 @@
 
     // Auth Logic
     function loginAs(role) {
-        // Hide auth, show app
         document.getElementById('authScreen').style.display = 'none';
         document.getElementById('mainApp').style.display = 'block';
 
         let welcomeMsg = "";
-        if (role === 'driver') {
-            document.getElementById('walletBadge').innerHTML = '<i class="fa-solid fa-wallet"></i> الرصيد: -50 د.م (الاشتراك)';
+        if (role === 'provider') {
+            document.getElementById('walletBadge').innerHTML = '<i class="fa-solid fa-wallet"></i> الرصيد: -100 د.م (الاشتراك)';
             document.getElementById('walletBadge').style.color = 'var(--rose)';
             document.getElementById('walletBadge').style.borderColor = 'var(--rose)';
-            welcomeMsg = "مرحباً بك أخي السائق. تم تسجيل الدخول بنجاح. راديو الطريق يعمل الآن، المرجو شحن رصيدك لتلقي الطلبات.";
+            welcomeMsg = "مرحباً بك. تم تفعيل حسابك كمزود خدمة. يمكنك الآن استقبال طلبات النقل، كراء الآلات، وأشغال الهدم.";
         } else {
             document.getElementById('walletBadge').style.display = 'none';
-            welcomeMsg = "مرحباً بك كزبون. يمكنك الآن طلب شاحنة بيكوب أو رموك بصوتك مجاناً.";
+            welcomeMsg = "مرحباً بك كزبون. يمكنك الآن طلب بورت شار، طراكس، أو عمال هدم بصوتك فقط مجاناً.";
         }
 
-        // Speak welcome, then play background radio
         radioPlayer.volume = 0.15;
         speakPro(welcomeMsg, () => {
             radioPlayer.play().catch(e => console.log("Radio auto-play blocked by browser."));
@@ -253,15 +290,15 @@
 
     function stopRecording() {
         document.querySelector('.mic-btn').style.background = 'linear-gradient(145deg, #1e293b, #0f172a)';
-        document.getElementById('transcript').innerText = "تم تسجيل طلبك: خاصني بيكوب من سوق الأربعاء لكازا.";
+        document.getElementById('transcript').innerText = "تم التسجيل: خاصني بورت شار لنقل طراكس من كازا لرباط، و 4 عمال للهدم.";
         document.getElementById('transcript').style.color = "var(--text-high)";
-        speakPro("تم تسجيل طلبك وسيتم نشره للسائقين.");
+        speakPro("تم تسجيل طلبك وتوزيعه على أصحاب البورت شار وعمال الهدم.");
     }
 
-    // Accept Order Logic (Commission deduction demo)
-    function acceptOrder() {
-        if(confirm("هل أنت متأكد من قبول هذا الطلب؟ سيتم خصم 10% كعمولة للتطبيق من رصيدك.")) {
-            speakPro("تم قبول الطلب بنجاح، تم خصم العمولة. طريق السلامة.");
+    // Accept Order Logic
+    function acceptOrder(type) {
+        if(confirm("تأكيد قبول طلب " + type + "؟ سيتم خصم العمولة من رصيدك.")) {
+            speakPro("تم قبول طلب " + type + " بنجاح. معلومات الزبون متاحة الآن. الله يسهل الأمور.");
         }
     }
 </script>

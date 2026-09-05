@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>شَرْجِي برو | الراديو المباشر والخدمات</title>
+    <title>شَرْجِي برو | المنصة الشاملة والسلامة المرورية</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --bg-base: #030712; --surface-1: #0f172a; --surface-2: #1e293b;
             --primary: #2563eb; --cyan: #06b6d4; --amber: #f59e0b;
-            --emerald: #10b981; --rose: #f43f5e; --text-high: #f8fafc;
-            --text-dim: #94a3b8; --border: rgba(255, 255, 255, 0.08);
+            --emerald: #10b981; --rose: #f43f5e; --narsa: #0ea5e9;
+            --text-high: #f8fafc; --text-dim: #94a3b8; --border: rgba(255, 255, 255, 0.08);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, sans-serif; user-select: none; }
@@ -35,20 +35,31 @@
         .ad-space { margin: 12px 16px; background: #171717; border: 1px dashed var(--amber); border-radius: 12px; height: 80px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden; cursor: pointer; }
         .ad-tag { position: absolute; top: 0; right: 0; background: var(--amber); color: #000; font-size: 9px; font-weight: bold; padding: 2px 8px; border-bottom-left-radius: 8px; }
 
-        /* --- THE RADIO BANNER (RESTORED & UPGRADED) --- */
+        /* --- THE RADIO BANNER --- */
         .radio-banner { background: linear-gradient(90deg, #1e1b4b 0%, #0f172a 100%); border: 1px solid var(--cyan); border-radius: 12px; margin: 0 16px 12px 16px; padding: 10px 14px; display: flex; align-items: center; gap: 12px; cursor: pointer; box-shadow: 0 0 15px rgba(6, 182, 212, 0.15); }
         .play-btn { width: 36px; height: 36px; background: var(--cyan); border-radius: 50%; color: #000; display: flex; justify-content: center; align-items: center; font-size: 14px; flex-shrink: 0; }
-        
         .equalizer { display: none; align-items: flex-end; gap: 3px; height: 16px; }
         .equalizer span { width: 3px; background-color: var(--amber); border-radius: 2px; animation: eq-play 0.5s infinite alternate ease-in-out; }
         .equalizer span:nth-child(2) { animation-delay: 0.2s; }
         .equalizer span:nth-child(3) { animation-delay: 0.4s; }
         .equalizer span:nth-child(4) { animation-delay: 0.1s; }
         @keyframes eq-play { 0% { height: 4px; } 100% { height: 16px; } }
-
         .radio-ticker { width: 100%; overflow: hidden; background: rgba(0,0,0,0.3); border-radius: 4px; padding: 2px 4px; margin-top: 4px; }
         .ticker-text { font-size: 9px; color: var(--emerald); white-space: nowrap; animation: scrollText 15s linear infinite; display: inline-block; }
         @keyframes scrollText { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+
+        /* --- NEW: SAFETY & ROAD DASHBOARD (الطقس، نارسا، التشوير) --- */
+        .safety-dashboard { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 0 16px 12px 16px; }
+        .safety-box { background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px; padding: 10px 4px; text-align: center; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition: 0.2s; }
+        .safety-box:active { transform: scale(0.95); }
+        .safety-box.weather i { color: #38bdf8; font-size: 22px; }
+        .safety-box.alert { border-color: rgba(244, 63, 94, 0.5); background: rgba(244, 63, 94, 0.05); }
+        .safety-box.alert i { color: var(--rose); font-size: 22px; animation: flashWarning 1s infinite; }
+        .safety-box.narsa i { color: var(--narsa); font-size: 22px; }
+        .safety-title { font-size: 9px; color: var(--text-dim); }
+        .safety-val { font-size: 10px; font-weight: bold; color: var(--text-high); }
+        .safety-val.danger { color: var(--rose); }
+        @keyframes flashWarning { 0%, 100% { opacity: 1; text-shadow: 0 0 10px var(--rose); } 50% { opacity: 0.4; } }
 
         /* --- Voice Console --- */
         .voice-console { background: var(--surface-1); border: 1px solid var(--border); border-radius: 16px; margin: 0 16px 16px 16px; padding: 16px; display: flex; flex-direction: column; align-items: center; gap: 12px; position: relative; }
@@ -80,6 +91,11 @@
         .form-input { width: 100%; background: var(--surface-2); border: 1px solid var(--border); color: white; padding: 10px; border-radius: 8px; font-size: 12px; }
         .upload-btn { background: rgba(255,255,255,0.05); border: 1px dashed var(--cyan); color: var(--cyan); padding: 10px; border-radius: 8px; text-align: center; font-size: 11px; cursor: pointer; display: block; margin-top: 6px; }
         .submit-btn { background: linear-gradient(135deg, var(--primary), #1d4ed8); color: white; border: none; padding: 12px; border-radius: 8px; width: 100%; font-weight: bold; margin-top: 10px; cursor: pointer; }
+        
+        /* Pro Navbar */
+        .pro-navbar { position: fixed; bottom: 0; width: 100%; max-width: 480px; background: rgba(15, 23, 42, 0.95); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 10px 0; z-index: 1000; }
+        .pnav-item { text-align: center; color: var(--text-dim); font-size: 10px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+        .pnav-item.active { color: var(--cyan); }
     </style>
 </head>
 <body>
@@ -144,13 +160,13 @@
     </header>
 
     <!-- Ad Space -->
-    <div class="ad-space">
+    <div class="ad-space" onclick="speakPro('إشهار: تأمينات الوفاء، عروض خاصة بتأمين الشاحنات الثقيلة')">
         <div class="ad-tag">مساحة إعلانية</div>
-        <div style="font-size: 14px; font-weight: bold; color: var(--amber);">طوطال إنيرجي (Total)</div>
-        <div style="font-size: 10px; color: var(--text-high);">تخفيض 20% على زيوت المحركات لسائقي شَرْجِي</div>
+        <div style="font-size: 14px; font-weight: bold; color: var(--amber);">تأمين الشاحنات (Assurance)</div>
+        <div style="font-size: 10px; color: var(--text-high);">تخفيض 10% لسائقي شَرْجِي - اتصل الآن</div>
     </div>
 
-    <!-- THE RADIO: Live Hub for Audio & Alerts -->
+    <!-- THE RADIO: Live Hub -->
     <div class="radio-banner" onclick="toggleRadio()">
         <div class="play-btn" id="radioPlayBtn">
             <i class="fa-solid fa-play" id="radioIcon"></i>
@@ -162,13 +178,37 @@
                     <span></span><span></span><span></span><span></span>
                 </div>
             </div>
-            <div style="font-size: 9px; color: var(--text-dim); margin-top:2px;">نصائح، إشهار، وبث الطلبات الصوتية العاجلة</div>
             <!-- Live Ticker for urgent returns/needs -->
             <div class="radio-ticker">
                 <span class="ticker-text" id="tickerText">
-                    🚨 عاجل: سائق شاحنة ديانا راجع خاوي من مراكش (26-أ) للدار البيضاء (6-أ) مع 16:00، شكون عندو سلعة؟ | 🚨 عاجل: مطلوب رموك لنقل طراكس من طنجة (50-أ)...
+                    🚨 تنبيه مروري: حادثة سير في A1 (الرباط-كازا) | 🚨 عاجل: ديانا راجع خاوي من مراكش (26-أ) للدار البيضاء (6-أ) مع 16:00، شكون عندو سلعة؟
                 </span>
             </div>
+        </div>
+    </div>
+
+    <!-- NEW: SAFETY & ROAD DASHBOARD (Weather, NARSA, Traffic) -->
+    <div class="section-title" style="margin-bottom: 6px;">
+        <span><i class="fa-solid fa-road"></i> حالة الطريق والسلامة</span>
+    </div>
+    <div class="safety-dashboard">
+        <!-- Weather -->
+        <div class="safety-box weather" onclick="speakPro('حالة الطقس المباشرة: ضباب كثيف وأمطار خفيفة في الطريق السيار بين الرباط والدار البيضاء. المرجو تخفيض السرعة.')">
+            <i class="fa-solid fa-cloud-showers-heavy"></i>
+            <span class="safety-title">الطقس بمسارك</span>
+            <span class="safety-val">16°C (ضباب)</span>
+        </div>
+        <!-- Traffic Alert -->
+        <div class="safety-box alert" onclick="speakPro('انتباه وتشوير طرقي: حادثة سير خطيرة في النقطة الكيلومترية 45. الطريق مقطوع مؤقتاً، يرجى تحويل المسار.')">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <span class="safety-title">تشوير وحوادث</span>
+            <span class="safety-val danger">طريق مقطوع !</span>
+        </div>
+        <!-- NARSA -->
+        <div class="safety-box narsa" onclick="speakPro('بوابة نارسا الرسمية: يمكنك هنا الاطلاع على المخالفات، رصيد النقاط، ومواعيد تجديد الفحص التقني.')">
+            <i class="fa-solid fa-file-shield"></i>
+            <span class="safety-title">خدمات NARSA</span>
+            <span class="safety-val" style="color: var(--narsa);">مخالفات ونقاط</span>
         </div>
     </div>
 
@@ -230,6 +270,14 @@
             <i class="fa-solid fa-lock"></i> قبول الطلب
         </button>
     </div>
+
+    <!-- Pro Navbar -->
+    <nav class="pro-navbar">
+        <div class="pnav-item active"><i class="fa-solid fa-house"></i> الرئيسية</div>
+        <div class="pnav-item"><i class="fa-solid fa-road"></i> الطريق</div>
+        <div class="pnav-item"><i class="fa-solid fa-wallet"></i> المداخيل</div>
+        <div class="pnav-item"><i class="fa-solid fa-user"></i> حسابي</div>
+    </nav>
 </div>
 
 <script>
@@ -239,7 +287,7 @@
     const radioIcon = document.getElementById('radioIcon');
     const radioWaves = document.getElementById('radioWaves');
 
-    // Speech TTS (Darija context)
+    // Speech TTS
     function speakPro(text) {
         if ('speechSynthesis' in window) {
             window.speechSynthesis.cancel();
@@ -257,7 +305,7 @@
             setTimeout(() => {
                 document.getElementById('splashScreen').style.display = 'none';
                 document.getElementById('mainApp').style.display = 'block';
-                speakPro("مرحباً بك في شَرْجِي برو. يمكنك تشغيل الراديو المباشر، لكن المرجو تسجيل الدخول للتفاعل.");
+                speakPro("مرحباً بك في شَرْجِي برو. الراديو ولوحة السلامة متاحان. المرجو تسجيل الدخول لباقي الخدمات.");
             }, 500);
         }, 3500); // 3.5 seconds
     };
@@ -271,14 +319,13 @@
             radioWaves.style.display = 'none';
             isRadioPlaying = false;
         } else {
-            // Visitors can play the radio!
             radioPlayer.volume = 0.4;
             radioPlayer.play().then(() => {
                 radioIcon.classList.remove('fa-play');
                 radioIcon.classList.add('fa-pause');
                 radioWaves.style.display = 'flex';
                 isRadioPlaying = true;
-                speakPro('تم تشغيل راديو الطريق. استمع للنصائح والطلبات العاجلة.');
+                speakPro('تم تشغيل راديو شَرْجِي. انتبه لإعلانات حالة الطريق.');
             }).catch(e => console.log("Audio block", e));
         }
     }
@@ -287,7 +334,7 @@
     function requireAuth() {
         if (!isLoggedIn) {
             document.getElementById('authChoiceModal').style.display = 'flex';
-            speakPro('عذراً، المرجو توثيق هويتك أولاً لضمان مصداقية المنصة');
+            speakPro('المرجو توثيق هويتك أولاً لضمان مصداقية المنصة');
         }
     }
 
@@ -322,16 +369,12 @@
             statusBadge.style.color = 'var(--cyan)';
             statusBadge.style.borderColor = 'var(--cyan)';
         }
-
-        // Unlock action buttons
         document.querySelectorAll('.btn-action i').forEach(icon => { icon.className = 'fa-solid fa-handshake'; });
     }
 
     // 4. Voice Broadcasting (Radio Integration)
     function startBroadcast() {
         if(!isLoggedIn) { requireAuth(); return; }
-        
-        // Lower radio volume to speak
         if(isRadioPlaying) radioPlayer.volume = 0.1; 
         
         document.getElementById('mainMicBtn').style.background = 'var(--rose)';
@@ -345,8 +388,6 @@
 
     function stopBroadcast() {
         if(!isLoggedIn) return;
-
-        // Restore radio volume
         if(isRadioPlaying) setTimeout(() => radioPlayer.volume = 0.4, 2000);
 
         document.getElementById('mainMicBtn').style.background = 'linear-gradient(145deg, #1e293b, #0f172a)';
@@ -357,27 +398,17 @@
         document.getElementById('transcript').innerText = "تم إرسال بثك الصوتي للراديو بنجاح.";
         document.getElementById('transcript').style.color = "var(--emerald)";
         
-        // Update Ticker to show user's broadcast
         document.getElementById('tickerText').innerText = "🚨 طلب جديد: سائق متوفر للعودة بحمولة الآن... (تم البث الصوتي)";
-        
         speakPro("تم بث طلبك في الراديو المباشر بنجاح.");
     }
 
     // 5. Smart Commission Rules
     function handleOrderAccept(price) {
-        if (!isLoggedIn) {
-            requireAuth();
-            return;
-        }
-
-        // 10% commission, capped at 100 DH.
+        if (!isLoggedIn) { requireAuth(); return; }
         let calculatedCommission = price * 0.10;
         let finalCommission = (calculatedCommission > 100) ? 100 : calculatedCommission;
-
         let confirmMsg = `تأكيد قبول الطلب؟\n\nثمن الرحلة: ${price} درهم\nالعمولة المقتطعة: ${finalCommission} درهم`;
-        
         speakPro(`عمولة التطبيق هي ${finalCommission} درهم. هل تؤكد القبول؟`);
-        
         if(confirm(confirmMsg)) {
             speakPro("تم قبول الطلب. طريق السلامة، الله يعاون.");
         }

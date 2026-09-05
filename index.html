@@ -1,1 +1,293 @@
 
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>شَرْجِي برو | المنصة الموثوقة</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-base: #030712; --surface-1: #0f172a; --surface-2: #1e293b;
+            --primary: #2563eb; --cyan: #06b6d4; --amber: #f59e0b;
+            --emerald: #10b981; --rose: #f43f5e; --text-high: #f8fafc;
+            --text-dim: #94a3b8; --border: rgba(255, 255, 255, 0.08);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, sans-serif; user-select: none; }
+        body { background-color: var(--bg-base); color: var(--text-high); display: flex; justify-content: center; min-height: 100vh; overflow-x: hidden; }
+
+        .pro-app { width: 100%; max-width: 480px; background: #080d1a; min-height: 100vh; padding-bottom: 90px; position: relative; border-left: 1px solid var(--border); border-right: 1px solid var(--border); display: none; }
+
+        /* --- 1. Splash Screen Animation --- */
+        .splash-screen {
+            position: fixed; inset: 0; background: var(--bg-base); z-index: 99999;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: opacity 0.5s ease-out;
+        }
+        .splash-logo-text { font-size: 24px; font-weight: 900; color: var(--cyan); margin-top: 20px; opacity: 0; animation: fadeIn 0.5s forwards 1.5s; }
+        .truck-container { position: relative; width: 100px; height: 100px; display: flex; align-items: flex-end; }
+        .splash-truck { font-size: 45px; color: var(--primary); animation: driveAway 1.5s forwards 2s; }
+        .splash-box { position: absolute; font-size: 20px; color: var(--amber); left: 35px; top: -50px; opacity: 0; animation: dropBox 1.5s forwards 0.5s; }
+        
+        @keyframes dropBox { 0% { top: -50px; opacity: 0; } 50% { top: 20px; opacity: 1; } 100% { top: 35px; opacity: 1; } }
+        @keyframes driveAway { 0% { transform: translateX(0); } 100% { transform: translateX(300px); opacity: 0; } }
+        @keyframes fadeIn { to { opacity: 1; } }
+
+        /* --- Header & Ads --- */
+        .pro-header { position: sticky; top: 0; z-index: 1000; background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(12px); display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--border); }
+        .guest-badge { background: rgba(245, 158, 11, 0.15); color: var(--amber); border: 1px solid var(--amber); padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: bold; cursor: pointer; }
+        
+        .ad-space { margin: 12px 16px; background: #171717; border: 1px dashed var(--amber); border-radius: 12px; height: 85px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden; cursor: pointer; }
+        .ad-tag { position: absolute; top: 0; right: 0; background: var(--amber); color: #000; font-size: 9px; font-weight: bold; padding: 2px 8px; border-bottom-left-radius: 8px; }
+
+        /* --- Voice Console --- */
+        .voice-console { background: var(--surface-1); border: 1px solid var(--border); border-radius: 16px; margin: 0 16px 16px 16px; padding: 16px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+        .mic-btn { width: 70px; height: 70px; border-radius: 50%; background: linear-gradient(145deg, #1e293b, #0f172a); border: 3px solid var(--cyan); color: var(--cyan); font-size: 28px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; }
+        .transcript-box { width: 100%; background: rgba(0,0,0,0.4); border-radius: 8px; padding: 10px; font-size: 10px; color: var(--text-dim); text-align: center; border-right: 3px solid var(--cyan); }
+
+        /* --- Services & Orders --- */
+        .section-title { font-size: 13px; font-weight: bold; color: var(--text-high); margin: 0 16px 10px 16px; display: flex; justify-content: space-between; align-items: center; }
+        .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 0 16px 16px 16px; }
+        .service-box { background: var(--surface-2); border: 1px solid var(--border); border-radius: 12px; padding: 12px 6px; text-align: center; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+        .service-box i { font-size: 22px; color: var(--cyan); }
+        .service-box span { font-size: 9px; font-weight: bold; color: var(--text-high); }
+
+        .order-card { background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px; margin: 0 16px 12px 16px; padding: 12px; border-right: 4px solid var(--amber); }
+        .plate-badge { background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 4px; font-size: 9px; color: var(--cyan); margin-right: 4px; border: 1px solid rgba(255,255,255,0.2); }
+        .order-header { display: flex; justify-content: space-between; font-weight: bold; font-size: 12px; margin-bottom: 6px; align-items: center; }
+        .order-price { color: var(--emerald); font-size: 14px; }
+        .order-details { font-size: 10px; color: var(--text-dim); margin-bottom: 10px; line-height: 1.5; }
+        .btn-action { background: var(--primary); color: white; border: none; padding: 8px; border-radius: 8px; font-size: 11px; font-weight: bold; cursor: pointer; width: 100%; display: flex; justify-content: center; gap: 8px; align-items: center; }
+
+        /* --- Registration Modals --- */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(3, 7, 18, 0.95); z-index: 10000; display: none; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(5px); }
+        .modal-card { background: var(--surface-1); border: 1px solid var(--cyan); border-radius: 16px; padding: 20px; width: 100%; max-width: 360px; text-align: right; }
+        .modal-title { font-size: 16px; font-weight: bold; color: var(--cyan); margin-bottom: 10px; text-align: center; }
+        .form-group { margin-bottom: 12px; }
+        .form-group label { display: block; font-size: 10px; color: var(--text-dim); margin-bottom: 4px; }
+        .form-input { width: 100%; background: var(--surface-2); border: 1px solid var(--border); color: white; padding: 10px; border-radius: 8px; font-size: 12px; }
+        .upload-btn { background: rgba(255,255,255,0.05); border: 1px dashed var(--cyan); color: var(--cyan); padding: 10px; border-radius: 8px; text-align: center; font-size: 11px; cursor: pointer; display: block; margin-top: 6px; }
+        .submit-btn { background: linear-gradient(135deg, var(--primary), #1d4ed8); color: white; border: none; padding: 12px; border-radius: 8px; width: 100%; font-weight: bold; margin-top: 10px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<!-- 1. Splash Screen Animation -->
+<div class="splash-screen" id="splashScreen">
+    <div class="truck-container">
+        <i class="fa-solid fa-box splash-box"></i>
+        <i class="fa-solid fa-truck-fast splash-truck"></i>
+    </div>
+    <div class="splash-logo-text">شَرْجِي برو</div>
+</div>
+
+<!-- Registration Wall Modals -->
+<div class="modal-overlay" id="authChoiceModal">
+    <div class="modal-card" style="text-align: center;">
+        <i class="fa-solid fa-shield-halved" style="font-size: 40px; color: var(--amber); margin-bottom: 12px;"></i>
+        <div class="modal-title">المرجو تسجيل الدخول للتحكم</div>
+        <p style="font-size: 11px; color: var(--text-dim); margin-bottom: 20px;">لضمان الأمان والمصداقية، يجب توثيق الهوية قبل نشر أو قبول أي طلب.</p>
+        
+        <button class="submit-btn" style="background: var(--surface-2); border: 1px solid var(--cyan);" onclick="showForm('driver')">
+            <i class="fa-solid fa-steering-wheel"></i> تسجيل كسائق (تحميل الأوراق)
+        </button>
+        <button class="submit-btn" style="background: var(--surface-2); border: 1px solid var(--amber);" onclick="showForm('customer')">
+            <i class="fa-solid fa-user-check"></i> تسجيل كزبون (توثيق الهوية)
+        </button>
+        <button class="submit-btn" style="background: transparent; border: none; color: var(--text-dim);" onclick="closeModals()">إلغاء</button>
+    </div>
+</div>
+
+<!-- Driver Registration Form -->
+<div class="modal-overlay" id="driverFormModal">
+    <div class="modal-card">
+        <div class="modal-title">توثيق أوراق السائق والشاحنة</div>
+        <div class="form-group">
+            <label>الاسم الكامل</label>
+            <input type="text" class="form-input" placeholder="الاسم الشخصي والعائلي">
+        </div>
+        <div class="form-group">
+            <label>الوثائق القانونية (تصوير مباشر)</label>
+            <div class="upload-btn"><i class="fa-solid fa-id-card"></i> صورة البطاقة الوطنية (CIN)</div>
+            <div class="upload-btn"><i class="fa-solid fa-file-invoice"></i> صورة البطاقة الرمادية (Carte Grise)</div>
+        </div>
+        <button class="submit-btn" onclick="completeRegistration('driver')">تأكيد وإرسال للإدارة</button>
+    </div>
+</div>
+
+<!-- Main Application (Read-Only until logged in) -->
+<div class="pro-app" id="mainApp">
+    <header class="pro-header">
+        <div style="display:flex; align-items:center; gap:8px;">
+            <i class="fa-solid fa-layer-group" style="color: var(--cyan); font-size: 18px;"></i>
+            <span style="font-weight: 900; font-size: 15px;">شَرْجِي برو</span>
+        </div>
+        <div class="guest-badge" id="userStatus" onclick="requireAuth()">
+            <i class="fa-solid fa-lock"></i> زائر (تصفح فقط)
+        </div>
+    </header>
+
+    <!-- Ad Space -->
+    <div class="ad-space">
+        <div class="ad-tag">مساحة إعلانية</div>
+        <i class="fa-solid fa-gears" style="color: var(--amber); font-size: 22px; margin-bottom: 4px;"></i>
+        <div style="font-size: 14px; font-weight: bold;">إطارات ميشلان (Michelin)</div>
+        <div style="font-size: 10px; color: var(--text-dim);">عروض خاصة للشاحنات الثقيلة!</div>
+    </div>
+
+    <!-- Voice Console -->
+    <div class="voice-console">
+        <div style="font-size: 11px; font-weight: bold; color: var(--cyan);">
+            <i class="fa-solid fa-walkie-talkie"></i> اطلب خدمة بصوتك (يتطلب التسجيل)
+        </div>
+        <button class="mic-btn" onclick="requireAuth()">
+            <i class="fa-solid fa-microphone"></i>
+        </button>
+        <div class="transcript-box">
+            صلاحية الميكروفون مقفلة للزوار.
+        </div>
+    </div>
+
+    <!-- Services -->
+    <div class="section-title"><span><i class="fa-solid fa-shapes"></i> الخدمات الشاملة</span></div>
+    <div class="services-grid">
+        <div class="service-box" onclick="requireAuth()"><i class="fa-solid fa-tractor" style="color: var(--amber);"></i><span>كراء الآلات</span></div>
+        <div class="service-box" onclick="requireAuth()"><i class="fa-solid fa-truck-moving" style="color: var(--rose);"></i><span>بورت شار</span></div>
+        <div class="service-box" onclick="requireAuth()"><i class="fa-solid fa-helmet-safety" style="color: var(--cyan);"></i><span>عمال الهدم</span></div>
+    </div>
+
+    <!-- Live Orders Feed with License Plates -->
+    <div class="section-title">
+        <span><i class="fa-solid fa-satellite-dish"></i> رادار الطلبات المباشرة</span>
+    </div>
+
+    <!-- Order 1 (>1000 DH - Commission Cap Test) -->
+    <div class="order-card">
+        <div class="order-header">
+            <div>
+                الرباط <span class="plate-badge">1-أ</span> <i class="fa-solid fa-arrow-left" style="font-size: 10px; margin: 0 4px;"></i> الدار البيضاء <span class="plate-badge">6-أ</span>
+            </div>
+            <span class="order-price">1,800 د.م</span>
+        </div>
+        <div class="order-details">
+            <i class="fa-solid fa-truck-moving" style="color: var(--rose);"></i> نقل آلة طراكس عبر بورت شار. انطلاق فوري.
+        </div>
+        <button class="btn-action" onclick="handleOrderAccept(1800)">
+            <i class="fa-solid fa-lock"></i> قبول الطلب
+        </button>
+    </div>
+
+    <!-- Order 2 (<1000 DH - 10% Commission Test) -->
+    <div class="order-card">
+        <div class="order-header">
+            <div>
+                طنجة <span class="plate-badge">50-أ</span> <i class="fa-solid fa-arrow-left" style="font-size: 10px; margin: 0 4px;"></i> القنيطرة <span class="plate-badge">15-أ</span>
+            </div>
+            <span class="order-price">800 د.م</span>
+        </div>
+        <div class="order-details">
+            <i class="fa-solid fa-carrot" style="color: var(--emerald);"></i> نقل 2 طن خضروات. مطلوب ديانا.
+        </div>
+        <button class="btn-action" onclick="handleOrderAccept(800)">
+            <i class="fa-solid fa-lock"></i> قبول الطلب
+        </button>
+    </div>
+</div>
+
+<script>
+    let isLoggedIn = false;
+
+    // Speech Function
+    function speakPro(text) {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            const utter = new SpeechSynthesisUtterance(text);
+            utter.lang = 'ar-SA';
+            utter.rate = 0.9;
+            window.speechSynthesis.speak(utter);
+        }
+    }
+
+    // 1. Splash Screen Logic
+    window.onload = () => {
+        setTimeout(() => {
+            document.getElementById('splashScreen').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('splashScreen').style.display = 'none';
+                document.getElementById('mainApp').style.display = 'block';
+                speakPro("مرحباً بك في شَرْجِي برو. أنت الآن في وضع التصفح كزائر.");
+            }, 500);
+        }, 3500); // 3.5 seconds for animation
+    };
+
+    // 2. Authentication Gateway (Guest Mode Protection)
+    function requireAuth() {
+        if (!isLoggedIn) {
+            document.getElementById('authChoiceModal').style.display = 'flex';
+            speakPro('عذراً، المرجو تسجيل الدخول وتوثيق هويتك للتحكم في التطبيق');
+        }
+    }
+
+    function closeModals() {
+        document.querySelectorAll('.modal-overlay').forEach(el => el.style.display = 'none');
+    }
+
+    function showForm(type) {
+        closeModals();
+        if (type === 'driver') {
+            document.getElementById('driverFormModal').style.display = 'flex';
+            speakPro('المرجو إدخال معلوماتك وتصوير البطاقة الرمادية للشاحنة');
+        } else {
+            // Can add customer form here, simulating login for now
+            completeRegistration('customer');
+        }
+    }
+
+    function completeRegistration(role) {
+        closeModals();
+        isLoggedIn = true;
+        
+        let statusBadge = document.getElementById('userStatus');
+        if(role === 'driver') {
+            statusBadge.innerHTML = '<i class="fa-solid fa-check-circle"></i> سائق موثوق';
+            statusBadge.style.background = 'rgba(16, 185, 129, 0.2)';
+            statusBadge.style.color = 'var(--emerald)';
+            statusBadge.style.borderColor = 'var(--emerald)';
+            speakPro('تم توثيق أوراقك بنجاح. حسابك كسائق مفعل الآن.');
+        } else {
+            statusBadge.innerHTML = '<i class="fa-solid fa-user-check"></i> زبون موثوق';
+            statusBadge.style.background = 'rgba(6, 182, 212, 0.2)';
+            statusBadge.style.color = 'var(--cyan)';
+            statusBadge.style.borderColor = 'var(--cyan)';
+            speakPro('تم توثيق هويتك. يمكنك الآن طلب الخدمات.');
+        }
+
+        // Change lock icons to action icons
+        document.querySelectorAll('.btn-action i').forEach(icon => {
+            icon.className = 'fa-solid fa-handshake';
+        });
+    }
+
+    // 3. Smart Commission Logic
+    function handleOrderAccept(price) {
+        if (!isLoggedIn) {
+            requireAuth();
+            return;
+        }
+
+        // Commission Rule: 10% of price, MAX 100 DH.
+        let calculatedCommission = price * 0.10;
+        let finalCommission = (calculatedCommission > 100) ? 100 : calculatedCommission;
+
+        let confirmMsg = `تأكيد قبول الطلب؟\n\nثمن الرحلة: ${price} درهم\nعمولة التطبيق: ${finalCommission} درهم (مخصومة من الرصيد)`;
+        
+        speakPro(`عمولة هذا الطلب هي ${finalCommission} درهم. هل تؤكد القبول؟`);
+        
+        if(confirm(confirmMsg)) {
+            speakPro("تم قبول الطلب. طريق السلامة.");
+        }
+    }
+</script>
+</body>
+</html>

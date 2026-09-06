@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>شَرْجِي برو (Charji Pro) — النسخة النهائية البسيطة والسريعة</title>
+<title>شَرْجِي برو (Charji Pro) — النسخة الشاملة النهائية</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <style>
@@ -34,8 +34,11 @@ header{background:var(--navy);color:#fff;padding:13px 14px 12px}
 .head{display:flex;align-items:center;justify-content:space-between}.brand{display:flex;align-items:center;gap:8px}.logo{width:42px;height:42px;border-radius:12px;background:var(--amber);display:grid;place-items:center;color:#fff;font-size:21px}.brand b{font-size:17px}.brand small{display:block;color:#b9d1ea;font-size:8px}
 .round{width:39px;height:39px;border-radius:50%;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.08);color:#fff; cursor:pointer;}
 .radio-ad{margin-top:12px;border:1px solid rgba(255,255,255,.2);border-radius:17px;padding:10px;background:rgba(255,255,255,.04);display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px}
-.radio-play{width:45px;height:45px;border:0;border-radius:50%;background:var(--amber);color:#17213a;font-size:17px;cursor:pointer;}.wave{height:30px;display:flex;align-items:center;gap:2px;overflow:hidden}.wave i{display:block;width:3px;border-radius:9px;background:var(--amber);animation:w 1s ease-in-out infinite alternate}.wave i:nth-child(2n){animation-delay:.2s}.wave i:nth-child(3n){animation-delay:.4s}@keyframes w{from{height:5px}to{height:27px}}
+.radio-play{width:45px;height:45px;border:0;border-radius:50%;background:var(--amber);color:#17213a;font-size:17px;cursor:pointer;}.wave{height:20px;display:flex;align-items:center;gap:2px;overflow:hidden; margin-top:4px;}
+.wave i{display:block;width:3px;border-radius:9px;background:var(--amber);animation:w 1s ease-in-out infinite alternate}
+.wave i:nth-child(2n){animation-delay:.2s}.wave i:nth-child(3n){animation-delay:.4s}@keyframes w{from{height:4px}to{height:16px}}
 .radio-copy b{font-size:9px;color:#ffd15d}.radio-copy div{font-size:10px;font-weight:800;margin-top:2px}.radio-copy small{font-size:7px;color:#b7c8db}
+.ad-thumb{width:45px;height:45px;border-radius:50%;background:#fff;display:grid;place-items:center;color:#111;font-size:20px}
 
 /* COMMON UI */
 .page{display:none}.page.active{display:block;}
@@ -44,16 +47,16 @@ header{background:var(--navy);color:#fff;padding:13px 14px 12px}
 .btn-outline { width: 100%; background: #fff; color: var(--navy); border: 2px solid var(--line); border-radius: 12px; padding: 12px; font-size: 11px; font-weight: bold; cursor: pointer; margin-top: 8px; }
 
 /* MAP */
-.map-wrap{margin:10px 12px;height:220px;border-radius:22px;overflow:hidden;position:relative;box-shadow:0 4px 15px #ccd7e2; border: 2px solid #fff;}#map{height:100%;width:100%}.live{position:absolute;z-index:500;top:12px;right:12px;background:rgba(9, 35, 67, 0.9);color:#fff;border-radius:11px;padding:8px 12px;font-size:9px;backdrop-filter:blur(5px);}.live b{font-size:14px;display:block;margin-top:2px;color:var(--amber);}.gps{position:absolute;z-index:500;bottom:12px;left:12px;width:40px;height:40px;border:0;border-radius:12px;background:#fff;color:var(--blue);font-size:16px;box-shadow:0 3px 10px rgba(0,0,0,0.2);cursor:pointer;}
+.map-wrap{margin:10px 12px;height:200px;border-radius:22px;overflow:hidden;position:relative;box-shadow:0 4px 15px #ccd7e2; border: 2px solid #fff;}#map{height:100%;width:100%}.live{position:absolute;z-index:500;top:12px;right:12px;background:rgba(9, 35, 67, 0.9);color:#fff;border-radius:11px;padding:8px 12px;font-size:9px;backdrop-filter:blur(5px);}.live b{font-size:14px;display:block;margin-top:2px;color:var(--amber);}.gps{position:absolute;z-index:500;bottom:12px;left:12px;width:40px;height:40px;border:0;border-radius:12px;background:#fff;color:var(--blue);font-size:16px;box-shadow:0 3px 10px rgba(0,0,0,0.2);cursor:pointer;}
 
 /* CUSTOMER VS DRIVER UI */
 .customer-ui, .driver-ui { display: none; }
 .customer-mode .customer-ui { display: block; }
 .driver-mode .driver-ui { display: block; }
 
-.vehicles{display:grid;grid-template-columns:1fr 1fr;gap:10px}.vehicle{border:2px solid var(--line);border-radius:15px;background:#fff;padding:12px 5px;text-align:center;cursor:pointer;}.vehicle.active{border-color:var(--blue);background:#f4f8ff}.vehicle i{font-size:26px;color:var(--navy)}.vehicle b{display:block;font-size:10px;margin-top:8px}.vehicle strong{display:block;font-size:10px;color:var(--blue);margin-top:4px; font-weight:bold;}
-.mic{width:70px;height:70px;border-radius:50%;border:8px solid #ffe3e6;background:var(--amber);color:#fff;font-size:28px;box-shadow:0 0 0 5px #fff0f1;margin:10px auto;display:grid;place-items:center;cursor:pointer;}
-.input-route { display: grid; grid-template-columns: 1fr auto 1fr; gap: 8px; align-items: center; margin-bottom: 15px;}
+.vehicles{display:grid;grid-template-columns:1fr 1fr;gap:8px}.vehicle{border:2px solid var(--line);border-radius:12px;background:#fff;padding:10px 5px;text-align:center;cursor:pointer;}.vehicle.active{border-color:var(--blue);background:#f4f8ff}.vehicle i{font-size:22px;color:var(--navy)}.vehicle b{display:block;font-size:9px;margin-top:6px}
+.mic{width:65px;height:65px;border-radius:50%;border:6px solid #ffe3e6;background:var(--amber);color:#fff;font-size:24px;box-shadow:0 0 0 4px #fff0f1;margin:10px auto;display:grid;place-items:center;cursor:pointer;}
+.input-route { display: grid; grid-template-columns: 1fr auto 1fr; gap: 8px; align-items: center; margin-bottom: 12px;}
 .input-route input { width: 100%; border: 1px solid var(--line); padding: 10px; border-radius: 10px; font-size: 11px; text-align: center; background: #f9fbfd;}
 .offer-box { background: linear-gradient(to left, #fff, #f4f8ff); border: 1px solid #cce5ff; border-radius: 14px; padding: 12px; margin-bottom: 10px; border-right: 4px solid var(--blue);}
 .offer-box b { color: var(--navy); font-size: 12px;}
@@ -65,7 +68,14 @@ header{background:var(--navy);color:#fff;padding:13px 14px 12px}
 .order-price { background: #E8F0FE; color: var(--blue); padding: 5px 8px; border-radius: 8px; font-weight: bold; font-size: 11px;}
 .order-details { font-size: 10px; color: var(--muted); display: flex; gap: 10px; margin-bottom: 10px;}
 .order-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px;}
-.wallet-card{background:linear-gradient(135deg, var(--amber), #e65c00);color:#fff;text-align:center;border-radius:18px;padding:25px 15px;margin-bottom:15px;}.wallet-card b{font-size:16px;color:#fff;}.wallet-card .balance{font-size:38px;font-weight:900;margin:15px 0;font-family:monospace;}
+.wallet-card{background:linear-gradient(135deg, var(--amber), #e65c00);color:#fff;text-align:center;border-radius:18px;padding:20px 15px;margin-bottom:12px;}.wallet-card b{font-size:15px;color:#fff;}.wallet-card .balance{font-size:32px;font-weight:900;margin:10px 0;font-family:monospace;}
+
+/* DRIVER TOOLS (WEATHER, TRAFFIC, ADVICE) */
+.tool-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px;}
+.tool-box { background: #f8fafc; border: 1px solid var(--line); border-radius: 12px; padding: 10px; text-align: center;}
+.tool-box i { font-size: 18px; color: var(--blue); margin-bottom: 5px;}
+.tool-box b { display: block; font-size: 10px; color: var(--navy);}
+.tool-box small { font-size: 8px; color: var(--muted);}
 
 /* NAV */
 .nav{position:fixed;z-index:1200;bottom:0;left:50%;transform:translateX(-50%);width:min(100%,480px);height:66px;background:#fff;border-top:1px solid #d7e1ea;display:flex;justify-content:space-around;padding:0 5px;}
@@ -73,12 +83,15 @@ header{background:var(--navy);color:#fff;padding:13px 14px 12px}
 .customer-mode .nav-drv { display: none !important; }
 .driver-mode .nav-cust { display: none !important; }
 
-/* TOAST */
-.toast{position:fixed;z-index:6000;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);opacity:0;background:rgba(18,59,143,0.95);color:#fff;border-radius:12px;padding:12px 20px;font-size:12px;transition:0.3s;pointer-events:none;text-align:center;}
+/* TOAST & VOICE TOGGLE */
+.toast{position:fixed;z-index:6000;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);opacity:0;background:rgba(18,59,143,0.95);color:#fff;border-radius:12px;padding:12px 20px;font-size:12px;transition:0.3s;pointer-events:none;text-align:center;}
 .toast.show{opacity:1;transform:translateX(-50%);}
+.voice-toggle-float { position: fixed; left: 15px; bottom: 78px; z-index: 2000; border: 0; border-radius: 14px; padding: 10px 14px; background: var(--blue); color: #fff; font-weight: bold; font-size: 10px; display: flex; align-items: center; gap: 6px; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.2);}
+.voice-toggle-float.off { background: #687386; }
 
-/* CHARJI ALLO CALL SCREEN */
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:5000;display:none;align-items:center;justify-content:center;}.overlay.show{display:flex;}.call-screen{background:#111;width:280px;border-radius:30px;padding:30px 20px;text-align:center;color:#fff;border:5px solid #333;}.call-icon{width:80px;height:80px;border-radius:50%;background:#222;border:2px solid var(--amber);color:var(--amber);font-size:40px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;}@keyframes pulse{from{box-shadow:0 0 10px var(--amber);}to{box-shadow:0 0 30px var(--amber);}}.call-screen h2{margin:0 0 5px;font-size:18px;}.call-screen p{margin:0 0 20px;font-size:12px;color:#aaa;line-height:1.5;}.keypad{display:grid;grid-template-columns:1fr 1fr;gap:15px;}.keypad button{padding:15px;border-radius:15px;border:0;font-size:14px;font-weight:bold;color:#fff;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;}.btn-accept{background:#28a745;}.btn-reject{background:#dc3545;}
+/* OVERLAY */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:5000;display:none;align-items:center;justify-content:center;}.overlay.show{display:flex;}.call-screen{background:#111;width:280px;border-radius:30px;padding:30px 20px;text-align:center;color:#fff;border:5px solid #333;}.call-icon{width:80px;height:80px;border-radius:50%;background:#222;border:2px solid var(--amber);color:var(--amber);font-size:40px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;}
+.keypad{display:grid;grid-template-columns:1fr 1fr;gap:15px;}.keypad button{padding:15px;border-radius:15px;border:0;font-size:14px;font-weight:bold;color:#fff;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;}.btn-accept{background:#28a745;}.btn-reject{background:#dc3545;}
 </style>
 </head>
 <body class="auth-mode">
@@ -107,7 +120,12 @@ header{background:var(--navy);color:#fff;padding:13px 14px 12px}
     <div class="form-group">
       <label>نوع العربة</label>
       <select>
-        <option>ديانا / 3.5 طن</option><option>طريبورتور / هوندا</option><option>شاحنة كبيرة</option><option>رموك</option><option>آلات الحفر (طراكس)</option>
+        <option>طريبورتور / هوندا</option>
+        <option>ديانا / 3.5 طن</option>
+        <option>شاحنة كبيرة</option>
+        <option>رموك</option>
+        <option>آلات الحفر (طراكس / پيلتوز)</option>
+        <option>شاحنة شحن الردم والهدم</option>
       </select>
     </div>
     <button class="btn-submit" onclick="loginAs('driver')">تسجيل ودخول كمهني</button>
@@ -117,7 +135,7 @@ header{background:var(--navy);color:#fff;padding:13px 14px 12px}
 
 <div class="app">
 
-<!-- HEADER -->
+<!-- HEADER WITH RADIO AD -->
 <header>
   <div class="head">
     <button class="round" onclick="toast('القائمة الجانبية')"><i class="fa-solid fa-bars"></i></button>
@@ -125,8 +143,13 @@ header{background:var(--navy);color:#fff;padding:13px 14px 12px}
     <div style="width:39px;"></div> 
   </div>
   <div class="radio-ad">
-    <button class="radio-play" onclick="toast('تم تشغيل الراديو')"><i class="fa-solid fa-play"></i></button>
-    <div class="radio-copy"><b>راديو شَرْجِي • إشهار ممول</b><div>عروض خاصة على زيوت المحركات</div><div class="wave"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+    <button class="radio-play" onclick="toast('🔊 راديو شَرْجِي شغال: عروض خاصة على زيوت المحركات ومستلزمات الشاحنات')"><i class="fa-solid fa-play"></i></button>
+    <div class="radio-copy">
+      <b>راديو شَرْجِي • إشهار ممول</b>
+      <div>عروض خاصة على زيوت المحركات</div>
+      <div class="wave"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    </div>
+    <div class="ad-thumb"><i class="fa-solid fa-oil-can" style="color:var(--amber);"></i></div>
   </div>
 </header>
 
@@ -142,63 +165,95 @@ header{background:var(--navy);color:#fff;padding:13px 14px 12px}
   <!-- CUSTOMER UNIVERSE -->
   <div class="customer-ui">
     <div class="sheet">
-      <div class="title"><div><b><i class="fa-solid fa-rotate"></i> فرص "رجوع خاوي" قريبة منك</b></div></div>
+      <div class="title"><div><b><i class="fa-solid fa-rotate"></i> عروض "رجوع خاوي" أو "بوكلان"</b></div></div>
       <div class="offer-box">
-        <span class="badge">الآن</span><b>ياسين • شاحنة كبيرة</b>
-        <p style="margin:5px 0 0; font-size:10px; color:#555;">راجع من كازا لـ طنجة. شكون عندو شي سلعة فهاد الطريق بثمن ناقص؟</p>
+        <span class="badge">بوكلان</span><b>ياسين • شاحنة كبيرة (بوكلان ذهاب وإياب)</b>
+        <p style="margin:5px 0 0; font-size:10px; color:#555;">راجع من كازا لـ طنجة وعندو رحلة دائرية (بوكلان) بثمن اقتصادي.</p>
         <button class="btn-primary" style="padding:8px; margin-top:8px; width:auto; font-size:10px;" onclick="toast('جاري الاتصال بياسين')">تواصل مع السائق</button>
       </div>
     </div>
 
     <div class="sheet">
-      <div class="title"><div><b>📦 طلب شاحنة أو آلة حفر</b></div></div>
+      <div class="title"><div><b>📦 طلب شاحنة، آلة حفر أو شحن ردم</b></div></div>
       <div class="input-route">
         <input type="text" placeholder="من (انطلاق)"><i class="fa-solid fa-arrow-left" style="color:var(--muted);"></i><input type="text" placeholder="إلى (وصول)">
       </div>
       <div class="vehicles">
-        <button class="vehicle active" onclick="pickVehicle(this)"><i class="fa-solid fa-truck-pickup"></i><b>ديانا / 3.5 طن</b></button>
-        <button class="vehicle" onclick="pickVehicle(this)"><i class="fa-solid fa-tractor"></i><b>آلات الحفر (طراكس)</b></button>
+        <button class="vehicle active" onclick="pickVehicle(this)"><i class="fa-solid fa-motorcycle"></i><b>طريبورتور</b></button>
+        <button class="vehicle" onclick="pickVehicle(this)"><i class="fa-solid fa-truck-pickup"></i><b>ديانا 3.5 طن</b></button>
         <button class="vehicle" onclick="pickVehicle(this)"><i class="fa-solid fa-truck"></i><b>شاحنة كبيرة</b></button>
         <button class="vehicle" onclick="pickVehicle(this)"><i class="fa-solid fa-trailer"></i><b>رموك 20 طن</b></button>
+        <button class="vehicle" onclick="pickVehicle(this)"><i class="fa-solid fa-tractor"></i><b>آلات الحفر (طراكس)</b></button>
+        <button class="vehicle" onclick="pickVehicle(this)"><i class="fa-solid fa-dumpster"></i><b>شحن الهدم والردم</b></button>
       </div>
-      <div style="text-align:center; margin-top:20px; border-top:1px dashed var(--line); padding-top:15px;">
-        <b style="font-size:11px; color:var(--navy);">سجل التفاصيل بالصوت (الذكاء الاصطناعي غيفهمك)</b>
-        <button class="mic" onclick="toast('جاري تسجيل صوتك...')"><i class="fa-solid fa-microphone"></i></button>
-        <label style="font-size:10px; display:block; margin-top:10px; color:var(--navy); font-weight:bold; cursor:pointer;">
-          <input type="checkbox" style="vertical-align: middle;"> ⏳ نقدر نتسنى شيفور راجع خاوي (ثمن رخيص ووقت مرن)
+      <div style="text-align:center; margin-top:15px; border-top:1px dashed var(--line); padding-top:12px;">
+        <b style="font-size:11px; color:var(--navy);">سجل التفاصيل بالصوت (الذكاء الاصطناعي)</b>
+        <button class="mic" onclick="toast('🎙️ جاري تسجيل صوتك...')"><i class="fa-solid fa-microphone"></i></button>
+        <label style="font-size:10px; display:block; margin-top:8px; color:var(--navy); font-weight:bold; cursor:pointer;">
+          <input type="checkbox" style="vertical-align: middle;"> ⏳ نقدر نتسنى شيفور راجع خاوي / بوكلان (ثمن رخيص)
         </label>
-        <button class="btn-primary" onclick="toast('تم إرسال الطلب للسائقين')">نشر الطلب</button>
+        <button class="btn-primary" onclick="toast('✅ تم نشر الطلب بنجاح')">نشر الطلب</button>
       </div>
     </div>
   </div>
 
   <!-- DRIVER UNIVERSE -->
   <div class="driver-ui">
-    <div class="sheet" style="border:1px solid #cce5ff;">
-      <div class="title"><div><b>شَرْجِي ألو (محاكي)</b><small>التتبع الآلي</small></div><i class="fa-solid fa-phone-volume" style="color:var(--blue); font-size:24px;"></i></div>
-      <button class="btn-primary" style="margin-top:5px;" onclick="simulateAlloCall('new')">جرب مكالمة "كوموند جديدة" 📞</button>
-      <button class="btn-outline" style="margin-top:10px;" onclick="simulateAlloCall('return')">جرب مكالمة "الرجوع الخاوي" 📞</button>
+    
+    <!-- PROFESSIONAL DRIVER TOOLS (WEATHER, TRAFFIC, ADVICE) -->
+    <div class="sheet" style="background:#f8fafc; padding:12px;">
+      <div class="title" style="margin-bottom:8px;"><div><b>🛠️ أدوات الطريق للمهني</b><small>حالة الطقس، المرور والنصائح</small></div></div>
+      <div class="tool-grid">
+        <div class="tool-box" onclick="toast('🌤️ الطقس مستقر فالطريق • حرارة 24°')">
+          <i class="fa-solid fa-cloud-sun"></i><b>الطقس</b><small>مستقر</small>
+        </div>
+        <div class="tool-box" onclick="toast('🚦 حركة المرور سلسة • لا توجد حوادث فمسارك')">
+          <i class="fa-solid fa-road"></i><b>المرور</b><small>سلس</small>
+        </div>
+        <div class="tool-box" onclick="toast('💡 نصيحة اليوم: تفقد عجلات الشاحنة قبل دخول الطريق السيار')">
+          <i class="fa-solid fa-lightbulb"></i><b>نصيحة</b><small>سلامة</small>
+        </div>
+      </div>
     </div>
 
+    <!-- CHARJI ALLO SIMULATOR -->
+    <div class="sheet" style="border:1px solid #cce5ff; padding:12px;">
+      <div class="title" style="margin-bottom:8px;"><div><b>شَرْجِي ألو (تليفون بوطونات)</b><small>التتبع الآلي للطلبات</small></div><i class="fa-solid fa-phone-volume" style="color:var(--blue); font-size:20px;"></i></div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+        <button class="btn-primary" style="margin:0; font-size:10px; padding:10px;" onclick="simulateAlloCall('new')">📞 مكالمة كوموند</button>
+        <button class="btn-outline" style="margin:0; font-size:10px; padding:10px;" onclick="simulateAlloCall('return')">📞 مكالمة بوكلان / رجوع</button>
+      </div>
+    </div>
+
+    <!-- EMPTY RETURN & BOUCLAGE PUBLISH -->
     <div class="sheet" style="background: linear-gradient(to right, #fff, #fef4e8); border: 1px solid #ffd48b;">
-      <div class="title"><div><b style="color:var(--amber);"><i class="fa-solid fa-rotate"></i> نشر "رجوع خاوي"</b></div></div>
+      <div class="title"><div><b style="color:var(--amber);"><i class="fa-solid fa-rotate"></i> نشر "رجوع خاوي" أو "بوكلان"</b></div></div>
       <div class="input-route">
-        <input type="text" placeholder="راجع من.."><i class="fa-solid fa-arrow-left" style="color:var(--muted);"></i><input type="text" placeholder="غادي ل..">
+        <input type="text" placeholder="من.."><i class="fa-solid fa-arrow-left" style="color:var(--muted);"></i><input type="text" placeholder="إلى..">
       </div>
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-        <button class="btn-primary" style="margin:0; background:var(--amber);" onclick="toast('سجل رسالة صوتية')">🎙️ رسالة صوتية</button>
-        <button class="btn-primary" style="margin:0;" onclick="toast('تم نشر توفرك للزبناء')">نشر التوفر</button>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+        <button class="btn-primary" style="margin:0; background:var(--amber); font-size:10px;" onclick="toast('🎙️ تم تسجيل رسالتك الصوتية')">🎙️ رسالة صوتية</button>
+        <button class="btn-primary" style="margin:0; font-size:10px;" onclick="toast('✅ تم نشر توفرك للزبناء')">نشر التوفر</button>
       </div>
     </div>
 
-    <div class="page-head" style="padding-top:0;"><b>الطلبات المتاحة فجهتك</b><small>بناءً على موقع الـ GPS ديالك</small></div>
+    <div class="page-head" style="padding-top:0;"><b>الطلبات المتاحة فجهتك (شملت الهدم والردم)</b></div>
     <div style="padding:0 12px;">
       <div class="order-card">
-        <div class="order-header"><b>كازا ← الرباط</b><span class="order-price">1,200 د.م</span></div>
-        <div class="order-details"><span><i class="fa-solid fa-box"></i> 3.5 طن</span><span><i class="fa-solid fa-clock"></i> دابا</span></div>
+        <div class="order-header"><b>كازا ← الرباط (مع بوكلان رجوع)</b><span class="order-price">1,400 د.م</span></div>
+        <div class="order-details"><span><i class="fa-solid fa-box"></i> 3.5 طن</span><span><i class="fa-solid fa-rotate"></i> بوكلان متوفر</span></div>
         <div class="order-actions">
-          <button class="btn-primary" style="margin:0; background:#28a745;" onclick="acceptTripOrder()">قبول الرحلة</button>
-          <button class="btn-primary" style="margin:0; background:var(--navy);" onclick="toast('اقتراح ثمن')">اقتراح ثمن</button>
+          <button class="btn-primary" style="margin:0; background:#28a745; font-size:10px;" onclick="acceptTripOrder()">قبول الرحلة</button>
+          <button class="btn-primary" style="margin:0; background:var(--navy); font-size:10px;" onclick="toast('اقتراح ثمن')">اقتراح ثمن</button>
+        </div>
+      </div>
+      
+      <div class="order-card" style="border-right-color: var(--blue);">
+        <div class="order-header"><b>ورشة بناء (تمارة)</b><span class="order-price">شحن الردم 800 د.م</span></div>
+        <div class="order-details"><span><i class="fa-solid fa-dumpster"></i> شاحنة هدم وردم</span><span><i class="fa-solid fa-clock"></i> عاجل</span></div>
+        <div class="order-actions">
+          <button class="btn-primary" style="margin:0; background:#28a745; font-size:10px;" onclick="acceptTripOrder()">قبول العمل</button>
+          <button class="btn-primary" style="margin:0; background:var(--navy); font-size:10px;" onclick="toast('تفاصيل الورشة')">التفاصيل</button>
         </div>
       </div>
     </div>
@@ -208,7 +263,7 @@ header{background:var(--navy);color:#fff;padding:13px 14px 12px}
 
 <!-- ACCOUNT / WALLET PAGE -->
 <section id="account" class="page">
-  <div class="page-head"><b>حسابي</b><small>إعدادات الحساب</small></div>
+  <div class="page-head"><b>حسابي</b><small>إعدادات الحساب والعربة</small></div>
   <div style="padding: 0 12px;">
     
     <div class="driver-ui">
@@ -216,10 +271,21 @@ header{background:var(--navy);color:#fff;padding:13px 14px 12px}
         <b>بْزْطَام شَرْجِي (Wallet)</b>
         <div class="balance"><span id="walletAmount">150</span> د.م</div>
         <p>الرصيد كيُقتطع منو أوتوماتيكياً فاش كتشد شي كوموند.</p>
-        <button onclick="rechargeWallet()" style="width:100%; background:#fff; color:var(--amber); border:none; padding:12px; border-radius:10px; font-weight:bold;">تعبئة الحساب (CashPlus/Wafacash)</button>
+        <button onclick="rechargeWallet()" style="width:100%; background:#fff; color:var(--amber); border:none; padding:12px; border-radius:10px; font-weight:bold; cursor:pointer;">تعبئة الحساب (CashPlus/Wafacash)</button>
       </div>
       <div class="sheet">
-        <button class="btn-primary" style="background:#dc3545;" onclick="logout()">تسجيل الخروج (تبديل الحساب)</button>
+        <b>تحديث نوع العربة (شاحنة، هدم، طراكس...)</b>
+        <div style="margin-top:8px;">
+          <select style="width:100%; padding:10px; border:1px solid var(--line); border-radius:10px; font-size:11px;">
+            <option>شاحنة كبيرة (10 طن الفوق)</option>
+            <option>ديانا / 3.5 طن</option>
+            <option>آلات الحفر (طراكس / پيلتوز)</option>
+            <option>شاحنة شحن الردم والهدم</option>
+            <option>رموك</option>
+          </select>
+          <button class="btn-primary" onclick="toast('✅ تم تحديث العربة بنجاح')">حفظ التغيير</button>
+        </div>
+        <button class="btn-outline" style="margin-top:15px; border-color:#dc3545; color:#dc3545;" onclick="logout()">تسجيل الخروج</button>
       </div>
     </div>
 
@@ -249,6 +315,14 @@ header{background:var(--navy);color:#fff;padding:13px 14px 12px}
   <button class="nav-drv active" onclick="go('home')"><i class="fa-solid fa-truck-fast"></i>الطَّلَبَات</button>
 </nav>
 
+<!-- FLOATING VOICE TOGGLE (OPTIONAL BY USER) -->
+<button id="voiceToggleFloat" class="voice-toggle-float" onclick="toggleVoiceMode()">
+  <i class="fa-solid fa-volume-high"></i>
+  <span id="voiceToggleText">الصوت: شغال</span>
+</button>
+
+<div class="toast" id="toast"></div>
+
 <!-- CHARJI ALLO OVERLAY -->
 <div class="overlay" id="alloOverlay">
   <div class="call-screen">
@@ -273,12 +347,12 @@ const $$ = s => document.querySelectorAll(s);
 let map = L.map("map", { zoomControl: false, dragging: false }).setView([33.57, -7.59], 6);
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19 }).addTo(map);
 
-// --- REMEMBER ME (LOCAL STORAGE) ---
+// --- 1. REMEMBER ME ---
 window.addEventListener('load', () => {
   const savedRole = localStorage.getItem('charjiUserRole');
   if (savedRole) {
     $('#authScreen').style.display = 'none';
-    loginAs(savedRole);
+    loginAs(savedRole, true);
   }
 });
 
@@ -292,7 +366,7 @@ function switchAuthTab(type) {
   }
 }
 
-function loginAs(role) {
+function loginAs(role, isSilent = false) {
   localStorage.setItem('charjiUserRole', role);
   document.getElementById('authScreen').style.display = 'none';
   document.body.classList.remove('auth-mode', 'customer-mode', 'driver-mode');
@@ -300,11 +374,13 @@ function loginAs(role) {
   if(role === 'customer') {
     document.body.classList.add("customer-mode");
     $("#headerTitle").innerText = "شَرْجِي للزبناء";
-    $("#headerSub").innerText = "طلب شاحنة أو آلة حفر";
+    $("#headerSub").innerText = "طلب شاحنة، حفر أو هدم";
+    if(!isSilent) speakText("مرحبا بك ف شَرْجِي للزبناء.");
   } else {
     document.body.classList.add("driver-mode");
     $("#headerTitle").innerText = "شَرْجِي للمهنيين";
-    $("#headerSub").innerText = "الطلبات والسوق";
+    $("#headerSub").innerText = "الطلبات، الطقس والسوق";
+    if(!isSilent) speakText("مرحبا بك ف شَرْجِي للمهنيين.");
   }
   setTimeout(() => map.invalidateSize(), 200);
   go('home');
@@ -315,7 +391,7 @@ function logout() {
   location.reload(); 
 }
 
-// --- NAVIGATION ---
+// --- 2. NAVIGATION ---
 function go(id) {
   $$(".page").forEach(x => x.classList.remove("active"));
   $("#" + id).classList.add("active");
@@ -337,11 +413,42 @@ function toast(t) {
   clearTimeout(toast.timer); toast.timer = setTimeout(() => e.classList.remove("show"), 3500);
 }
 
-// --- WALLET & ALLO ---
+// --- 3. SPEECH & VOICE TOGGLE (OPTIONAL) ---
+let voiceModeActive = true;
+function toggleVoiceMode() {
+  voiceModeActive = !voiceModeActive;
+  const btn = $('#voiceToggleFloat');
+  const txt = $('#voiceToggleText');
+  if(voiceModeActive) {
+    btn.classList.remove('off');
+    txt.innerText = 'الصوت: شغال';
+    toast("تم تفعيل المساعد الصوتي والراديو");
+    speakText("الصوت شغال.");
+  } else {
+    btn.classList.add('off');
+    txt.innerText = 'الصوت: مطفي';
+    window.speechSynthesis.cancel();
+    toast("تم إطفاء المساعد الصوتي (التطبيق بضغطة وحدة سريعة)");
+  }
+}
+
+function speakText(t) {
+  if (!voiceModeActive || !window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  let u = new SpeechSynthesisUtterance(t);
+  let v = window.speechSynthesis.getVoices();
+  u.voice = v.find(x => /ar-MA/i.test(x.lang)) || v.find(x => /^ar/i.test(x.lang)) || null;
+  u.lang = u.voice?.lang || "ar-MA";
+  u.rate = 0.95; 
+  window.speechSynthesis.speak(u);
+}
+
+// --- 4. WALLET & ALLO ---
 let walletBalance = 150;
 function updateWalletUI() { if($("#walletAmount")) $("#walletAmount").innerText = walletBalance; }
 function rechargeWallet() {
   walletBalance += 100; updateWalletUI();
+  speakText("تْمّ شَحْن حسابك بْمِيَة دَرْهَم.");
   toast("✅ تم شحن حسابك بـ 100 درهم بنجاح.");
 }
 
@@ -349,6 +456,7 @@ function acceptTripOrder() {
   if (walletBalance >= 10) {
     walletBalance -= 10; updateWalletUI();
     toast("✅ تم قبول الرحلة. اقتطاع 10 دراهم.");
+    speakText("تم قبول الرحلة بنجاح.");
   } else {
     toast("❌ رصيدك غير كافي (خاصك 10 دراهم).");
   }
@@ -359,7 +467,7 @@ function simulateAlloCall(type) {
   if(type === 'new') {
       $("#alloText").innerText = "ألو، معاك الروبوت ديال شَرْجِي. كاينة سلعة خاصها تمشي من كازا للرباط. الثمن 1200 درهم.";
   } else {
-      $("#alloText").innerText = "ألو، فايت ليك شديتي كوموند لأكادير. كاين كليان دابا باغي يصيفط السلعة لكازا. واش باغي ترجعها معاك؟";
+      $("#alloText::1") || ($("#alloText").innerText = "ألو، البوكلان واجد: كاين كليان باغي يرجع بسلعة من أكادير لكازا. واش قابل؟");
   }
 }
 

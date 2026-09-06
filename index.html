@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>شَرْجِي برو (Charji Pro) — النسخة الصافية V26</title>
+<title>شَرْجِي برو (Charji Pro) — النسخة الشاملة V27</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <style>
@@ -14,11 +14,7 @@ button,input,textarea{font:inherit; outline:none;}
 .app{max-width:480px;margin:auto;background:var(--bg);min-height:100vh;padding-bottom:72px; position:relative; overflow-x:hidden;}
 
 /* --- SPLASH SCREEN --- */
-.splash-screen {
-  position: fixed; inset: 0; z-index: 999999; background: var(--navy); color: #fff;
-  display: flex; align-items: center; justify-content: center; flex-direction: column;
-  transition: opacity 0.5s ease;
-}
+.splash-screen { position: fixed; inset: 0; z-index: 999999; background: var(--navy); color: #fff; display: flex; align-items: center; justify-content: center; flex-direction: column; transition: opacity 0.5s ease; }
 .splash-content { position: relative; width: 200px; height: 180px; text-align: center; }
 .splash-truck { font-size: 60px; color: var(--amber); position: absolute; bottom: 50px; left: 50%; transform: translateX(-50%); animation: driveOff 2.8s ease-in-out forwards; }
 .splash-box { position: absolute; font-size: 24px; color: #fff; left: 50%; transform: translateX(-50%); opacity: 0; z-index: 2;}
@@ -41,24 +37,10 @@ header{background:var(--navy);color:#fff;padding:15px}
 .brand b{font-size:18px}.brand small{display:block;color:#b9d1ea;font-size:9px}
 .round{width:42px;height:42px;border-radius:50%;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.1);color:#fff; cursor:pointer;}
 
-/* --- RADIO AD --- */
-.radio-ad{margin-top:15px;border:1px solid rgba(255,255,255,.2);border-radius:16px;padding:12px;background:rgba(255,255,255,.05);display:flex;align-items:center;gap:12px}
-.radio-play{width:45px;height:45px;border:0;border-radius:50%;background:var(--amber);color:var(--navy);font-size:18px; cursor:pointer;}
-.radio-copy{flex:1;}
-.radio-copy b{font-size:10px;color:#ffd15d}.radio-copy div{font-size:11px;font-weight:bold;margin:3px 0}.radio-copy small{font-size:8px;color:#b7c8db}
-.wave{height:20px;display:flex;align-items:center;gap:3px;overflow:hidden; margin-top:5px;}
-.wave i{display:block;width:3px;border-radius:9px;background:var(--amber);animation:w 1s ease-in-out infinite alternate}
-.wave i:nth-child(2n){animation-delay:.2s}.wave i:nth-child(3n){animation-delay:.4s}
-@keyframes w{from{height:4px}to{height:18px}}
-
-/* --- MODE SELECTOR (FIXED ISOLATION) --- */
+/* --- MODE SELECTOR --- */
 .mode-wrapper { padding: 15px 12px 5px; }
 .mode-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-.mode-btn { 
-  border: 2px solid transparent; border-radius: 14px; background: #fff; color: var(--ink); 
-  padding: 15px 5px; box-shadow: 0 3px 10px rgba(0,0,0,0.05); display: flex; flex-direction: column; 
-  align-items: center; text-align: center; gap: 8px; cursor: pointer; transition: 0.2s;
-}
+.mode-btn { border: 2px solid transparent; border-radius: 14px; background: #fff; color: var(--ink); padding: 15px 5px; box-shadow: 0 3px 10px rgba(0,0,0,0.05); display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; cursor: pointer; transition: 0.2s;}
 .mode-btn.active { border-color: var(--blue); background: #f4f8ff; box-shadow: 0 4px 15px rgba(21, 94, 239, 0.2); }
 .mode-btn i { font-size: 24px; color: var(--blue); }
 .mode-btn b { font-size: 11px; }
@@ -73,52 +55,56 @@ header{background:var(--navy);color:#fff;padding:15px}
 .title-row b { font-size: 14px; }
 .title-row small { font-size: 9px; color: var(--muted); display: block; margin-top: 3px; }
 
-/* --- MAP --- */
-.map-wrap { margin: 10px 12px; height: 280px; border-radius: 20px; overflow: hidden; position: relative; border: 2px solid #fff; box-shadow: 0 5px 15px rgba(0,0,0,0.08); }
-#map { height: 100%; width: 100%; }
-.map-badge { position: absolute; z-index: 500; top: 12px; right: 12px; background: rgba(9, 35, 67, 0.9); color: #fff; padding: 8px 12px; border-radius: 12px; font-size: 9px; backdrop-filter: blur(5px); }
-.map-badge b { display: block; font-size: 14px; margin-top: 2px; color: var(--amber); }
-
-/* --- VEHICLES --- */
+/* --- VEHICLES & BUTTONS --- */
 .vehicles { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .vehicle { border: 2px solid var(--line); border-radius: 14px; background: #fff; padding: 12px 5px; text-align: center; cursor: pointer; transition: 0.2s;}
 .vehicle.active { border-color: var(--blue); background: #f4f8ff; }
 .vehicle i { font-size: 30px; color: var(--navy); margin-bottom: 8px; }
 .vehicle b { display: block; font-size: 10px; }
 .vehicle strong { display: block; font-size: 11px; color: var(--blue); margin-top: 4px; font-weight: 900;}
-
-/* --- VOICE & ACTIONS --- */
-.mic-btn { width: 80px; height: 80px; border-radius: 50%; border: 8px solid #ffe3e6; background: var(--amber); color: #fff; font-size: 30px; margin: 10px auto; display: grid; place-items: center; box-shadow: 0 4px 15px rgba(255, 122, 0, 0.3); cursor: pointer; }
-.transcript { background: #f7f9fb; border: 1px solid var(--line); border-radius: 12px; padding: 12px; font-size: 10px; color: #555; margin: 10px 0; text-align: center; }
 .btn-primary { width: 100%; background: var(--blue); color: #fff; border: 0; border-radius: 12px; padding: 14px; font-size: 11px; font-weight: bold; cursor: pointer; margin-top: 8px; }
-.btn-outline { width: 100%; background: #fff; color: var(--blue); border: 2px solid var(--blue); border-radius: 12px; padding: 12px; font-size: 11px; font-weight: bold; cursor: pointer; margin-top: 8px; }
+.btn-outline { width: 100%; background: #fff; color: var(--navy); border: 2px solid var(--line); border-radius: 12px; padding: 12px; font-size: 11px; font-weight: bold; cursor: pointer; margin-top: 8px; }
 
-/* --- SERVICES GRID --- */
-.services { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 0 12px; }
-.svc { background: #fff; border: 0; border-radius: 14px; padding: 15px 5px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.05); cursor: pointer; }
-.svc i { font-size: 22px; color: var(--navy); margin-bottom: 6px; }
-.svc b { display: block; font-size: 9px; }
+/* --- WALLET (بزطام) --- */
+.wallet-card { background: linear-gradient(135deg, var(--amber), #e65c00); color: #fff; text-align: center; border-radius: 18px; padding: 25px 15px; margin-bottom: 15px;}
+.wallet-card b { font-size: 16px; color: #fff; }
+.wallet-card .balance { font-size: 38px; font-weight: 900; margin: 15px 0; font-family: monospace;}
+.wallet-card p { font-size: 11px; color: #ffe0cc; margin-bottom: 20px;}
+.wallet-card .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.wallet-card button { background: #fff; color: #e65c00; border: 0; padding: 12px; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 11px;}
+.agencies { display: flex; justify-content: center; gap: 15px; margin-top: 15px; }
+.agency-tag { background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 20px; font-size: 9px; font-weight: bold; }
+
+/* --- CHARJI ALLO SIMULATOR (CALL SCREEN) --- */
+.overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 5000; display: none; align-items: center; justify-content: center; }
+.overlay.show { display: flex; animation: fade 0.2s; }
+.call-screen { background: #111; width: 280px; border-radius: 30px; padding: 30px 20px; text-align: center; color: #fff; border: 5px solid #333; position: relative;}
+.call-icon { width: 80px; height: 80px; border-radius: 50%; background: #222; border: 2px solid var(--amber); color: var(--amber); font-size: 40px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; animation: pulse 1s infinite alternate;}
+@keyframes pulse { from { box-shadow: 0 0 10px var(--amber); } to { box-shadow: 0 0 30px var(--amber); } }
+.call-screen h2 { margin: 0 0 5px; font-size: 18px; color: #fff;}
+.call-screen p { margin: 0 0 20px; font-size: 12px; color: #aaa; line-height: 1.5;}
+.keypad { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+.keypad button { padding: 15px; border-radius: 15px; border: 0; font-size: 14px; font-weight: bold; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 5px;}
+.btn-accept { background: #28a745; color: #fff; }
+.btn-reject { background: #dc3545; color: #fff; }
 
 /* --- NAV BAR --- */
 .nav { position: fixed; z-index: 1000; bottom: 0; left: 50%; transform: translateX(-50%); width: min(100%, 480px); height: 70px; background: #fff; border-top: 1px solid var(--line); display: flex; justify-content: space-around; align-items: center; padding: 0 10px; box-shadow: 0 -4px 15px rgba(0,0,0,0.03); }
 .nav button { background: transparent; border: 0; color: #8898aa; display: flex; flex-direction: column; align-items: center; gap: 5px; font-size: 9px; font-weight: bold; cursor: pointer; padding: 10px; }
-.nav button i { font-size: 20px; }
 .nav button.active { color: var(--blue); }
 
 /* --- TOAST & ACCESSIBILITY --- */
-.toast { position: fixed; z-index: 3000; bottom: 90px; left: 50%; transform: translateX(-50%) translateY(20px); opacity: 0; background: rgba(18, 59, 143, 0.95); color: #fff; border-radius: 12px; padding: 12px 20px; font-size: 11px; transition: 0.3s; box-shadow: 0 5px 15px rgba(0,0,0,0.2); pointer-events: none; text-align: center; width: max-content; max-width: 90%; }
+.toast { position: fixed; z-index: 6000; bottom: 90px; left: 50%; transform: translateX(-50%) translateY(20px); opacity: 0; background: rgba(18, 59, 143, 0.95); color: #fff; border-radius: 12px; padding: 12px 20px; font-size: 11px; transition: 0.3s; pointer-events: none; text-align: center; width: max-content; max-width: 90%; }
 .toast.show { opacity: 1; transform: translateX(-50%); }
-
-.tap-access-btn { position: fixed; left: 15px; bottom: 90px; z-index: 2000; border: 0; border-radius: 14px; padding: 12px 15px; background: var(--blue); color: #fff; font-weight: bold; font-size: 10px; box-shadow: 0 5px 15px rgba(21, 94, 239, 0.3); display: flex; align-items: center; gap: 8px; cursor: pointer; transition: 0.2s; }
-.tap-access-btn.off { background: #687386; box-shadow: 0 5px 15px rgba(0,0,0,0.15); }
-.tap-access-hint { position: fixed; left: 50%; transform: translateX(-50%); top: 80px; z-index: 2500; display: none; background: #FF7A00; color: #fff; border-radius: 12px; padding: 10px 15px; font-size: 11px; font-weight: bold; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
-.tap-access-hint.show { display: block; animation: popDown 0.3s ease-out; }
-@keyframes popDown { from { opacity: 0; transform: translateX(-50%) translateY(-10px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
-.tap-reading-target { outline: 3px solid var(--amber) !important; outline-offset: 2px !important; border-radius: inherit; transition: outline 0.1s; }
+.tap-access-btn { position: fixed; left: 15px; bottom: 90px; z-index: 2000; border: 0; border-radius: 14px; padding: 12px 15px; background: var(--blue); color: #fff; font-weight: bold; font-size: 10px; display: flex; align-items: center; gap: 8px; cursor: pointer; }
+.tap-access-btn.off { background: #687386; }
+.tap-access-hint { position: fixed; left: 50%; transform: translateX(-50%); top: 80px; z-index: 2500; display: none; background: var(--amber); color: #fff; border-radius: 12px; padding: 10px 15px; font-size: 11px; font-weight: bold; }
+.tap-access-hint.show { display: block; }
+.tap-reading-target { outline: 3px solid var(--amber) !important; outline-offset: 2px !important; border-radius: inherit; }
 
 /* Dashboard specifics */
-.patron-dashboard, .driver-cost, .driver-gps-lock { display: none; }
-.patron-dashboard.show, .driver-cost.show, .driver-gps-lock.show { display: block; }
+.patron-dashboard, .driver-dashboard, .customer-dashboard { display: none; }
+.patron-dashboard.show, .driver-dashboard.show, .customer-dashboard.show { display: block; }
 </style>
 </head>
 <body>
@@ -141,131 +127,129 @@ header{background:var(--navy);color:#fff;padding:15px}
 
 <header>
   <div class="head">
-    <button class="round" onclick="toast('القائمة الجانبية')" data-voice="القائمة الجانبية"><i class="fa-solid fa-bars"></i></button>
+    <button class="round" onclick="toast('القائمة الجانبية')"><i class="fa-solid fa-bars"></i></button>
     <div class="brand">
       <div class="logo"><i class="fa-solid fa-truck-fast"></i></div>
-      <div><b>شَرْجِي برو</b><small>نقل ذكي بصوت واحد</small></div>
+      <div><b>شَرْجِي برو</b><small>التطبيق اللي جامع الحرايفية</small></div>
     </div>
     <button class="round" id="voiceToggle" data-voice="الصوت شغال"><i class="fa-solid fa-volume-high"></i></button>
-  </div>
-  
-  <div class="radio-ad">
-    <button class="radio-play" id="radioBtn" data-voice="راديو شَرْجِي. إشهار مهني"><i class="fa-solid fa-play"></i></button>
-    <div class="radio-copy">
-      <b>راديو شَرْجِي</b>
-      <div>عروض خاصة للمهنيين</div>
-      <div class="wave"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-    </div>
   </div>
 </header>
 
 <section id="home" class="page active">
 
-  <!-- MODE SELECTOR: CLEAR & ISOLATED -->
+  <!-- MODE SELECTOR -->
   <div class="mode-wrapper">
     <div class="mode-grid">
-      <button id="mode-customer" class="mode-btn active" onclick="setMode('customer')" data-voice="حساب كليان. كتقلب على كاميو.">
-        <i class="fa-solid fa-box"></i>
-        <b>أنا زبون</b>
-        <small>نقلب على شاحنة</small>
+      <button id="mode-customer" class="mode-btn active" onclick="setMode('customer')" data-voice="حساب كليان. كتقلب على شاحنة.">
+        <i class="fa-solid fa-box"></i><b>أنا زبون</b><small>نقلب على شاحنة</small>
       </button>
-      <button id="mode-driver" class="mode-btn" onclick="setMode('driver')" data-voice="حساب شيفور. عندك كاميو.">
-        <i class="fa-solid fa-user-tie"></i>
-        <b>أنا سائق</b>
-        <small>عندي شاحنة</small>
+      <button id="mode-driver" class="mode-btn" onclick="setMode('driver')" data-voice="حساب شيفور. عندك كاميو وباغي تخدم.">
+        <i class="fa-solid fa-user-tie"></i><b>أنا سائق</b><small>عندي شاحنة</small>
       </button>
       <button id="mode-patron" class="mode-btn" onclick="setMode('patron')" data-voice="حساب باترون. كتسير الشاحنات ديالك.">
-        <i class="fa-solid fa-building"></i>
-        <b>أنا پاترون</b>
-        <small>تسيير الأسطول</small>
+        <i class="fa-solid fa-building"></i><b>أنا پاترون</b><small>تسيير الأسطول</small>
       </button>
     </div>
   </div>
 
-  <div class="sheet patron-dashboard" id="patronDashboard">
-    <div class="title-row">
-      <div><b>لوحة تحكم الأسطول</b><small>الشاحنات ديالك</small></div>
-      <i class="fa-solid fa-truck-ramp-box" style="color:var(--amber); font-size:24px;"></i>
-    </div>
-    <p style="font-size:12px; margin:5px 0;">المدخول اليومي: <strong style="color:var(--blue); font-size:16px;">4,200 د.م</strong></p>
-    <button class="btn-primary" onclick="toast('توزيع الطلبات')">توزيع الطلبات على السائقين</button>
-  </div>
-
-  <div class="sheet driver-gps-lock" id="driverGpsLock" style="background:#fff7e8; border:1px solid #ffd48b;">
-    <div class="title-row" style="margin-bottom:5px;">
-      <div><b>GPS ضروري للشيفور</b><small>باش تشد الكوموندات</small></div>
-      <i class="fa-solid fa-location-dot" style="color:var(--amber); font-size:24px;"></i>
-    </div>
-    <button class="btn-primary" onclick="toast('GPS خدام دابا')" style="background:var(--amber);">شعل GPS وابدأ الخدمة</button>
-  </div>
-
-  <!-- MAP -->
-  <div class="map-wrap">
-    <div id="map"></div>
-    <div class="map-badge">
-      اتصال مباشر
-      <b id="liveDriversCount">18 سائق واجد</b>
+  <!-- CUSTOMER DASHBOARD -->
+  <div class="customer-dashboard show">
+    <div class="sheet">
+      <div class="title-row"><div><b>🚚 عْزَل الكاميو</b><small>الثمن لكل كيلومتر</small></div></div>
+      <div class="vehicles">
+        <button class="vehicle active" onclick="pickVehicle(this)" data-voice="ديانا. ستة دراهم.">
+          <i class="fa-solid fa-truck-pickup"></i><b>ديانا / 3.5 طن</b><strong>6 د/كم</strong>
+        </button>
+        <button class="vehicle" onclick="pickVehicle(this)" data-voice="شاحنة كبيرة. عشرة دراهم.">
+          <i class="fa-solid fa-truck"></i><b>شاحنة كبيرة</b><strong>10 د/كم</strong>
+        </button>
+      </div>
+      <button class="btn-primary" onclick="toast('سجل صوتك دابا')" style="margin-top:15px; background:var(--amber);">🎙️ سَجِّل الكُومُونْد بصوتك</button>
     </div>
   </div>
 
-  <!-- VEHICLE SELECTION (CUSTOMER) -->
-  <div class="sheet" id="vehicleSelection">
-    <div class="title-row">
-      <div><b>🚚 عْزَل الكاميو</b><small>الثمن لكل كيلومتر</small></div>
-    </div>
-    <div class="vehicles">
-      <button class="vehicle active" onclick="pickVehicle(this, 'ديانا')" data-voice="عزلتي ديانا. ستة دراهم للكيلومتر.">
-        <i class="fa-solid fa-truck-pickup"></i><b>ديانا / 3.5 طن</b><strong>6 د/كم</strong>
-      </button>
-      <button class="vehicle" onclick="pickVehicle(this, 'طريبورتور')" data-voice="عزلتي طريبورتور. ربعة دراهم.">
-        <i class="fa-solid fa-truck-droplet"></i><b>طريبورتور</b><strong>4 د/كم</strong>
-      </button>
-      <button class="vehicle" onclick="pickVehicle(this, 'شاحنة')" data-voice="عزلتي كاميو كبير. عشرة دراهم.">
-        <i class="fa-solid fa-truck"></i><b>شاحنة كبيرة</b><strong>10 د/كم</strong>
-      </button>
-      <button class="vehicle" onclick="pickVehicle(this, 'رموك')" data-voice="عزلتي رموك. خمسطاش درهم.">
-        <i class="fa-solid fa-trailer"></i><b>رموك 20 طن</b><strong>15 د/كم</strong>
-      </button>
+  <!-- DRIVER DASHBOARD -->
+  <div class="driver-dashboard">
+    <div class="sheet" style="background:#fff7e8; border:1px solid #ffd48b;">
+      <div class="title-row">
+        <div><b>شَرْجِي ألو (Charji Allo)</b><small>إدماج الشيافر اللي معندهومش سمارتفون</small></div>
+        <i class="fa-solid fa-phone-volume" style="color:var(--amber); font-size:24px;"></i>
+      </div>
+      <p style="font-size:11px; line-height:1.6; color:#555;">ملي كطيح شي كوموند فمدينتك، الروبوت ديالنا كيعيط ليك فالتليفون العادي باش يعطيك التفاصيل ويقتطع العمولة من البزطام ديالك.</p>
+      <button class="btn-primary" onclick="simulateAlloCall()">جرب الاتصال الآلي (Simulation) 📞</button>
     </div>
   </div>
 
-  <!-- VOICE ORDER (CUSTOMER) -->
-  <div class="sheet voice-box" id="voiceOrderBox">
-    <div class="title-row" style="justify-content:center;">
-      <div><b>🎙️ سْجّل الكُومُونْد بِصُوتَك</b><small>قول فين نتا وفين غادي</small></div>
+  <!-- PATRON DASHBOARD -->
+  <div class="patron-dashboard">
+    <div class="sheet">
+      <div class="title-row">
+        <div><b>لوحة تحكم الأسطول</b><small>الشاحنات ديالك</small></div>
+      </div>
+      <p style="font-size:12px; margin:5px 0;">المدخول اليومي: <strong style="color:var(--blue); font-size:16px;">4,200 د.م</strong></p>
+      <button class="btn-primary">تتبع مسار الشاحنات (GPS)</button>
     </div>
-    <button class="mic-btn" onclick="toast('جاري تسجيل الصوت...')" data-voice="ورك وهضر باش تسجل الرحلة.">
-      <i class="fa-solid fa-microphone"></i>
-    </button>
-    <div class="transcript">كانْتْسَنّاو الصُّوت ديالَك...</div>
-    <button class="btn-primary" onclick="toast('تم النشر فالمزاد')" data-voice="لوح الكوموند فالمزاد">🚀 لُوح الكوموند فالمزاد</button>
-  </div>
-
-  <!-- QUICK SERVICES -->
-  <div class="services">
-    <button class="svc" onclick="go('market')" data-voice="سوق الحرايفية"><i class="fa-solid fa-shop"></i><b>السوق</b></button>
-    <button class="svc" onclick="toast('تأمين')" data-voice="تأمين السلعة"><i class="fa-solid fa-shield-halved"></i><b>تأمين</b></button>
-    <button class="svc" onclick="toast('عروض')" data-voice="عروض وخصومات"><i class="fa-solid fa-tags"></i><b>عروض</b></button>
-    <button class="svc" onclick="toast('ميازين')" data-voice="خريطة الميازين"><i class="fa-solid fa-scale-balanced"></i><b>الميازين</b></button>
   </div>
 
 </section>
 
-<!-- OTHER PAGES (STUBS FOR NAV) -->
-<section id="trips" class="page"><div class="sheet"><br><br><center><b>صفحة الرحلات والمزاد</b></center><br><br></div></section>
-<section id="market" class="page"><div class="sheet"><br><br><center><b>سوق المهنيين</b></center><br><br></div></section>
-<section id="account" class="page"><div class="sheet"><br><br><center><b>حسابي والمحفظة (Wallet)</b></center><br><br></div></section>
+<!-- ACCOUNT & WALLET PAGE -->
+<section id="account" class="page">
+  <div class="sheet" style="background: transparent; box-shadow: none; padding: 0;">
+    
+    <div class="wallet-card">
+      <b>بْزْطَام شَرْجِي (Wallet)</b>
+      <div class="balance"><span id="walletAmount">0</span> د.م</div>
+      <p>اشحن رصيدك باش تستقبل الكوموندات وتخلص العمولة أوتوماتيكياً. وتقدر تخرج أرباحك كاش فأي وقت.</p>
+      
+      <div class="actions">
+        <button onclick="rechargeWallet()" data-voice="شحن الرصيد ب مية درهم."><i class="fa-solid fa-plus"></i> شْحَن الرصيد</button>
+        <button onclick="withdrawWallet()" data-voice="سحب الفلوس كاش."><i class="fa-solid fa-money-bill-wave"></i> خَرّج كاش</button>
+      </div>
+      
+      <div class="agencies">
+        <span class="agency-tag">Cash Plus</span>
+        <span class="agency-tag">Wafacash</span>
+        <span class="agency-tag">تسهيلات</span>
+      </div>
+    </div>
+
+    <div class="sheet">
+      <b>السجل والعمليات</b>
+      <p style="font-size:11px; color:var(--muted);" id="walletHistory">مازال ما درتي حتى عملية.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- CHARJI ALLO SIMULATOR OVERLAY -->
+<div class="overlay" id="alloOverlay">
+  <div class="call-screen">
+    <div class="call-icon"><i class="fa-solid fa-phone"></i></div>
+    <h2>شَرْجِي كيعيّط ليك...</h2>
+    <p>ألو، معاك الروبوت ديال شَرْجِي. كاينة سلعة ديال 3 طن خاصها تمشي من كازا للرباط. الثمن 1200 درهم.</p>
+    <p style="color:var(--amber); font-weight:bold;">غادي تُقتطع 10 دراهم (عمولة) من بزطامك.</p>
+    
+    <div class="keypad">
+      <button class="btn-accept" onclick="acceptTrip()" data-voice="موافق. ورك على واحد.">
+        <i class="fa-solid fa-1"></i> موافق (1)
+      </button>
+      <button class="btn-reject" onclick="rejectTrip()" data-voice="لا. ورك على جوج.">
+        <i class="fa-solid fa-2"></i> ممساليش (2)
+      </button>
+    </div>
+  </div>
+</div>
 
 <!-- BOTTOM NAVIGATION -->
 <nav class="nav">
-  <button data-page="account" onclick="go('account')" data-voice="صفحة الحساب"><i class="fa-solid fa-user"></i>حْسَابِي</button>
-  <button data-page="trips" onclick="go('trips')" data-voice="صفحة الرحلات والمزاد"><i class="fa-solid fa-truck"></i>الرِّحْلَات</button>
+  <button data-page="account" onclick="go('account')" data-voice="صفحة الحساب والبزطام"><i class="fa-solid fa-wallet"></i>حْسَابِي</button>
   <button class="active" data-page="home" onclick="go('home')" data-voice="الصفحة الرئيسية"><i class="fa-solid fa-house"></i>الرَّئِيسِيَّة</button>
-  <button data-page="market" onclick="go('market')" data-voice="سوق البيع والشرا"><i class="fa-solid fa-shop"></i>السُّوق</button>
 </nav>
 
 <!-- ACCESSIBILITY TOGGLE & HINTS -->
-<button id="tapAccessToggle" class="tap-access-btn" type="button" data-voice="زر تغيير القراءة باللمس.">
+<button id="tapAccessToggle" class="tap-access-btn" type="button">
   <i class="fa-solid fa-ear-listen"></i>
   <span id="tapAccessText">ضَرْبَة تْقْرَا • جُوج يْدَخْلُو</span>
 </button>
@@ -274,80 +258,110 @@ header{background:var(--navy);color:#fff;padding:15px}
 
 </div>
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 // --- SPLASH SCREEN LOGIC ---
 window.addEventListener('load', () => {
   setTimeout(() => {
     const splash = document.getElementById('splashScreen');
-    if(splash) {
-      splash.classList.add('hide');
-      setTimeout(() => splash.remove(), 600);
-    }
-  }, 2500); // 2.5 seconds
+    if(splash) { splash.classList.add('hide'); setTimeout(() => splash.remove(), 600); }
+  }, 2500); 
 });
 
 /* --- UI FUNCTIONS --- */
 const $ = s => document.querySelector(s);
 const $$ = s => document.querySelectorAll(s);
-window.currentMode = "customer";
 
-// Toast Notification - Duration kept long (4s) for readability
 function toast(t) {
-  let e = $("#toast");
-  e.textContent = t;
-  e.classList.add("show");
-  clearTimeout(toast.timer);
-  toast.timer = setTimeout(() => e.classList.remove("show"), 4000);
+  let e = $("#toast"); e.textContent = t; e.classList.add("show");
+  clearTimeout(toast.timer); toast.timer = setTimeout(() => e.classList.remove("show"), 4500);
 }
 
-// Map Initialization
-let map = L.map("map", { zoomControl: false, dragging: false }).setView([33.57, -7.59], 6);
-L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19 }).addTo(map);
-
-// Navigation
 function go(id) {
   $$(".page").forEach(x => x.classList.remove("active"));
   $("#" + id).classList.add("active");
   $$(".nav button").forEach(x => x.classList.toggle("active", x.dataset.page === id));
   window.scrollTo({ top: 0, behavior: "smooth" });
-  if (id === "home") setTimeout(() => map.invalidateSize(), 200);
 }
 
-// Mode Selection
 function setMode(m) {
-  window.currentMode = m;
-  
-  // Update Buttons UI
   $$(".mode-btn").forEach(btn => btn.classList.remove("active"));
   $("#mode-" + m).classList.add("active");
   
-  // Show/Hide Sections based on mode
-  $("#patronDashboard").classList.toggle("show", m === "patron");
-  $("#driverGpsLock").classList.toggle("show", m === "driver");
-  
-  // Hide customer elements if driver/patron
-  const isCustomer = m === "customer";
-  $("#vehicleSelection").style.display = isCustomer ? "block" : "none";
-  $("#voiceOrderBox").style.display = isCustomer ? "block" : "none";
+  $(".customer-dashboard").classList.toggle("show", m === "customer");
+  $(".driver-dashboard").classList.toggle("show", m === "driver");
+  $(".patron-dashboard").classList.toggle("show", m === "patron");
 }
 
-function pickVehicle(el, name) {
+function pickVehicle(el) {
   $$(".vehicle").forEach(x => x.classList.remove("active"));
   el.classList.add("active");
 }
 
-/* --- TEXT TO SPEECH (MOROCCAN DARIJA TWEAKS) --- */
+/* --- WALLET & CHARJI ALLO LOGIC --- */
+let walletBalance = 0; // Starts at 0
+
+function updateWalletUI() {
+  $("#walletAmount").innerText = walletBalance;
+}
+
+function rechargeWallet() {
+  walletBalance += 100;
+  updateWalletUI();
+  $("#walletHistory").innerHTML = `<span style="color:green;">+ 100 د.م</span> (شحن عبر كاش بلوس) <br>` + $("#walletHistory").innerHTML;
+  speakText("تْمّ شَحْن حسابك بْمِيَة دَرْهَم.");
+  toast("✅ تم شحن حسابك بـ 100 درهم بنجاح.");
+}
+
+function withdrawWallet() {
+  if (walletBalance > 0) {
+    toast(`✅ تم إرسال كود سحب لـ ${walletBalance} درهم عبر SMS.`);
+    $("#walletHistory").innerHTML = `<span style="color:var(--amber);">- ${walletBalance} د.م</span> (سحب كاش) <br>` + $("#walletHistory").innerHTML;
+    walletBalance = 0;
+    updateWalletUI();
+    speakText("تَمّ طَلَب سَحْب الفْلُوس كَاش.");
+  } else {
+    toast("❌ البزطام ديالك خاوي.");
+    speakText("البْزْطَام دْيَالَك خَاوِي.");
+  }
+}
+
+// Simulator Call
+function simulateAlloCall() {
+  $("#alloOverlay").classList.add("show");
+  speakText("ألو، مْعَاك الرُّوبُو ديال شَرْجِي. كَايْنَة سَلْعَة خاصها تمشي لكَازَا. الثَّمَن أَلْف ومِيتِين دَرْهَم. وَرَّك عَلَى وَاحَد للمُوافَقَة.");
+}
+
+function acceptTrip() {
+  $("#alloOverlay").classList.remove("show");
+  if (walletBalance >= 10) {
+    walletBalance -= 10;
+    updateWalletUI();
+    $("#walletHistory").innerHTML = `<span style="color:red;">- 10 د.م</span> (عمولة رحلة كازا) <br>` + $("#walletHistory").innerHTML;
+    toast("✅ تم قبول الرحلة. اقتطاع 10 دراهم. الكليان غيوصلك فـ SMS.");
+    speakText("مَبْرُوك. قْبَلْتِي الكُومُونْد. تْقْطْعَات عَشْرَة دْرَاهْم من حْسَابَك. رَقْم الكِلْيَان غَايْوَصْلَك فمِيساج.");
+  } else {
+    toast("❌ رصيدك غير كافي (خاصك 10 دراهم). سير لـ Cash Plus شَرّجي حسابك.");
+    speakText("رْصِيدَك مَكَافِيش. سِير شَرّجِي حْسَابَك بَاش تْشَدّ الكُومُونْدَات.");
+  }
+}
+
+function rejectTrip() {
+  $("#alloOverlay").classList.remove("show");
+  toast("تم رفض الطلب.");
+  speakText("مَاشِي مُشْكِيل. غَادِي نْقَلّبُو لِيك عَلَى كُومُونْد أُخْرَى.");
+}
+
+
+/* --- TEXT TO SPEECH (DARIJA TWEAKS) --- */
 let voiceEnabled = true;
 function speakText(t) {
   if (!voiceEnabled || !window.speechSynthesis) return;
   window.speechSynthesis.cancel();
   let u = new SpeechSynthesisUtterance(t);
   let v = window.speechSynthesis.getVoices();
-  // Try to find Arabic voice
   u.voice = v.find(x => /ar-MA/i.test(x.lang)) || v.find(x => /^ar/i.test(x.lang)) || null;
   u.lang = u.voice?.lang || "ar-MA";
-  u.rate = 0.95; // Slightly slower for clarity
+  u.rate = 0.95; 
   window.speechSynthesis.speak(u);
 }
 
@@ -357,18 +371,15 @@ $("#voiceToggle").onclick = function() {
   toast(voiceEnabled ? "الصوت شغال" : "الصوت مطفي");
 };
 
-/* --- NEW CLEAN DOUBLE-TAP ACCESSIBILITY LOGIC --- */
-// We use a safe "Arming" logic instead of intercepting and replacing clicks.
+/* --- CLEAN DOUBLE-TAP ACCESSIBILITY LOGIC --- */
 let tapReadMode = true;
 let armedButton = null;
 let disarmTimer = null;
 
 document.getElementById('tapAccessToggle').addEventListener('click', function(e) {
-    // This button handles its own state
     tapReadMode = !tapReadMode;
     const btn = this;
     const textSpan = document.getElementById('tapAccessText');
-    
     if(tapReadMode) {
         btn.classList.remove('off');
         textSpan.innerText = 'ضَرْبَة تْقْرَا • جُوج يْدَخْلُو';
@@ -380,39 +391,26 @@ document.getElementById('tapAccessToggle').addEventListener('click', function(e)
     }
 });
 
-// The core event listener at the capture phase
 document.addEventListener('click', function(e) {
-  if(!tapReadMode) return; // If off, let all clicks pass normally
+  if(!tapReadMode) return;
   
-  // Find if user clicked an interactive element
-  const clickable = e.target.closest('button, .vehicle, .svc, .nav button');
-  if(!clickable) return; // Clicked on empty space, ignore
-  
-  // Exclude the toggle button itself from double-tap logic so it doesn't get stuck
-  if(clickable.id === 'tapAccessToggle') return;
+  const clickable = e.target.closest('button, .vehicle, .nav button');
+  if(!clickable || clickable.id === 'tapAccessToggle') return;
 
   if (armedButton === clickable) {
-      // THIS IS THE SECOND TAP!
-      // Let the click event proceed naturally to trigger its native 'onclick'.
-      armedButton = null; // reset
+      // Second Tap -> Execute normally
+      armedButton = null; 
       clearTimeout(disarmTimer);
-      
-      const hint = document.getElementById('tapAccessHint');
-      hint.classList.remove('show'); // Hide hint
-      
-      // We do NOT call e.preventDefault() here. The click goes through to the browser.
+      document.getElementById('tapAccessHint').classList.remove('show');
   } else {
-      // THIS IS THE FIRST TAP!
-      e.preventDefault(); // Stop the click from activating the button
+      // First Tap -> Block execution, read voice, arm button
+      e.preventDefault(); 
       e.stopPropagation();
-      
       armedButton = clickable;
       
-      // Read the voice text
       let txtToRead = clickable.getAttribute('data-voice') || clickable.innerText;
       speakText(txtToRead);
       
-      // Visual feedback
       document.querySelectorAll('.tap-reading-target').forEach(el => el.classList.remove('tap-reading-target'));
       clickable.classList.add('tap-reading-target');
       
@@ -420,7 +418,6 @@ document.addEventListener('click', function(e) {
       hint.innerText = "🔊 وَرَّك مَرَّة أُخْرَى بَاش تْدْخُل";
       hint.classList.add('show');
       
-      // Disarm after 600ms (window to double tap)
       clearTimeout(disarmTimer);
       disarmTimer = setTimeout(() => {
           if(armedButton === clickable) {
@@ -430,8 +427,7 @@ document.addEventListener('click', function(e) {
           }
       }, 600);
   }
-}, true); // True means Capture phase (runs before the element's actual onclick)
-
+}, true);
 </script>
 </body>
 </html>

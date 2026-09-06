@@ -1,1673 +1,675 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<meta name="theme-color" content="#07111f">
-<title>شَرْجِي برو | منصة النقل الذكية</title>
-<link rel="preconnect" href="https://cdnjs.cloudflare.com">
+<title>شَرْجِي برو (Charji Pro) — النسخة الشاملة V23</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <style>
-:root{
-  --bg:#050b14;
-  --card:#0c1727;
-  --card2:#111f32;
-  --line:rgba(255,255,255,.08);
-  --text:#f7fbff;
-  --muted:#8fa4ba;
-  --blue:#2d6df6;
-  --cyan:#20c7e8;
-  --green:#18c989;
-  --amber:#ffb020;
-  --red:#ff4d6d;
-  --violet:#8b5cf6;
-  --shadow:0 14px 35px rgba(0,0,0,.28);
-}
-
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-}
-
-html{
-  scroll-behavior:smooth;
-}
-
-body{
-  font-family:system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif;
-  background:
-    radial-gradient(circle at top right,rgba(32,199,232,.08),transparent 26%),
-    radial-gradient(circle at bottom left,rgba(45,109,246,.08),transparent 30%),
-    var(--bg);
-  color:var(--text);
-  min-height:100vh;
-}
-
-button,input{
-  font:inherit;
-}
-
-button{
-  cursor:pointer;
-}
-
-.app{
-  width:min(100%,480px);
-  min-height:100vh;
-  margin:auto;
-  background:rgba(5,11,20,.82);
-  padding-bottom:90px;
-  position:relative;
-}
-
-.hidden{
-  display:none!important;
-}
-
-/* Splash */
-.splash{
-  position:fixed;
-  inset:0;
-  z-index:9999;
-  background:#030812;
-  display:grid;
-  place-items:center;
-  transition:.45s;
-}
-
-.splash.fade{
-  opacity:0;
-  pointer-events:none;
-}
-
-.splash-inner{
-  text-align:center;
-}
-
-.splash-mark{
-  width:108px;
-  height:108px;
-  border-radius:30px;
-  margin:auto;
-  display:grid;
-  place-items:center;
-  background:linear-gradient(145deg,#0f2340,#07111f);
-  border:1px solid rgba(32,199,232,.25);
-  box-shadow:0 0 50px rgba(32,199,232,.14);
-  position:relative;
-}
-
-.splash-mark i{
-  font-size:44px;
-  color:var(--cyan);
-  animation:truck 1.4s ease-in-out infinite;
-}
-
-.splash-mark:after{
-  content:"";
-  position:absolute;
-  width:48px;
-  height:3px;
-  border-radius:99px;
-  background:linear-gradient(90deg,transparent,var(--cyan),transparent);
-  bottom:22px;
-  animation:road 1s linear infinite;
-}
-
-@keyframes truck{
-  50%{transform:translateY(-5px)}
-}
-
-@keyframes road{
-  from{transform:translateX(10px)}
-  to{transform:translateX(-10px)}
-}
-
-.brand{
-  font-size:27px;
-  font-weight:900;
-  margin-top:18px;
-}
-
-.brand b{
-  color:var(--cyan);
-}
-
-.splash small{
-  display:block;
-  color:var(--muted);
-  margin-top:7px;
-}
-
-/* Header */
-.header{
-  position:sticky;
-  top:0;
-  z-index:100;
-  background:rgba(5,11,20,.83);
-  backdrop-filter:blur(18px);
-  border-bottom:1px solid var(--line);
-  padding:13px 16px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-}
-
-.logo{
-  display:flex;
-  gap:10px;
-  align-items:center;
-  font-size:16px;
-  font-weight:900;
-}
-
-.logo-icon{
-  width:36px;
-  height:36px;
-  border-radius:12px;
-  background:linear-gradient(145deg,var(--blue),var(--cyan));
-  display:grid;
-  place-items:center;
-  color:#fff;
-  box-shadow:0 8px 20px rgba(45,109,246,.25);
-}
-
-.status{
-  border:1px solid rgba(255,176,32,.42);
-  background:rgba(255,176,32,.10);
-  color:var(--amber);
-  border-radius:99px;
-  padding:7px 10px;
-  font-size:10px;
-  font-weight:800;
-}
-
-/* Hero */
-.hero{
-  margin:14px 16px 12px;
-  padding:18px;
-  border-radius:22px;
-  background:
-    linear-gradient(145deg,rgba(45,109,246,.22),rgba(32,199,232,.07)),
-    var(--card);
-  border:1px solid rgba(32,199,232,.18);
-  box-shadow:var(--shadow);
-  position:relative;
-  overflow:hidden;
-}
-
-.hero:before{
-  content:"";
-  position:absolute;
-  width:150px;
-  height:150px;
-  border-radius:50%;
-  background:rgba(32,199,232,.10);
-  left:-50px;
-  top:-70px;
-}
-
-.hero h1{
-  font-size:20px;
-  line-height:1.5;
-  position:relative;
-}
-
-.hero h1 span{
-  color:var(--cyan);
-}
-
-.hero p{
-  font-size:11px;
-  color:var(--muted);
-  margin-top:6px;
-  line-height:1.7;
-  position:relative;
-}
-
-.hero-stats{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:8px;
-  margin-top:15px;
-  position:relative;
-}
-
-.stat{
-  background:rgba(0,0,0,.18);
-  border:1px solid var(--line);
-  border-radius:13px;
-  padding:9px;
-  text-align:center;
-}
-
-.stat b{
-  font-size:14px;
-  display:block;
-}
-
-.stat small{
-  font-size:8px;
-  color:var(--muted);
-}
-
-/* Ad */
-.ad{
-  margin:0 16px 12px;
-  border-radius:15px;
-  padding:12px 14px;
-  background:linear-gradient(90deg,#211b0b,#111827);
-  border:1px solid rgba(255,176,32,.25);
-  display:flex;
-  align-items:center;
-  gap:12px;
-  position:relative;
-}
-
-.ad-icon{
-  width:38px;
-  height:38px;
-  border-radius:12px;
-  display:grid;
-  place-items:center;
-  background:rgba(255,176,32,.12);
-  color:var(--amber);
-}
-
-.ad strong{
-  font-size:11px;
-}
-
-.ad p{
-  font-size:9px;
-  color:var(--muted);
-  margin-top:3px;
-}
-
-.ad-tag{
-  position:absolute;
-  left:8px;
-  top:7px;
-  font-size:7px;
-  color:var(--amber);
-}
-
-/* Sections */
-.section{
-  margin:17px 16px 8px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
-
-.section h2{
-  font-size:13px;
-}
-
-.section span{
-  font-size:9px;
-  color:var(--muted);
-}
-
-.grid3{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:9px;
-  margin:0 16px 14px;
-}
-
-.mini{
-  border:1px solid var(--line);
-  background:var(--card);
-  border-radius:16px;
-  padding:12px 6px;
-  text-align:center;
-  min-height:90px;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:7px;
-  transition:.2s;
-  color:white;
-}
-
-.mini:active,
-.service:active{
-  transform:scale(.97);
-}
-
-.mini i{
-  font-size:22px;
-}
-
-.mini b{
-  font-size:9px;
-}
-
-.mini small{
-  font-size:8px;
-  color:var(--muted);
-}
-
-.cyan{color:var(--cyan)}
-.red{color:var(--red)}
-.green{color:var(--green)}
-.amber{color:var(--amber)}
-.violet{color:var(--violet)}
-
-/* Radio */
-.radio{
-  margin:0 16px 14px;
-  background:linear-gradient(135deg,#17153e,#091525);
-  border:1px solid rgba(32,199,232,.35);
-  border-radius:18px;
-  padding:13px;
-  display:flex;
-  align-items:center;
-  gap:12px;
-  box-shadow:0 0 25px rgba(32,199,232,.07);
-}
-
-.play{
-  width:45px;
-  height:45px;
-  border-radius:50%;
-  border:0;
-  background:linear-gradient(145deg,var(--cyan),#70e6ff);
-  color:#041019;
-  display:grid;
-  place-items:center;
-  font-size:16px;
-  flex:0 0 auto;
-  box-shadow:0 7px 18px rgba(32,199,232,.2);
-}
-
-.radio-main{
-  min-width:0;
-  flex:1;
-}
-
-.radio-title{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  font-size:11px;
-  font-weight:800;
-}
-
-.live{
-  font-size:8px;
-  color:var(--red);
-  display:flex;
-  align-items:center;
-  gap:5px;
-}
-
-.live:before{
-  content:"";
-  width:6px;
-  height:6px;
-  background:var(--red);
-  border-radius:50%;
-  box-shadow:0 0 8px var(--red);
-}
-
-.ticker{
-  overflow:hidden;
-  margin-top:7px;
-  background:rgba(0,0,0,.23);
-  border-radius:8px;
-  padding:5px 7px;
-}
-
-.ticker span{
-  display:inline-block;
-  white-space:nowrap;
-  font-size:8px;
-  color:#90f7cd;
-  animation:ticker 18s linear infinite;
-}
-
-@keyframes ticker{
-  from{transform:translateX(-100%)}
-  to{transform:translateX(100%)}
-}
-
-/* Voice */
-.voice{
-  margin:0 16px 16px;
-  padding:16px;
-  border:1px solid var(--line);
-  background:var(--card);
-  border-radius:20px;
-  text-align:center;
-  box-shadow:var(--shadow);
-}
-
-.voice-head{
-  font-size:11px;
-  font-weight:800;
-  color:var(--cyan);
-}
-
-.mic-wrap{
-  height:86px;
-  display:grid;
-  place-items:center;
-  position:relative;
-}
-
-.pulse{
-  position:absolute;
-  width:65px;
-  height:65px;
-  border-radius:50%;
-  background:rgba(255,77,109,.25);
-  animation:pulse 1.3s infinite;
-  display:none;
-}
-
-@keyframes pulse{
-  to{
-    transform:scale(1.7);
-    opacity:0;
-  }
-}
-
-.mic{
-  width:64px;
-  height:64px;
-  border-radius:50%;
-  border:2px solid var(--cyan);
-  background:#101d2e;
-  color:var(--cyan);
-  font-size:22px;
-  position:relative;
-  z-index:2;
-}
-
-.mic.recording{
-  background:var(--red);
-  border-color:var(--red);
-  color:#fff;
-}
-
-.transcript{
-  font-size:9px;
-  line-height:1.6;
-  color:var(--muted);
-  padding:9px;
-  border-radius:11px;
-  background:rgba(0,0,0,.22);
-  border-right:3px solid var(--cyan);
-}
-
-/* Services */
-.services{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:9px;
-  margin:0 16px 16px;
-}
-
-.service{
-  background:var(--card2);
-  border:1px solid var(--line);
-  border-radius:16px;
-  padding:14px 6px;
-  text-align:center;
-  transition:.2s;
-  color:white;
-}
-
-.service i{
-  font-size:21px;
-  margin-bottom:8px;
-}
-
-.service b{
-  display:block;
-  font-size:9px;
-}
-
-/* Orders */
-.order{
-  margin:0 16px 11px;
-  padding:14px;
-  background:var(--card);
-  border:1px solid var(--line);
-  border-radius:17px;
-  box-shadow:0 10px 25px rgba(0,0,0,.16);
-  position:relative;
-  overflow:hidden;
-}
-
-.order:before{
-  content:"";
-  position:absolute;
-  right:0;
-  top:0;
-  bottom:0;
-  width:4px;
-  background:var(--amber);
-}
-
-.order.blue:before{
-  background:var(--cyan);
-}
-
-.route{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:8px;
-}
-
-.route strong{
-  font-size:11px;
-}
-
-.price{
-  font-weight:900;
-  color:var(--green);
-  font-size:14px;
-}
-
-.details{
-  font-size:9px;
-  color:var(--muted);
-  line-height:1.7;
-  margin:8px 0 11px;
-}
-
-.tags{
-  display:flex;
-  gap:5px;
-  flex-wrap:wrap;
-  margin-bottom:10px;
-}
-
-.tag{
-  font-size:7px;
-  border:1px solid var(--line);
-  border-radius:99px;
-  padding:3px 7px;
-  color:#bfd0df;
-  background:rgba(255,255,255,.03);
-}
-
-.action{
-  width:100%;
-  border:0;
-  border-radius:11px;
-  padding:10px;
-  background:linear-gradient(135deg,var(--blue),#1e50c7);
-  color:white;
-  font-size:10px;
-  font-weight:900;
-}
-
-.action.accepted{
-  background:var(--green);
-}
-
-/* Bottom nav */
-.nav{
-  position:fixed;
-  bottom:0;
-  left:50%;
-  transform:translateX(-50%);
-  width:min(100%,480px);
-  z-index:90;
-  background:rgba(8,16,29,.94);
-  backdrop-filter:blur(15px);
-  border-top:1px solid var(--line);
-  padding:9px 6px 12px;
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-}
-
-.nav button{
-  border:0;
-  background:none;
-  color:var(--muted);
-  font-size:8px;
-  display:flex;
-  flex-direction:column;
-  gap:4px;
-  align-items:center;
-}
-
-.nav i{
-  font-size:17px;
-}
-
-.nav .active{
-  color:var(--cyan);
-}
-
-/* Modal */
-.overlay{
-  position:fixed;
-  inset:0;
-  background:rgba(1,5,12,.88);
-  backdrop-filter:blur(8px);
-  z-index:1000;
-  display:none;
-  align-items:flex-end;
-  justify-content:center;
-}
-
-.overlay.show{
-  display:flex;
-}
-
-.modal{
-  width:min(100%,480px);
-  background:#0b1625;
-  border:1px solid var(--line);
-  border-radius:24px 24px 0 0;
-  padding:20px 18px 24px;
-  animation:up .25s ease;
-}
-
-@keyframes up{
-  from{
-    transform:translateY(40px);
-    opacity:0;
-  }
-}
-
-.handle{
-  width:45px;
-  height:4px;
-  border-radius:10px;
-  background:#30445a;
-  margin:0 auto 15px;
-}
-
-.modal h3{
-  font-size:15px;
-  text-align:center;
-}
-
-.modal .sub{
-  text-align:center;
-  color:var(--muted);
-  font-size:9px;
-  margin:7px 0 15px;
-  line-height:1.6;
-}
-
-.role{
-  width:100%;
-  border:1px solid var(--line);
-  background:var(--card2);
-  color:var(--text);
-  border-radius:13px;
-  padding:12px;
-  margin-top:8px;
-  font-size:10px;
-  font-weight:800;
-}
-
-.role i{
-  margin-left:7px;
-  color:var(--cyan);
-}
-
-.close{
-  background:transparent!important;
-  color:var(--muted)!important;
-}
-
-.field{
-  margin-top:10px;
-}
-
-.field label{
-  display:block;
-  font-size:9px;
-  color:var(--muted);
-  margin-bottom:5px;
-}
-
-.field input{
-  width:100%;
-  border:1px solid var(--line);
-  background:#122137;
-  color:white;
-  border-radius:11px;
-  padding:11px;
-  font-size:11px;
-  outline:none;
-}
-
-.field input:focus{
-  border-color:var(--cyan);
-}
-
-.upload{
-  border:1px dashed rgba(32,199,232,.45);
-  background:rgba(32,199,232,.05);
-  padding:11px;
-  border-radius:11px;
-  text-align:center;
-  font-size:9px;
-  color:var(--cyan);
-  display:block;
-  margin-top:7px;
-}
-
-.submit{
-  width:100%;
-  margin-top:14px;
-  border:0;
-  border-radius:12px;
-  padding:12px;
-  color:white;
-  background:linear-gradient(135deg,var(--blue),#174fc8);
-  font-size:10px;
-  font-weight:900;
-}
-
-.toast{
-  position:fixed;
-  z-index:2000;
-  left:50%;
-  transform:translateX(-50%) translateY(20px);
-  bottom:90px;
-  background:#111f31;
-  color:white;
-  border:1px solid var(--line);
-  border-radius:12px;
-  padding:10px 14px;
-  font-size:9px;
-  opacity:0;
-  pointer-events:none;
-  transition:.25s;
-  max-width:90%;
-  text-align:center;
-}
-
-.toast.show{
-  opacity:1;
-  transform:translateX(-50%) translateY(0);
-}
+:root{--navy:#123B8F;--navy2:#123B8F;--blue:#155EEF;--cyan:#155EEF;--green:#155EEF;--red:#FF7A00;--amber:#FF7A00;--ink:#172033;--muted:#6B7280;--bg:#F4F6F8;--line:#E1E5EA}
+*{box-sizing:border-box}body{margin:0;background:#dfe8f0;font-family:system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif;color:var(--ink)}
+button,input,textarea{font:inherit}.app{max-width:480px;margin:auto;background:var(--bg);min-height:100vh;padding-bottom:72px}
+header{background:#123B8F;color:#fff;padding:13px 14px 12px}
+.head{display:flex;align-items:center;justify-content:space-between}.brand{display:flex;align-items:center;gap:8px}.logo{width:42px;height:42px;border-radius:12px;background:#FF7A00;display:grid;place-items:center;color:#fff;font-size:21px}.brand b{font-size:17px}.brand small{display:block;color:#b9d1ea;font-size:8px}
+.round{width:39px;height:39px;border-radius:50%;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.08);color:#fff}
+.radio-ad{margin-top:12px;border:1px solid rgba(255,255,255,.2);border-radius:17px;padding:10px;background:rgba(255,255,255,.04);display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px}
+.radio-play{width:45px;height:45px;border:0;border-radius:50%;background:var(--amber);color:#17213a;font-size:17px}.wave{height:30px;display:flex;align-items:center;gap:2px;overflow:hidden}.wave i{display:block;width:3px;border-radius:9px;background:var(--amber);animation:w 1s ease-in-out infinite alternate}.wave i:nth-child(2n){animation-delay:.2s}.wave i:nth-child(3n){animation-delay:.4s}@keyframes w{from{height:5px}to{height:27px}}
+.radio-copy b{font-size:9px;color:#ffd15d}.radio-copy div{font-size:10px;font-weight:800;margin-top:2px}.radio-copy small{font-size:7px;color:#b7c8db}
+.ad-thumb{width:54px;height:54px;border-radius:50%;background:#fff;display:grid;place-items:center;color:#111;font-size:24px}
+.mode{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;padding:12px 12px 8px}.mode button{min-height:70px;border:2px solid transparent;border-radius:14px;background:#fff;color:var(--ink);box-shadow:0 3px 13px #cfd9e4;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;text-align:center}.mode button.active{border-color:var(--blue);box-shadow:0 3px 14px rgba(23,105,255,.22);background:#f4f8ff}.mode i{font-size:22px;color:var(--blue)}.mode b{font-size:10px}.mode small{display:block;font-size:7px;color:var(--muted);margin-top:2px}
+.map-wrap{margin:4px 12px 10px;height:300px;border-radius:22px;overflow:hidden;position:relative;box-shadow:0 4px 15px #ccd7e2}#map{height:100%;width:100%}.live{position:absolute;z-index:500;top:12px;right:12px;background:#092343;color:#fff;border-radius:11px;padding:8px 10px;font-size:8px;box-shadow:0 4px 12px #678}.live b{font-size:15px;display:block;margin-top:2px}.gps{position:absolute;z-index:500;bottom:12px;left:12px;width:43px;height:43px;border:0;border-radius:12px;background:#fff;color:var(--blue);font-size:17px;box-shadow:0 3px 10px #8798a8}
+.sheet{margin:0 12px 10px;background:#fff;border-radius:20px;padding:13px;box-shadow:0 3px 13px #d3dde7}.title{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.title b{font-size:13px}.title small{font-size:8px;color:var(--muted)}
+.vehicles{display:grid;grid-template-columns:1fr 1fr;gap:8px}.vehicle{min-height:108px;border:1px solid var(--line);border-radius:15px;background:#fff;padding:9px;color:var(--ink);text-align:center}.vehicle.active{border:2px solid var(--blue);background:#f4f8ff}.vehicle i{font-size:29px;color:#3b566f}.vehicle b{display:block;font-size:9px;margin-top:7px}.vehicle strong{display:block;font-size:9px;color:var(--blue);margin-top:3px}
+.voice-box{text-align:center}.mic{width:82px;height:82px;border-radius:50%;border:9px solid #ffe3e6;background:var(--red);color:#fff;font-size:32px;box-shadow:0 0 0 5px #fff0f1;margin:5px auto 10px}.voice-box p{font-size:8px;color:var(--muted);line-height:1.6}.transcript{border:1px solid var(--line);border-radius:12px;background:#f7f9fb;padding:10px;font-size:8px;color:#667b91;margin:9px 0}.publish{width:100%;border:0;border-radius:13px;background:var(--blue);color:#fff;padding:12px;font-weight:900;font-size:10px}
+.cost{margin-top:10px;border:1px solid #BFD0FA;border-radius:14px;background:#F2F6FF;text-align:center;padding:9px}.cost small{font-size:8px;color:#54806d}.cost b{display:block;font-size:22px;color:#155EEF}.call{width:100%;margin-top:8px;border:0;border-radius:13px;background:var(--blue);color:#fff;padding:12px;font-size:10px;font-weight:900}
+.services{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;padding:4px 12px 12px}.svc{border:0;background:#fff;border-radius:13px;min-height:78px;color:var(--ink);box-shadow:0 2px 8px #d5dfe8}.svc i{font-size:19px;color:#0a5ebc}.svc b{display:block;font-size:7px;margin-top:7px}.svc small{display:block;font-size:6px;color:var(--muted);margin-top:2px}
+.page{display:none}.page.active{display:block}.page-head{padding:15px 14px 8px}.page-head b{font-size:16px}.page-head small{display:block;font-size:8px;color:var(--muted);margin-top:3px}.cards{padding:0 12px;display:grid;gap:9px}.card{background:#fff;border-radius:16px;padding:12px;box-shadow:0 2px 9px #d5dfe8}.card b{font-size:11px}.card p{font-size:8px;color:var(--muted);line-height:1.6}.price{color:#155EEF;font-size:15px;font-weight:900}.actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:8px}.actions button{border:0;border-radius:10px;padding:9px;font-size:8px;font-weight:800;background:#eaf1fa;color:#17395d}.actions .ok{background:var(--blue);color:#fff}.bid-input{width:100%;border:1px solid var(--line);border-radius:10px;padding:8px;margin-top:5px;font-size:9px;}
+.market{grid-template-columns:1fr 1fr}.prod{text-align:center}.prod i{font-size:34px;color:#315d86;margin:10px}.prod small{display:block}.post-actions{display:flex;gap:6px}.post-actions button{border:0;border-radius:9px;background:#edf3f9;padding:8px;font-size:8px}
+.nav{position:fixed;z-index:1200;bottom:0;left:50%;transform:translateX(-50%);width:min(100%,480px);height:66px;background:#fff;border-top:1px solid #d7e1ea;display:grid;grid-template-columns:repeat(5,1fr)}.nav button{border:0;background:transparent;color:#789;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:7px}.nav i{font-size:18px}.nav .active{color:var(--blue)}
+.toast{position:fixed;z-index:3000;bottom:78px;left:50%;transform:translateX(-50%) translateY(15px);opacity:0;background:#0a203d;color:#fff;border-radius:12px;padding:12px 16px;font-size:10px;transition:.2s;box-shadow:0 4px 15px rgba(0,0,0,.3)}.toast.show{opacity:1;transform:translateX(-50%)}
+.city{background:#fff;border:2px solid #18314a;border-radius:8px;padding:3px 5px;font-size:7px;font-weight:900;white-space:nowrap}.city strong{background:#0c2138;color:#fff;border-radius:3px;padding:1px 3px;margin-right:2px}
+
+.premium-glow{position:absolute;inset:auto 12px 12px 12px;z-index:520;background:rgba(18,59,143,.96);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.16);border-radius:16px;padding:10px 11px;color:#fff;display:flex;align-items:center;justify-content:space-between;gap:10px;box-shadow:0 10px 28px rgba(0,0,0,.28)}
+.near-driver{display:flex;align-items:center;gap:9px}.driver-avatar{width:38px;height:38px;border-radius:50%;background:#155EEF;display:grid;place-items:center;color:#fff;font-size:17px;box-shadow:0 0 0 3px rgba(255,255,255,.10)}.near-driver b{font-size:10px}.near-driver small{display:block;font-size:7px;color:#bcd0e5;margin-top:2px}.eta-badge{border-radius:11px;padding:7px 9px;background:rgba(255,122,0,.16);border:1px solid rgba(255,122,0,.45);color:#FFFFFF;font-size:8px;font-weight:900}
+
+.assistant-fab{position:fixed;z-index:1350;bottom:82px;right:max(16px,calc((100vw - 480px)/2 + 16px));width:58px;height:58px;border:0;border-radius:50%;background:#155EEF;color:#fff;font-size:22px;box-shadow:0 9px 24px rgba(38,92,255,.38);animation:pulseFab 1.9s ease-in-out infinite;}
+@keyframes pulseFab{0%,100%{box-shadow:0 9px 24px rgba(38,92,255,.38),0 0 0 0 rgba(38,92,255,.22)}50%{box-shadow:0 9px 24px rgba(38,92,255,.38),0 0 0 11px rgba(38,92,255,0)}}
+.assistant-panel{position:fixed;z-index:1400;right:max(12px,calc((100vw - 480px)/2 + 12px));bottom:150px;width:min(330px,calc(100vw - 24px));background:rgba(7,24,48,.96);color:#fff;border-radius:18px;padding:13px;border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(14px);box-shadow:0 14px 35px rgba(0,0,0,.35);display:none}
+.assistant-panel.show{display:block;animation:pop .18s ease-out}@keyframes pop{from{transform:translateY(10px);opacity:0}to{transform:none;opacity:1}}
+.assistant-panel b{font-size:11px}.assistant-panel p{font-size:8px;line-height:1.6;color:#b8cae0}.assistant-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:9px}.assistant-actions button{border:1px solid rgba(255,255,255,.12);background:#102b50;color:#fff;border-radius:10px;padding:9px;font-size:8px}
+
+.stat-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;padding:0 12px 10px}.stat{background:#fff;border-radius:14px;padding:10px;text-align:center;box-shadow:0 2px 8px #d7e0e8}.stat b{display:block;font-size:15px;color:#0b4380}.stat small{font-size:7px;color:var(--muted)}
+.smart-banner{margin:0 12px 10px;border-radius:16px;padding:11px 12px;background:#155EEF;color:#fff;display:flex;align-items:center;gap:10px;box-shadow:0 7px 18px rgba(15,103,255,.25)}.smart-banner i{font-size:23px}.smart-banner b{display:block;font-size:10px}.smart-banner small{font-size:7px;color:#d8f5ff}.smart-banner button{margin-right:auto;border:0;background:#fff;color:#1256a4;border-radius:9px;padding:7px 9px;font-size:8px;font-weight:900}
+.driver-pin{width:28px;height:28px;border-radius:50%;background:#0c6cff;color:#fff;display:grid;place-items:center;border:3px solid #fff;box-shadow:0 3px 9px rgba(0,0,0,.3);font-size:11px}.route-dash{stroke-dasharray:10 12;animation:routeMove 1.3s linear infinite}@keyframes routeMove{to{stroke-dashoffset:-22}}
+.voice-flash{position:fixed;z-index:4000;top:76px;left:50%;transform:translateX(-50%) translateY(-8px);background:rgba(6,26,53,.96);color:#fff;border:1px solid rgba(255,255,255,.13);border-radius:99px;padding:10px 14px;font-size:9px;opacity:0;pointer-events:none;transition:.18s;box-shadow:0 7px 20px rgba(0,0,0,.2)}.voice-flash.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.driver-gps-lock{display:none;margin:10px 12px;border:1px solid #ffd48b;background:#fff7e8;border-radius:16px;padding:12px;box-shadow:0 3px 12px #d9e0e7;}.driver-gps-lock.show{display:block}.driver-gps-lock .gps-lock-top{display:flex;align-items:center;gap:10px}.driver-gps-lock .gps-lock-icon{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:#FF7A00;color:#fff;font-size:18px}.driver-gps-lock b{font-size:10px}.driver-gps-lock small{display:block;font-size:7px;color:#7a6a4f;margin-top:3px;line-height:1.5}.driver-gps-lock button{width:100%;margin-top:9px;border:0;border-radius:11px;padding:10px;background:#0f6eff;color:#fff;font-size:9px;font-weight:900}.driver-gps-lock.ok{border-color:#9fe0c3;background:#F2F6FF}.driver-gps-lock.ok .gps-lock-icon{background:#155EEF}
+.ad-slot{margin:10px 12px;border-radius:18px;overflow:hidden;background:#123B8F;color:#fff;border:1px solid rgba(255,255,255,.08);box-shadow:0 5px 16px rgba(38,76,112,.18);}.ad-slot-inner{padding:12px;display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;}.ad-slot .ad-badge{display:inline-block;font-size:6px;border-radius:99px;padding:3px 6px;background:rgba(255,255,255,.14);margin-bottom:5px}.ad-slot b{font-size:11px;display:block}.ad-slot small{display:block;font-size:7px;color:#c8d9eb;margin-top:4px}.ad-slot button{margin-top:8px;border:0;border-radius:9px;padding:7px 9px;background:#fff;color:#164a80;font-size:8px;font-weight:900}.ad-art{width:64px;height:64px;border-radius:16px;background:rgba(255,255,255,.12);display:grid;place-items:center;font-size:26px;color:#FF7A00}
+.ad-strip{margin:8px 12px 10px;border-radius:14px;padding:9px 10px;background:#fff;border:1px solid var(--line);display:flex;align-items:center;gap:10px;box-shadow:0 2px 9px #d8e1e9}.ad-strip i{font-size:20px;color:#FF7A00}.ad-strip b{font-size:9px}.ad-strip small{display:block;font-size:7px;color:var(--muted);margin-top:2px}.ad-strip .sponsored{margin-right:auto;font-size:6px;color:#8aa0b5;border:1px solid var(--line);border-radius:99px;padding:3px 5px}
+.driver-blocked{opacity:.45!important;pointer-events:none!important;filter:grayscale(.4)}
+.return-strip{margin:0 12px 10px;background:#fff;border:1px solid var(--line);border-radius:17px;padding:11px;box-shadow:0 3px 12px #d9e1e8}.return-head{display:flex;align-items:center;gap:9px}.return-icon{width:42px;height:42px;border-radius:13px;background:#FF7A00;color:#fff;display:grid;place-items:center;font-size:18px}.return-head b{font-size:11px}.return-head small{display:block;font-size:7px;color:var(--muted);margin-top:3px}.return-toggle{margin-right:auto;border:0;border-radius:99px;background:#155EEF;color:#fff;padding:7px 9px;font-size:7px;font-weight:900}.return-match{display:none;margin:10px 12px;background:#fff;border:2px solid #FF7A00;border-radius:18px;padding:12px;box-shadow:0 8px 22px rgba(25,45,70,.16)}.return-match.show{display:block}.return-match h3{font-size:13px;margin:8px 0 4px}.return-match p{font-size:8px;color:var(--muted);line-height:1.65}.match-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:10px 0}.match-stat{background:#f5f7fa;border-radius:10px;padding:8px;text-align:center}.match-stat b{display:block;font-size:10px;color:#155EEF}.match-stat small{font-size:6px;color:var(--muted)}.match-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px}.match-actions button{border:0;border-radius:11px;padding:10px;font-size:8px;font-weight:900}.match-actions .yes{background:#155EEF;color:#fff}.match-actions .no{background:#edf0f4;color:#566579}.match-actions .listen{grid-column:1/-1;background:#FF7A00;color:#fff}.return-flow{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:6px;margin-top:10px;background:#f5f7fa;border-radius:12px;padding:9px}.return-city{text-align:center}.return-city b{font-size:9px}.return-city small{display:block;font-size:6px;color:var(--muted)}.return-arrow{color:#FF7A00;font-size:16px}
+.driver-cost{display:none;margin:0 12px 10px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:12px;box-shadow:0 3px 12px #d8e0e8}.driver-cost.show{display:block}.cost-head{display:flex;align-items:center;gap:9px;margin-bottom:10px}.cost-icon{width:42px;height:42px;border-radius:13px;background:#155EEF;color:#fff;display:grid;place-items:center;font-size:18px}.cost-head b{font-size:11px}.cost-head small{display:block;font-size:7px;color:var(--muted);margin-top:3px}.today-price{margin-right:auto;background:#FFF2E8;color:#C65E00;border-radius:10px;padding:7px 8px;text-align:center;font-size:7px}.today-price strong{display:block;font-size:11px}.cost-inputs{display:grid;grid-template-columns:1fr 1fr;gap:7px}.cost-field{border:1px solid var(--line);border-radius:11px;padding:8px;background:#f8f9fb}.cost-field label{display:block;font-size:6px;color:var(--muted);margin-bottom:4px}.cost-field input{width:100%;border:0;background:transparent;outline:none;color:var(--ink);font-size:10px;font-weight:800}.cost-summary{margin-top:9px;display:grid;grid-template-columns:repeat(2,1fr);gap:7px}.cost-box{border-radius:11px;padding:9px;text-align:center;background:#f4f6f8}.cost-box b{display:block;font-size:12px;color:#155EEF}.cost-box small{font-size:6px;color:var(--muted)}.net-box{grid-column:1/-1;background:#123B8F;color:#fff}.net-box b{color:#fff;font-size:17px}.net-box small{color:#d9e5fb}.calc-note{margin-top:8px;font-size:6px;color:var(--muted);line-height:1.5}
+.tap-access-btn{position:fixed;left:12px;bottom:76px;z-index:10020;border:0;border-radius:16px;padding:10px 12px;background:#155EEF;color:#fff;font-weight:900;font-size:8px;box-shadow:0 8px 22px rgba(18,59,143,.28);display:flex;align-items:center;gap:7px}.tap-access-btn.off{background:#687386}.tap-access-btn i{font-size:13px}.tap-access-hint{position:fixed;left:50%;transform:translateX(-50%);bottom:128px;z-index:10019;display:none;background:#123B8F;color:#fff;border-radius:12px;padding:10px 14px;font-size:9px;font-weight:800;box-shadow:0 6px 18px rgba(0,0,0,.2);white-space:nowrap}.tap-access-hint.show{display:block;animation:tapHint .18s ease-out}@keyframes tapHint{from{opacity:0;transform:translateX(-50%) translateY(5px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}.tap-reading-target{outline:3px solid #FF7A00!important;outline-offset:3px!important;border-radius:10px!important}
+.tools-launch{margin:0 12px 10px;background:#123B8F;color:#fff;border-radius:18px;padding:12px;display:flex;align-items:center;gap:10px;box-shadow:0 6px 18px rgba(18,59,143,.22)}.tools-launch i{font-size:24px;color:#FF7A00}.tools-launch b{display:block;font-size:11px}.tools-launch small{display:block;font-size:7px;color:#cbd8ee;margin-top:3px}.tools-launch button{margin-right:auto;border:0;border-radius:10px;background:#FF7A00;color:#fff;padding:9px 11px;font-size:8px;font-weight:900}
+.overlay{position:fixed;inset:0;z-index:9000;background:rgba(5,18,38,.62);display:none;align-items:flex-end;justify-content:center}.overlay.show{display:flex}.tools-panel{width:min(100%,480px);max-height:91vh;overflow:auto;background:#F4F6F8;border-radius:24px 24px 0 0;padding:14px 12px 85px;animation:panelUp .2s ease-out}.tool-detail{display:none}.tool-detail.show{display:block}.tools-home.hide{display:none}@keyframes panelUp{from{transform:translateY(30px);opacity:.4}to{transform:none;opacity:1}}
+.panel-head{position:sticky;top:-14px;z-index:2;background:#F4F6F8;padding:8px 2px 11px;display:flex;align-items:center;gap:9px}.panel-head div{flex:1}.panel-head b{font-size:14px}.panel-head small{display:block;font-size:7px;color:var(--muted);margin-top:2px}.panel-close,.panel-back{width:38px;height:38px;border:0;border-radius:12px;background:#fff;color:#123B8F;box-shadow:0 2px 8px #d4dde5}.panel-back{display:none}
+.tool-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.tool-card{min-height:105px;border:0;border-radius:17px;background:#fff;padding:12px;text-align:right;color:var(--ink);box-shadow:0 3px 11px #d8e0e8}.tool-card i{font-size:23px;color:#155EEF}.tool-card b{display:block;font-size:10px;margin-top:8px}.tool-card small{display:block;font-size:7px;color:var(--muted);margin-top:3px;line-height:1.5}.tool-card.danger i{color:#e53935}.tool-card.reward i{color:#FF7A00}
+.detail-card{background:#fff;border-radius:17px;padding:13px;margin-bottom:10px;box-shadow:0 2px 9px #d6dfe7}.detail-card h3{font-size:12px;margin:0 0 8px}.detail-card p{font-size:8px;color:var(--muted);line-height:1.7}.field{margin:8px 0}.field label{display:block;font-size:7px;color:#58677a;margin-bottom:4px}.field input,.field select,.field textarea{width:100%;border:1px solid var(--line);border-radius:10px;padding:10px;background:#f8fafc;font-size:9px}.field textarea{min-height:70px;resize:vertical}.primary,.danger-btn,.soft-btn{width:100%;border:0;border-radius:11px;padding:11px;font-size:9px;font-weight:900;margin-top:6px}.primary{background:#155EEF;color:#fff}.danger-btn{background:#e53935;color:#fff}.soft-btn{background:#eaf1fa;color:#17395d}.mini-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.status-row{display:flex;align-items:center;gap:9px;padding:10px 0;border-bottom:1px solid #eef1f4}.status-row:last-child{border-bottom:0}.status-icon{width:39px;height:39px;border-radius:12px;background:#edf3ff;color:#155EEF;display:grid;place-items:center}.status-row div:nth-child(2){flex:1}.status-row b{font-size:9px}.status-row small{display:block;font-size:7px;color:var(--muted);margin-top:3px}.status-tag{font-size:7px;border-radius:99px;padding:5px 7px;background:#edf8f3;color:#18865b}.status-tag.warn{background:#fff3df;color:#bb6500}
+.weather-box{background:linear-gradient(135deg,#155EEF,#123B8F);color:#fff;border-radius:18px;padding:16px;text-align:center}.weather-box i{font-size:35px;color:#ffd45c}.weather-box strong{display:block;font-size:29px;margin:6px}.weather-box small{font-size:8px;color:#d8e6ff}.reward-total{text-align:center;padding:15px}.reward-total i{font-size:32px;color:#FF7A00}.reward-total strong{display:block;font-size:28px;color:#123B8F;margin:5px}.report-types{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.report-types button{border:1px solid var(--line);border-radius:12px;background:#fff;padding:11px 4px;font-size:8px;color:#334}.report-types button.selected{border-color:#155EEF;background:#edf3ff;color:#155EEF}.service-item{display:flex;align-items:center;gap:9px}.service-item .status-icon{background:#fff4e8;color:#FF7A00}.service-item .mini-actions{margin-right:auto}.service-item button{border:0;border-radius:9px;padding:7px;background:#eaf1fa;color:#155EEF;font-size:7px}.drive-mode .app{font-size:115%}.drive-mode .nav{height:78px}.drive-mode .nav i{font-size:23px}.drive-mode button{min-height:44px}.sos-pulse{animation:sosPulse 1.2s infinite}@keyframes sosPulse{50%{box-shadow:0 0 0 10px rgba(229,57,53,0)}}
+
+/* SUPER APP NEW FEATURES CSS */
+.wallet-card{background:linear-gradient(135deg, #FF7A00, #e65c00);color:#fff;text-align:center}.wallet-card b{color:#fff}.wallet-card .balance{font-size:28px;font-weight:900;margin:10px 0}.wallet-card p{color:#ffe0cc}.wallet-card button{background:#fff;color:#e65c00;border:0;padding:8px;border-radius:8px;font-weight:bold}
+.offline-banner{display:none;background:#e53935;color:#fff;text-align:center;padding:10px;font-size:10px;font-weight:bold;position:sticky;top:0;z-index:2000}.offline-banner.show{display:block}
+.fatigue-alert{position:fixed;inset:0;background:rgba(0,0,0,0.85);color:#fff;z-index:9999;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px}.fatigue-alert.show{display:flex}.fatigue-alert i{font-size:60px;color:#FF7A00;margin-bottom:20px;animation:sosPulse 1s infinite}.fatigue-alert button{margin-top:20px;padding:15px 30px;font-size:14px;border-radius:10px;background:#155EEF;color:#fff;border:0;font-weight:bold}
+.patron-dashboard{display:none;margin:0 12px 10px;}.patron-dashboard.show{display:block}
+.receipt-modal{display:none;background:#fff;padding:20px;border-radius:10px;color:#111;text-align:right}.receipt-modal h2{margin-top:0;color:#123B8F;border-bottom:2px solid #FF7A00;padding-bottom:10px}
 </style>
 </head>
+<body><div class="app">
+<div id="offlineBanner" class="offline-banner"><i class="fa-solid fa-wifi" style="text-decoration:line-through"></i> أنت الآن خارج التغطية. التطبيق خدام أوفلاين وغادي يحفظ كاع البيانات.</div>
 
-<body>
-
-<audio id="radio" loop preload="none">
-  <source src="https://stream.zeno.fm/f3yqy0p7m4zuv" type="audio/mpeg">
-</audio>
-
-<div class="splash" id="splash">
-  <div class="splash-inner">
-    <div class="splash-mark">
-      <i class="fa-solid fa-truck-fast"></i>
-    </div>
-    <div class="brand">شَرْجِي <b>برو</b></div>
-    <small>النقل الذكي، الطريق والراديو في مكان واحد</small>
-  </div>
+<div class="fatigue-alert" id="fatigueAlert">
+  <i class="fa-solid fa-mug-hot"></i>
+  <h2>راك سكتي بزاف!</h2>
+  <p>حسب الـ GPS راك صايغ مدة طويلة بلا توقف. حفاظاً على سلامتك، كاين محطة استراحة قريبة ليك.</p>
+  <button onclick="closeFatigueAlert()">فهمت، غادي نرتاح</button>
 </div>
 
-<main class="app">
-
-<header class="header">
-  <div class="logo">
-    <div class="logo-icon">
-      <i class="fa-solid fa-route"></i>
-    </div>
-    <span>شَرْجِي برو</span>
-  </div>
-
-  <button class="status" id="statusBtn">
-    <i class="fa-solid fa-lock"></i> زائر
-  </button>
+<header>
+<div class="head"><button class="round" onclick="openTools()" data-voice="فتح مركز خدمات السائق."><i class="fa-solid fa-bars"></i></button><div class="brand"><div class="logo"><i class="fa-solid fa-truck-fast"></i></div><div><b>شَرْجِي برو</b><small>نقل ذكي بصوت واحد</small></div></div><button class="round" id="voiceToggle" aria-label="الصوت شغال"><i class="fa-solid fa-volume-high"></i></button></div>
+<div class="radio-ad">
+<button class="radio-play" id="radioBtn"><i class="fa-solid fa-play"></i></button>
+<div><div class="radio-copy"><b>راديو شَرْجِي • إشهار ممول</b><div>عروض خاصة على زيوت المحركات</div><small id="radioState">ضغط للتشغيل • إعلانات مهنية صوتية</small></div><div class="wave"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+<div class="ad-thumb"><i class="fa-solid fa-oil-can"></i></div>
+<audio id="radio" preload="none" src="https://stream.zeno.fm/f3yqy0p7m4zuv"></audio>
+</div>
 </header>
 
-<section class="hero">
-  <h1>
-    كل ما يحتاجه السائق<br>
-    <span>في تطبيق واحد</span>
-  </h1>
-
-  <p>
-    طلبات نقل، حالة الطريق، الراديو، الخدمات المهنية
-    ومتابعة الرحلات بشكل بسيط وسريع.
-  </p>
-
-  <div class="hero-stats">
-    <div class="stat">
-      <b>24/7</b>
-      <small>خدمة مستمرة</small>
+<div class="ad-slot">
+  <div class="ad-slot-inner">
+    <div>
+      <span class="ad-badge">إعلان ممول</span>
+      <b>مساحة إشهارية للمهنيين</b>
+      <small>تأمين • زيوت • عجلات • محطات • قطع الغيار</small>
+      <button data-voice="شوف العرض الإشهاري الممول." onclick="toast('هنا يفتح عرض المعلن أو رقم التواصل')">شوف العرض</button>
     </div>
+    <div class="ad-art"><i class="fa-solid fa-bullhorn"></i></div>
+  </div>
+</div>
 
-    <div class="stat">
-      <b>+120</b>
-      <small>طلب متاح</small>
-    </div>
+<section id="home" class="page active">
+<div class="mode">
+<button id="customerMode" class="active" data-voice="أنا زبون. كنقلب على شاحنة." onclick="setMode('customer')"><i class="fa-solid fa-box"></i><div><b>أنا زبون</b><small>نقلب على شاحنة</small></div></button>
+<button id="driverMode" data-voice="أنا سائق. عندي شاحنة وباغي نخدم." onclick="setMode('driver')"><i class="fa-solid fa-user-tie"></i><div><b>أنا سائق</b><small>عندي شاحنة</small></div></button>
+<button id="patronMode" data-voice="أنا پاترون. عندي أسطول دالشاحنات." onclick="setMode('patron')"><i class="fa-solid fa-building"></i><div><b>أنا پاترون</b><small>تسيير الأسطول</small></div></button>
+</div>
 
-    <div class="stat">
-      <b>آمن</b>
-      <small>حسابات موثقة</small>
+<div class="patron-dashboard card" id="patronDashboard">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+    <b>لوحة تحكم الأسطول</b>
+    <span class="status-tag">3 شاحنات خدامين</span>
+  </div>
+  <p>المدخول اليومي: <strong>4,200 د.م</strong></p>
+  <div class="mini-actions" style="margin-top:10px">
+    <button onclick="toast('توزيع الطلبات على السائقين')">توزيع الطلبات</button>
+    <button onclick="toast('تتبع مسار الشاحنات على الخريطة')">تتبع الشاحنات</button>
+  </div>
+</div>
+
+<div class="driver-gps-lock" id="driverGpsLock">
+  <div class="gps-lock-top">
+    <div class="gps-lock-icon"><i class="fa-solid fa-location-dot"></i></div>
+    <div>
+      <b>GPS ضروري للسائق</b>
+      <small id="driverGpsMessage">باش تبان للزبناء وتستقبل الطلبات، خاص الموقع يبقى خدام.</small>
     </div>
   </div>
-</section>
+  <button id="enableDriverGpsBtn" data-voice="شعل الجي بي إس باش تبدأ الخدمة كسائق.">
+    شعل GPS وابدأ الخدمة
+  </button>
+</div>
 
-<div class="ad">
-  <div class="ad-icon">
-    <i class="fa-solid fa-shield-halved"></i>
+<div class="return-strip" id="returnStrip"><div class="return-head"><div class="return-icon"><i class="fa-solid fa-rotate"></i></div><div><b>ما ترجعش خاوي</b><small>شَرْجِي يقلب ليك على حمولة فالرجوع</small></div><button class="return-toggle" id="returnToggle">شعّال ✓</button></div><div class="return-flow"><div class="return-city"><b>كازا</b><small>الانطلاق</small></div><div class="return-arrow">←</div><div class="return-city"><b>طنجة</b><small>تفريغ الحمولة</small></div></div></div>
+<div class="driver-cost" id="driverCost">
+  <div class="cost-head">
+    <div class="cost-icon"><i class="fa-solid fa-calculator"></i></div>
+    <div>
+      <b>حاسبة مصاريف الرحلة</b>
+      <small>خاصة بالسائق • شوف تقريباً شحال غادي تخسر وشحال غادي يبقى ليك</small>
+    </div>
+    <div class="today-price">
+      ثمن المازوط اليوم
+      <strong id="dieselToday">13.40 د</strong>
+    </div>
   </div>
 
+  <div class="cost-inputs">
+    <div class="cost-field">
+      <label>المسافة بالكيلومتر</label>
+      <input id="tripKm" type="number" value="338" min="1" oninput="calcDriverCost()">
+    </div>
+    <div class="cost-field">
+      <label>استهلاك الشاحنة L/100km</label>
+      <input id="fuelUse" type="number" value="18" min="1" step="0.5" oninput="calcDriverCost()">
+    </div>
+    <div class="cost-field">
+      <label>ثمن المازوط / لتر</label>
+      <input id="dieselPrice" type="number" value="13.40" min="1" step="0.01" oninput="calcDriverCost()">
+    </div>
+    <div class="cost-field">
+      <label>أداء الطريق السيار</label>
+      <input id="tollCost" type="number" value="180" min="0" step="1" oninput="calcDriverCost()">
+    </div>
+    <div class="cost-field">
+      <label>ثمن الخدمة</label>
+      <input id="tripRevenue" type="number" value="1350" min="0" step="10" oninput="calcDriverCost()">
+    </div>
+    <div class="cost-field">
+      <label>مصاريف أخرى</label>
+      <input id="otherCost" type="number" value="50" min="0" step="10" oninput="calcDriverCost()">
+    </div>
+  </div>
+
+  <div class="cost-summary">
+    <div class="cost-box">
+      <b id="fuelCostOut">815 د</b>
+      <small>تقريباً ديال المازوط</small>
+    </div>
+    <div class="cost-box">
+      <b id="totalCostOut">1,045 د</b>
+      <small>مجموع المصاريف</small>
+    </div>
+    <div class="cost-box net-box">
+      <b id="netProfitOut">305 د</b>
+      <small>الربح التقريبي الصافي من الرحلة</small>
+    </div>
+  </div>
+
+  <div class="calc-note">
+    الحساب تقريبي. ثمن المازوط وأداء الطريق السيار خاصهم يتحدّثو من مصدر بيانات حقيقي فنسخة التطبيق المتصلة بالإنترنت.
+  </div>
+</div>
+
+<div class="return-match" id="returnMatch"><span style="font-size:7px;color:#C65E00;font-weight:900">🔄 فرصة رجوع ذكية</span><h3>لقينا ليك حمولة من طنجة لكازا</h3><p>الزبون قريب من مكان التفريغ ديالك، ونفس اتجاه الرجوع.</p><div class="match-grid"><div class="match-stat"><b>6 كم</b><small>من مكان التفريغ</small></div><div class="match-stat"><b>1,350 د</b><small>عرض الزبون</small></div><div class="match-stat"><b>3 طن</b><small>الحمولة</small></div></div><div class="match-actions"><button class="listen" onclick="readReturnOffer()">🔊 سمع العرض</button><button class="yes" onclick="acceptReturnOffer()">مهتم • وصلني بالزبون</button><button class="no" onclick="declineReturnOffer()">لا • عرض آخر</button></div></div><div class="stat-strip">
+  <div class="stat"><b>18</b><small>سائق متوفر</small></div>
+  <div class="stat"><b>4.9★</b><small>متوسط التقييم</small></div>
+  <div class="stat"><b>3 د</b><small>أقرب وصول</small></div>
+</div>
+
+<div class="smart-banner">
+  <i class="fa-solid fa-wand-magic-sparkles"></i>
+  <div><b>اقتراح ذكي للرحلة</b><small>نختار لك المركبة والسعر الأقرب تلقائياً</small></div>
+  <button data-voice="اقتراح ذكي للمركبة والثمن المناسب." onclick="smartSuggest()">جرّب</button>
+</div>
+
+<div class="map-wrap"><div id="map"></div><div class="live">اتصال مباشر بالسائقين<b>18 سائق متوفر</b><span id="gpsText">فمسارك الآن</span></div><button class="gps" onclick="startGPS()"><i class="fa-solid fa-location-crosshairs"></i></button>
+<div class="premium-glow">
+  <div class="near-driver">
+    <div class="driver-avatar"><i class="fa-solid fa-user-tie"></i></div>
+    <div><b>أقرب سائق: ياسين</b><small>⭐ 4.9 • موثق • ديانا 3.5 طن</small></div>
+  </div>
+  <div class="eta-badge">3 دقايق</div>
+</div>
+</div>
+
+<div class="sheet">
+<div class="title"><div><b>🚚 اختار نوع المركبة</b><small>الثمن لكل كيلومتر</small></div><i class="fa-solid fa-truck-fast" style="color:var(--blue)"></i></div>
+<div class="vehicles">
+<button class="vehicle active" data-rate="6" onclick="pickVehicle(this,'ديانا')"><i class="fa-solid fa-truck-pickup"></i><b>ديانا / 3.5 طن</b><strong>6 د/كم</strong></button>
+<button class="vehicle" data-rate="4" onclick="pickVehicle(this,'طريبورتور')"><i class="fa-solid fa-truck-droplet"></i><b>طريبورتور / هوندا</b><strong>4 د/كم</strong></button>
+<button class="vehicle" data-rate="10" onclick="pickVehicle(this,'شاحنة كبيرة')"><i class="fa-solid fa-truck"></i><b>شاحنة كبيرة</b><strong>10 د/كم</strong></button>
+<button class="vehicle" data-rate="15" onclick="pickVehicle(this,'رموك')"><i class="fa-solid fa-trailer"></i><b>رموك 20 طن</b><strong>15 د/كم</strong></button>
+</div>
+<div class="cost"><small>التكلفة التقديرية</small><b id="cost">1,326 درهم</b></div>
+</div>
+
+
+<div class="ad-strip">
+  <i class="fa-solid fa-gas-pump"></i>
   <div>
-    <strong>عروض تأمين مهني للسائقين</strong>
-    <p>خصم خاص لأعضاء شَرْجِي برو</p>
+    <b>إشهار مهني قريب منك</b>
+    <small>مثال: محطة وقود أو ورشة أو محل قطع غيار</small>
   </div>
-
-  <span class="ad-tag">إشهار</span>
+  <span class="sponsored">ممّول</span>
 </div>
 
-<div class="section">
-  <h2>
-    <i class="fa-solid fa-road cyan"></i>
-    حالة الطريق والسلامة
-  </h2>
-  <span>تحديث مباشر</span>
+<div class="sheet voice-box">
+<div class="title"><div><b>🎙️ سجل رحلتك بصوتك</b><small>قول فين نتا وفين باغي تمشي</small></div><i class="fa-solid fa-microphone" style="color:var(--blue)"></i></div>
+<button class="mic" id="micBtn"><i class="fa-solid fa-microphone"></i></button>
+<p>ضغط وتكلم: «أنا فطنجة، باغي نمشي لكازا وعندي 5 دالطن»</p>
+<label style="font-size:8px; display:block; margin-top:10px;"><input type="checkbox" id="multiStopCheck"> مسار متعدد النقط (توصيل لكذا كليان)</label>
+<div class="transcript" id="transcript">كنستناو تسجيلك الصوتي...</div>
+<button class="publish" data-voice="نشر الرحلة دابا للسائقين والمهنيين القريبين." onclick="publishTrip()">🚀 نشر العرض للمهنيين أو طلب المزاد</button>
+<button class="call" data-voice="تواصل مع أقرب سائق متوفر." onclick="openChat()">☎️ تواصل مع السائق المتوفر</button>
 </div>
 
-<div class="grid3">
-
-  <button class="mini"
-  onclick="notify('الطقس في المسار: ضباب خفيف. خفّض السرعة وحافظ على مسافة الأمان.')">
-    <i class="fa-solid fa-cloud-rain cyan"></i>
-    <b>الطقس</b>
-    <small>16°C • ضباب</small>
-  </button>
-
-  <button class="mini"
-  onclick="notify('تنبيه: يوجد اضطراب مروري في المسار الحالي.')">
-    <i class="fa-solid fa-triangle-exclamation red"></i>
-    <b>الحوادث</b>
-    <small class="red">تنبيه مروري</small>
-  </button>
-
-  <button class="mini"
-  onclick="notify('خدمات NARSA: المخالفات، رصيد النقاط والخدمات الرقمية.')">
-    <i class="fa-solid fa-file-shield cyan"></i>
-    <b>NARSA</b>
-    <small>مخالفات ونقاط</small>
-  </button>
-
-</div>
-
-<div class="section">
-  <h2>
-    <i class="fa-solid fa-radio cyan"></i>
-    راديو شَرْجِي
-  </h2>
-  <span>مباشر</span>
-</div>
-
-<div class="radio">
-
-  <button class="play" id="radioBtn">
-    <i id="radioIcon" class="fa-solid fa-play"></i>
-  </button>
-
-  <div class="radio-main">
-
-    <div class="radio-title">
-      <span>راديو الطريق المباشر</span>
-      <span class="live">LIVE</span>
-    </div>
-
-    <div class="ticker">
-      <span id="ticker">
-        🚨 تنبيه: ازدحام في محور الرباط - الدار البيضاء •
-        سائق متوفر للعودة من مراكش نحو كازا
-      </span>
-    </div>
-
-  </div>
-
-</div>
-
-<div class="voice">
-
-  <div class="voice-head">
-    <i class="fa-solid fa-microphone-lines"></i>
-    بث طلبك للسائقين
-  </div>
-
-  <div class="mic-wrap">
-
-    <div class="pulse" id="pulse"></div>
-
-    <button class="mic" id="micBtn">
-      <i class="fa-solid fa-microphone"></i>
-    </button>
-
-  </div>
-
-  <div class="transcript" id="transcript">
-    اضغط مطولاً وسجّل طلبك الصوتي،
-    مثلاً: راجع خاوي من فاس للرباط.
-  </div>
-
-</div>
-
-<div class="section">
-  <h2>
-    <i class="fa-solid fa-shapes cyan"></i>
-    الخدمات
-  </h2>
-  <span>الكل</span>
+<div class="tools-launch">
+  <i class="fa-solid fa-shield-heart"></i>
+  <div><b>مركز السائق الذكي</b><small>السلامة، الصيانة، الوثائق، الفواتير والميازين</small></div>
+  <button onclick="openTools()" data-voice="فتح مركز السائق الذكي.">فتح</button>
 </div>
 
 <div class="services">
+<button class="svc" onclick="go('community')"><i class="fa-regular fa-comments"></i><b>مجتمع المهنيين</b><small>تبادل الخبرة</small></button>
+<button class="svc" onclick="toast('قسم العروض والإشهار')"><i class="fa-solid fa-tags"></i><b>عروض</b><small>خصومات</small></button>
+<button class="svc" onclick="toast('قسم التأمين')"><i class="fa-solid fa-shield-halved"></i><b>التأمين</b><small>حماية الشحن</small></button>
+<button class="svc" onclick="go('market')"><i class="fa-solid fa-screwdriver-wrench"></i><b>السوق</b><small>قطع ومعدات</small></button>
+<button class="svc" onclick="toggleWeighStations()"><i class="fa-solid fa-scale-balanced"></i><b>الميازين</b><small>محطات الوزن</small></button>
+</div>
+</section>
 
-  <button class="service protected">
-    <i class="fa-solid fa-tractor amber"></i>
-    <b>كراء الآلات</b>
-  </button>
+<section id="trips" class="page"><div class="page-head"><b>الرحلات ونظام المزاد</b><small>تفاوض مباشر أو وضع أثمنة من طرف السائقين</small></div><div class="cards">
+<div class="card"><div style="display:flex;justify-content:space-between"><b>الرباط ← كازا</b><span class="status-tag warn">مزاد مفتوح</span></div><p>معدات • 2.3 طن • السائق قريب 4 كلم</p>
+<input type="number" placeholder="اكتب الثمن ديالك (درهم)" class="bid-input" id="bid1">
+<div class="actions"><button onclick="submitBid(1)">💬 حط الثمن ديالك</button><button class="ok" onclick="generateBonLivraison('الرباط لكازا', 'معدات 2.3 طن')">📄 صاوب بون ليڤريزون</button></div></div>
+<div class="card"><div style="display:flex;justify-content:space-between"><b>طنجة ← القنيطرة</b><span class="price">900 د.م</span></div><p>خضر • 2 طن • الانطلاق اليوم</p><div class="actions"><button onclick="speak('طلب من طنجة حتى القنيطرة. تسعمية درهم.')">🔊 سمع</button><button onclick="openChat()">💬 تفاوض</button></div></div>
+</div></section>
 
-  <button class="service protected">
-    <i class="fa-solid fa-truck-ramp-box red"></i>
-    <b>بورت شار</b>
-  </button>
+<section id="market" class="page"><div class="page-head"><b>سوق المهنيين</b><small>بيع وشراء خاص بالمهنين</small></div><div class="cards market">
+<div class="card prod" data-voice="إعلان فالسوق. جي بي إس للشاحنات. المدينة كازا. الثمن ثمانمية وخمسين درهم."><i class="fa-solid fa-location-dot"></i><b>GPS شاحنات</b><small>كازا</small><div class="price">850 د.م</div></div>
+<div class="card prod" data-voice="إعلان فالسوق. بطارية مية وثمانين أمبير. المدينة مراكش. الثمن ألف وثلاثمية وخمسين درهم."><i class="fa-solid fa-battery-three-quarters"></i><b>بطارية 180Ah</b><small>مراكش</small><div class="price">1,350 د.م</div></div>
+<div class="card prod" data-voice="إعلان فالسوق. رويضة مقاس اثنين وعشرين فاصلة خمسة للبيع. المدينة القنيطرة. الثمن ألفين وربعمية درهم."><i class="fa-solid fa-circle"></i><b>رويضة 22.5</b><small>القنيطرة</small><div class="price">2,400 د.م</div></div>
+<div class="card prod" data-voice="إعلان فالسوق. مراية جانبية للشاحنة. المدينة طنجة. الثمن ربعمية وخمسين درهم."><i class="fa-solid fa-truck"></i><b>مراية جانبية</b><small>طنجة</small><div class="price">450 د.م</div></div>
+</div></section>
 
-  <button class="service protected">
-    <i class="fa-solid fa-helmet-safety cyan"></i>
-    <b>عمال الهدم</b>
-  </button>
+<section id="community" class="page"><div class="page-head"><b>مجتمع المهنيين</b><small>الخبرة ديال الطريق والميكانيك والوثائق</small></div><div class="cards">
+<div class="card"><b>عبد الله • سطات</b><p>إلا حسّيتي الشاحنة كتجر لجهة وحدة فالفريانة، وقف وشوف العجلات والفرانات قبل ما تكمل.</p><div class="post-actions"><button onclick="speak('نصيحة فالفرانات. إلا حسّيتي الشاحنة كتجر لجهة وحدة، وقف وشوف العجلات والفرانات.')">🔊 سمع</button><button onclick="openChat()">💬 جاوب</button></div></div>
+<div class="card"><b>حميد • كازا</b><p>معلومة على الطريق والضباب للسائقين اللي خدامين فالليل.</p><div class="post-actions"><button>👍 مفيدة</button><button onclick="openChat()">💬 جاوب</button></div></div>
+</div></section>
 
-  <button class="service protected">
-    <i class="fa-solid fa-dumpster"></i>
-    <b>إفراغ الردمة</b>
-  </button>
+<section id="account" class="page"><div class="page-head"><b>حسابي</b><small>معلوماتك والمحفظة ديالك</small></div>
+<div class="cards">
+  <div class="card wallet-card">
+    <b>محفظة شَرْجِي (Charji Wallet)</b>
+    <div class="balance">4,500 د.م</div>
+    <p>دفع آمن للزبون. ضمان الخلاص للسائق.</p>
+    <div class="mini-actions">
+      <button onclick="toast('تم طلب سحب الرصيد للبنك')">سحب الرصيد</button>
+      <button onclick="toast('سجل العمليات')">سجل العمليات</button>
+    </div>
+  </div>
+  <div class="card"><b>إعدادات الحساب</b><p>التوثيق، السيارات المسجلة، التقييم، وتفضيلات التطبيق.</p></div>
+</div>
+</section>
 
-  <button class="service protected">
-    <i class="fa-solid fa-boxes-stacked green"></i>
-    <b>نقل البضائع</b>
-  </button>
+<div class="overlay" id="toolsOverlay" role="dialog" aria-modal="true">
+  <div class="tools-panel">
+    <div class="panel-head">
+      <button class="panel-close" onclick="closeTools()" aria-label="إغلاق"><i class="fa-solid fa-xmark"></i></button>
+      <button class="panel-back" id="toolBack" onclick="showToolsHome()" aria-label="رجوع"><i class="fa-solid fa-arrow-right"></i></button>
+      <div><b id="toolsTitle">مركز السائق الذكي</b><small id="toolsSub">كل ما يحتاجه السائق فالطريق</small></div>
+    </div>
+    <div class="tools-home" id="toolsHome"><div class="tool-grid">
+      <button class="tool-card danger" onclick="openTool('sos','النجدة SOS')"><i class="fa-solid fa-triangle-exclamation"></i><b>النجدة SOS</b><small>شارك موقعك واتصل بالمساعدة بسرعة</small></button>
+      <button class="tool-card" onclick="openTool('road','خريطة الطريق')"><i class="fa-solid fa-road"></i><b>الطريق والحوادث</b><small>شوف وبلّغ على الخطر والزحام</small></button>
+      <button class="tool-card" onclick="openTool('maintenance','تنبيهات الصيانة')"><i class="fa-solid fa-screwdriver-wrench"></i><b>الصيانة</b><small>الزيت، العجلات والفرامل</small></button>
+      <button class="tool-card" onclick="openTool('docs','وثائق الشاحنة')"><i class="fa-solid fa-file-shield"></i><b>الوثائق</b><small>التأمين والفحص التقني والرخصة</small></button>
+      <button class="tool-card" onclick="openTool('weather','الطقس والطريق')"><i class="fa-solid fa-cloud-sun"></i><b>الطقس</b><small>حالة الجو قبل الانطلاق</small></button>
+      <button class="tool-card" onclick="openTool('reports','بلاغات السائقين')"><i class="fa-solid fa-bullhorn"></i><b>البلاغات</b><small>شارك خطر أو زحام مع المهنيين</small></button>
+      <button class="tool-card reward" onclick="openTool('rewards','نقاط ومكافآت')"><i class="fa-solid fa-gift"></i><b>المكافآت</b><small>جمع النقاط من النشاط والإعلانات</small></button>
+      <button class="tool-card" onclick="openTool('drive','وضع القيادة')"><i class="fa-solid fa-gauge-high"></i><b>وضع القيادة</b><small>أزرار كبار وتحكم صوتي واضح</small></button>
+      <button class="tool-card" onclick="openTool('directory','دليل الخدمات')"><i class="fa-solid fa-location-dot"></i><b>خدمات قريبة</b><small>ميكانيكي، ديباناج، مطعم واستراحة</small></button>
+      <button class="tool-card" onclick="openTool('ledger','سجل المصاريف')"><i class="fa-solid fa-wallet"></i><b>سجل الرحلات</b><small>حفظ الربح والمصاريف اليومية</small></button>
+    </div></div>
 
-  <button class="service protected">
-    <i class="fa-solid fa-store violet"></i>
-    <b>سوق السائقين</b>
-  </button>
+    <div class="tool-detail" id="tool-sos"><div class="detail-card"><h3>طلب النجدة</h3><p>غادي ناخدو موقعك الحالي ونوجدو رسالة قصيرة ترسلها لرقم الطوارئ ديالك.</p><div class="field"><label>رقم شخص تثق فيه</label><input id="emergencyPhone" type="tel" placeholder="مثال: 0612345678"></div><button class="danger-btn sos-pulse" onclick="sendSOS()">🚨 شارك الموقع وطلب النجدة</button><button class="soft-btn" onclick="location.href='tel:112'">اتصل بالطوارئ 112</button></div></div>
 
+    <div class="tool-detail" id="tool-road"><div class="detail-card"><h3>حالة الطريق الآن</h3><div class="status-row"><div class="status-icon"><i class="fa-solid fa-car-burst"></i></div><div><b>حادثة قرب مدخل كازا</b><small>بلاغ قبل 12 دقيقة</small></div><span class="status-tag warn">انتبه</span></div><div class="status-row"><div class="status-icon"><i class="fa-solid fa-road-barrier"></i></div><div><b>أشغال فالطريق السيار</b><small>بين الرباط والقنيطرة</small></div><span class="status-tag">مؤكد</span></div><button class="primary" onclick="closeTools();setTimeout(()=>map.setView([33.8,-7.1],9),100)">عرض على الخريطة</button></div></div>
+
+    <div class="tool-detail" id="tool-maintenance"><div class="detail-card"><h3>موعد الصيانة القادمة</h3><div class="field"><label>تغيير الزيت</label><input id="oilDate" type="date"></div><div class="field"><label>فحص العجلات</label><input id="tireDate" type="date"></div><div class="field"><label>فحص الفرامل</label><input id="brakeDate" type="date"></div><button class="primary" onclick="saveMaintenance()">حفظ المواعيد</button></div><div class="detail-card" id="maintenanceStatus"></div></div>
+
+    <div class="tool-detail" id="tool-docs"><div class="detail-card"><h3>صلاحية الوثائق</h3><div class="field"><label>التأمين</label><input id="insuranceDate" type="date"></div><div class="field"><label>الفحص التقني</label><input id="inspectionDate" type="date"></div><div class="field"><label>رخصة السياقة</label><input id="licenseDate" type="date"></div><button class="primary" onclick="saveDocuments()">حفظ وتنشيط التنبيهات</button></div><div class="detail-card" id="documentsStatus"></div></div>
+
+    <div class="tool-detail" id="tool-weather"><div class="weather-box"><i class="fa-solid fa-cloud-sun"></i><strong>24°</strong><b>الجو مستقر فالمسار</b><small>رؤية جيدة • رياح خفيفة • آخر تحديث تجريبي</small></div><div class="detail-card"><div class="status-row"><div class="status-icon"><i class="fa-solid fa-sun"></i></div><div><b>كازا</b><small>25° • مشمس</small></div><span class="status-tag">مزيان</span></div><div class="status-row"><div class="status-icon"><i class="fa-solid fa-cloud"></i></div><div><b>الرباط</b><small>23° • غيوم خفيفة</small></div><span class="status-tag">مزيان</span></div><div class="status-row"><div class="status-icon"><i class="fa-solid fa-wind"></i></div><div><b>طنجة</b><small>21° • رياح متوسطة</small></div><span class="status-tag warn">انتبه</span></div></div></div>
+
+    <div class="tool-detail" id="tool-reports"><div class="detail-card"><h3>شنو بغيتي تبلّغ؟</h3><div class="report-types"><button onclick="selectReport(this,'حادثة')">🚗 حادثة</button><button onclick="selectReport(this,'زحام')">🚦 زحام</button><button onclick="selectReport(this,'طريق مقطوعة')">⛔ مقطوعة</button><button onclick="selectReport(this,'أشغال')">🚧 أشغال</button><button onclick="selectReport(this,'ضباب')">🌫️ ضباب</button><button onclick="selectReport(this,'خطر')">⚠️ خطر</button></div><div class="field"><label>تفاصيل إضافية</label><textarea id="reportNote" placeholder="شرح قصير للسائقين..."></textarea></div><button class="primary" onclick="publishReport()">نشر البلاغ بالموقع الحالي</button></div></div>
+
+    <div class="tool-detail" id="tool-rewards"><div class="detail-card reward-total"><i class="fa-solid fa-coins"></i><strong id="pointsTotal">120</strong><small>نقطة شَرْجِي</small></div><div class="detail-card"><div class="status-row"><div class="status-icon"><i class="fa-solid fa-radio"></i></div><div><b>سمع إعلان مهني</b><small>مرة واحدة يومياً</small></div><span class="status-tag">+10</span></div><div class="status-row"><div class="status-icon"><i class="fa-solid fa-bullhorn"></i></div><div><b>بلاغ مفيد ومؤكد</b><small>كتعاون سلامة السائقين</small></div><span class="status-tag">+20</span></div><button class="primary" onclick="redeemReward()">استبدل 100 نقطة بعرض</button></div></div>
+
+    <div class="tool-detail" id="tool-drive"><div class="detail-card"><h3>وضع القيادة الآمن</h3><p>كيكبّر الأزرار والكتابة وكيخلي القراءة الصوتية شاعلة باش تنقص اللمس وانت سايق.</p><button class="primary" id="driveModeBtn" onclick="toggleDriveMode()">تشغيل وضع القيادة</button><button class="soft-btn" onclick="say('وضع القيادة جاهز. قول: لقّي سائق، حسب الرحلة، فتح السوق، أو طلب النجدة.')">🔊 سمع الأوامر المتاحة</button></div></div>
+
+    <div class="tool-detail" id="tool-directory"><div class="detail-card"><div class="status-row service-item"><div class="status-icon"><i class="fa-solid fa-truck-medical"></i></div><div><b>ديباناج الطريق 24/24</b><small>3.2 كم • مفتوح</small></div><div class="mini-actions"><button onclick="location.href='tel:0600000001'">اتصل</button><button onclick="openServiceMap(33.58,-7.61)">خريطة</button></div></div><div class="status-row service-item"><div class="status-icon"><i class="fa-solid fa-wrench"></i></div><div><b>ميكانيكي الشاحنات</b><small>5.7 كم • موصى به</small></div><div class="mini-actions"><button onclick="location.href='tel:0600000002'">اتصل</button><button onclick="openServiceMap(33.61,-7.55)">خريطة</button></div></div><div class="status-row service-item"><div class="status-icon"><i class="fa-solid fa-utensils"></i></div><div><b>استراحة المهنيين</b><small>8 كم • مطعم وموقف</small></div><div class="mini-actions"><button onclick="toast('تفاصيل الاستراحة')">تفاصيل</button><button onclick="openServiceMap(33.65,-7.50)">خريطة</button></div></div></div></div>
+
+    <div class="tool-detail" id="tool-ledger"><div class="detail-card"><h3>حفظ نتيجة الرحلة الحالية</h3><p>كيستعمل الأرقام الموجودة فحاسبة مصاريف الرحلة.</p><button class="primary" onclick="saveTripLedger()">حفظ الرحلة فالسجل</button></div><div class="detail-card" id="ledgerList"></div></div>
+  </div>
 </div>
 
-<div class="section">
-  <h2>
-    <i class="fa-solid fa-list-check cyan"></i>
-    الطلبات المتاحة في مسارك
-  </h2>
-  <span>الأقرب أولاً</span>
+<div class="overlay" id="bonOverlay">
+  <div class="receipt-modal" id="bonModal">
+    <h2><i class="fa-solid fa-file-invoice"></i> بون ليڤريزون (Charji Pro)</h2>
+    <p><strong>التاريخ:</strong> <span id="bonDate"></span></p>
+    <p><strong>المسار:</strong> <span id="bonRoute"></span></p>
+    <p><strong>الحمولة:</strong> <span id="bonCargo"></span></p>
+    <p><strong>اسم السائق:</strong> ياسين (شَرْجِي برو)</p>
+    <hr style="border:0;border-bottom:1px dashed #ccc;margin:15px 0;">
+    <p style="text-align:center;font-size:10px;color:#666">تم التسليم بنجاح. شكرا لاستعمالكم شَرْجِي برو.</p>
+    <button class="primary" onclick="printBon()">طبع أو حفظ PDF</button>
+    <button class="soft-btn" onclick="document.getElementById('bonOverlay').classList.remove('show')">إغلاق</button>
+  </div>
 </div>
 
-<article class="order">
-
-  <div class="route">
-    <strong>الرباط ← الدار البيضاء</strong>
-    <span class="price">1,800 د.م</span>
+<button class="assistant-fab" id="assistantFab"><i class="fa-solid fa-microphone-lines"></i></button>
+<div class="assistant-panel" id="assistantPanel">
+  <b>مساعد شَرْجِي</b>
+  <p>قول ليا شنو بغيتي: «قلب ليا على سائق»، «شحال الثمن لكازا؟»، ولا «ورّيني السوق».</p>
+  <div class="assistant-actions">
+    <button onclick="assistantAction('driver')">لقّي سائق</button>
+    <button onclick="assistantAction('route')">حسب الرحلة</button>
+    <button onclick="assistantAction('market')">فتح السوق</button>
+    <button onclick="assistantAction('community')">مجتمع المهنيين</button>
   </div>
-
-  <div class="details">
-    <i class="fa-solid fa-truck-moving red"></i>
-    نقل آلة طراكس عبر بورت شار. الانطلاق في أقرب وقت.
-  </div>
-
-  <div class="tags">
-    <span class="tag">87 كم</span>
-    <span class="tag">بورت شار</span>
-    <span class="tag">دفع عند الوصول</span>
-  </div>
-
-  <button class="action orderBtn" data-price="1800">
-    <i class="fa-solid fa-lock"></i>
-    قبول الطلب
-  </button>
-
-</article>
-
-<article class="order blue">
-
-  <div class="route">
-    <strong>طنجة ← القنيطرة</strong>
-    <span class="price">800 د.م</span>
-  </div>
-
-  <div class="details">
-    <i class="fa-solid fa-carrot cyan"></i>
-    نقل 2 طن من الخضر الطرية. مطلوب شاحنة ديانا.
-  </div>
-
-  <div class="tags">
-    <span class="tag">210 كم</span>
-    <span class="tag">ديانا</span>
-    <span class="tag">حمولة غذائية</span>
-  </div>
-
-  <button class="action orderBtn" data-price="800">
-    <i class="fa-solid fa-lock"></i>
-    قبول الطلب
-  </button>
-
-</article>
+</div>
 
 <nav class="nav">
-
-  <button class="active">
-    <i class="fa-solid fa-house"></i>
-    الرئيسية
-  </button>
-
-  <button onclick="notify('قسم الطريق سيكون مخصصاً للخريطة والتنبيهات المباشرة.')">
-    <i class="fa-solid fa-road"></i>
-    الطريق
-  </button>
-
-  <button onclick="requireAuth()">
-    <i class="fa-solid fa-wallet"></i>
-    المداخيل
-  </button>
-
-  <button onclick="requireAuth()">
-    <i class="fa-solid fa-user"></i>
-    حسابي
-  </button>
-
+<button data-page="account" onclick="go('account')"><i class="fa-solid fa-user"></i>حسابي</button>
+<button data-page="community" onclick="go('community')"><i class="fa-solid fa-heart"></i>الخبرة</button>
+<button class="active" data-page="home" onclick="go('home')"><i class="fa-solid fa-house"></i>الرئيسية</button>
+<button data-page="trips" onclick="go('trips')"><i class="fa-solid fa-truck"></i>الرحلات</button>
+<button data-page="market" onclick="go('market')"><i class="fa-solid fa-shop"></i>السوق</button>
 </nav>
-
-</main>
-
-<div class="overlay" id="authModal">
-
-  <div class="modal">
-
-    <div class="handle"></div>
-
-    <h3>تسجيل الدخول والتوثيق</h3>
-
-    <div class="sub">
-      التسجيل ضروري لقبول الطلبات،
-      استعمال الميكروفون والوصول للخدمات المهنية.
-    </div>
-
-    <button class="role" onclick="openDriver()">
-      <i class="fa-solid fa-truck"></i>
-      التسجيل كسائق
-    </button>
-
-    <button class="role" onclick="loginAsCustomer()">
-      <i class="fa-solid fa-user-check"></i>
-      الدخول كزبون
-    </button>
-
-    <button class="role close"
-    onclick="closeModal('authModal')">
-      إلغاء
-    </button>
-
-  </div>
-
+<div class="voice-flash" id="voiceFlash"><i class="fa-solid fa-volume-high"></i> <span>الصوت شغال</span></div><div class="toast" id="toast"></div>
 </div>
 
-<div class="overlay" id="driverModal">
-
-  <div class="modal">
-
-    <div class="handle"></div>
-
-    <h3>توثيق حساب السائق</h3>
-
-    <div class="sub">
-      هذه نسخة تجريبية؛ الملفات تبقى في جهازك
-      ولا يتم إرسالها إلى خادم.
-    </div>
-
-    <div class="field">
-      <label>الاسم الكامل</label>
-      <input id="fullName" type="text"
-      placeholder="مثال: محمد العلوي">
-    </div>
-
-    <div class="field">
-      <label>رقم الهاتف</label>
-      <input id="phone" type="tel"
-      placeholder="06XXXXXXXX">
-    </div>
-
-    <div class="field">
-
-      <label>البطاقة الوطنية</label>
-
-      <label class="upload">
-        <i class="fa-solid fa-camera"></i>
-        اختر صورة CIN
-
-        <input id="cin"
-        type="file"
-        accept="image/*"
-        capture="environment"
-        hidden>
-
-      </label>
-
-    </div>
-
-    <div class="field">
-
-      <label>البطاقة الرمادية</label>
-
-      <label class="upload">
-        <i class="fa-solid fa-camera"></i>
-        اختر صورة Carte Grise
-
-        <input id="grise"
-        type="file"
-        accept="image/*"
-        capture="environment"
-        hidden>
-
-      </label>
-
-    </div>
-
-    <button class="submit"
-    onclick="registerDriver()">
-      تأكيد الحساب التجريبي
-    </button>
-
-    <button class="role close"
-    onclick="closeModal('driverModal')">
-      رجوع
-    </button>
-
-  </div>
-
-</div>
-
-<div class="toast" id="toast"></div>
-
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-
-const $ = s => document.querySelector(s);
-const $$ = s => document.querySelectorAll(s);
-
-let logged = false;
-let role = "guest";
-let radioPlaying = false;
-let mediaRecorder = null;
-let chunks = [];
-
-const radio = $("#radio");
-
-/* Splash */
-
-window.addEventListener("load", () => {
-
-  setTimeout(() => {
-
-    $("#splash").classList.add("fade");
-
-    setTimeout(() => {
-      $("#splash").remove();
-    }, 500);
-
-  }, 1700);
-
-});
-
-/* Toast */
-
-function toast(msg){
-
-  const el = $("#toast");
-
-  el.textContent = msg;
-
-  el.classList.add("show");
-
-  clearTimeout(window.__toast);
-
-  window.__toast = setTimeout(() => {
-    el.classList.remove("show");
-  }, 2800);
-
-}
-
-/* Speech */
-
-function notify(msg){
-
-  toast(msg);
-
-  if("speechSynthesis" in window){
-
-    try{
-
-      speechSynthesis.cancel();
-
-      const u = new SpeechSynthesisUtterance(msg);
-
-      u.lang = "ar-MA";
-      u.rate = 1.04;
-
-      speechSynthesis.speak(u);
-
-    }catch(e){}
-
-  }
-
-}
-
-/* Modals */
-
-function openModal(id){
-  document.getElementById(id).classList.add("show");
-}
-
-function closeModal(id){
-  document.getElementById(id).classList.remove("show");
-}
-
-/* Authentication */
-
-function requireAuth(){
-
-  if(!logged){
-    openModal("authModal");
-  }else{
-    toast("أنت مسجل بالفعل");
-  }
-
-}
-
-$("#statusBtn").onclick = requireAuth;
-
-$$(".protected").forEach(btn => {
-
-  btn.onclick = () => {
-
-    if(logged){
-      toast("الخدمة جاهزة للربط بالصفحة الخاصة بها");
-    }else{
-      requireAuth();
-    }
-
-  };
-
-});
-
-function setLogged(label,icon,color){
-
-  logged = true;
-
-  const btn = $("#statusBtn");
-
-  btn.innerHTML =
-  `<i class="fa-solid ${icon}"></i> ${label}`;
-
-  btn.style.color = color;
-  btn.style.borderColor = color;
-  btn.style.background =
-  "rgba(24,201,137,.09)";
-
-  $$(".orderBtn").forEach(x => {
-
-    x.innerHTML =
-    '<i class="fa-solid fa-handshake"></i> قبول الطلب';
-
-  });
-
-}
-
-/* Customer login */
-
-function loginAsCustomer(){
-
-  role = "customer";
-
-  closeModal("authModal");
-
-  setLogged(
-    "زبون موثوق",
-    "fa-user-check",
-    "var(--cyan)"
-  );
-
-  toast("تم الدخول كزبون في النسخة التجريبية");
-
-}
-
-/* Driver form */
-
-function openDriver(){
-
-  closeModal("authModal");
-
-  openModal("driverModal");
-
-}
-
-/* Driver registration */
-
-function registerDriver(){
-
-  const name =
-  $("#fullName").value.trim();
-
-  const phone =
-  $("#phone").value.trim();
-
-  if(!name || phone.length < 9){
-
-    toast("دخل الاسم ورقم هاتف صحيح");
-
-    return;
-
-  }
-
-  role = "driver";
-
-  closeModal("driverModal");
-
-  setLogged(
-    "سائق موثوق",
-    "fa-circle-check",
-    "var(--green)"
-  );
-
-  localStorage.setItem(
-    "charjiDemoDriver",
-    JSON.stringify({
-      name,
-      phone
-    })
-  );
-
-  toast("تم إنشاء الحساب التجريبي بنجاح");
-
-}
-
-/* Radio */
-
-$("#radioBtn").onclick = async () => {
-
-  try{
-
-    if(radioPlaying){
-
-      radio.pause();
-
-      radioPlaying = false;
-
-      $("#radioIcon").className =
-      "fa-solid fa-play";
-
-      toast("تم إيقاف الراديو");
-
-    }else{
-
-      radio.volume = 0.45;
-
-      await radio.play();
-
-      radioPlaying = true;
-
-      $("#radioIcon").className =
-      "fa-solid fa-pause";
-
-      toast("تم تشغيل راديو شَرْجِي");
-
-    }
-
-  }catch(e){
-
-    toast(
-      "تعذر تشغيل البث. قد يمنع المتصفح التشغيل أو يكون رابط البث غير متاح."
-    );
-
-  }
-
-};
-
-/* Orders */
-
-$$(".orderBtn").forEach(btn => {
-
-  btn.onclick = () => {
-
-    if(!logged){
-
-      requireAuth();
-
+/* Tap accessibility logic (unchanged) */
+let tapReadMode = localStorage.getItem("charjiTapReadMode") !== "off";
+let tapTimer = null;
+let tapLastEl = null;
+let tapLastTime = 0;
+let accessBypass = false;
+const DOUBLE_TAP_MS = 430;
+
+function accessSpeak(text){if(!text) return;if(typeof say === "function") say(text);}
+function cleanAccessText(s){return String(s||"").replace(/\s+/g," ").replace(/[✓•|]/g," ").trim().slice(0,220);}
+function accessLabel(el){if(!el) return "";let c = el.getAttribute("data-voice");if(c) return cleanAccessText(c);let a = el.getAttribute("aria-label")||el.getAttribute("title");if(a) return cleanAccessText(a);let txt=el.innerText||el.textContent||"";return cleanAccessText(txt);}
+function actionableFrom(t){return t?.closest?.('button,a,input,textarea,select,[role="button"],[onclick],.mode-card,.service-card,.vehicle-card,.nav-item,.city-marker,.map-control,.clickable')||null;}
+function flashReadTarget(el){document.querySelectorAll(".tap-reading-target").forEach(x=>x.classList.remove("tap-reading-target"));el.classList.add("tap-reading-target");setTimeout(()=>el.classList.remove("tap-reading-target"),700);}
+function showTapHint(msg){const h=document.getElementById("tapAccessHint");if(!h) return;h.textContent=msg;h.classList.add("show");clearTimeout(showTapHint.t);showTapHint.t=setTimeout(()=>h.classList.remove("show"),3000);} /* INCREASED TIMEOUT HERE TO 3000ms */
+function updateTapAccessUI(announce=false){const b=document.getElementById("tapAccessToggle"),t=document.getElementById("tapAccessText");if(!b||!t)return;if(tapReadMode){b.classList.remove("off");t.textContent="ضغطة تقرا • جوج يفتحو";if(announce)accessSpeak("خاصية القراءة باللمس شاعلة.");}else{b.classList.add("off");t.textContent="القراءة باللمس مطفية";if(announce)accessSpeak("القراءة باللمس مطفية.");}}
+function setTapReadMode(on,a=true){tapReadMode=!!on;localStorage.setItem("charjiTapReadMode",on?"on":"off");updateTapAccessUI(a);}
+
+(function(){
+  document.addEventListener("click", function(e){
+    if(bypass) return;
+    if(!tapReadMode) return;
+    const r=readable(e.target); if(!r) return;
+    const a=actionable(e.target)||actionable(r);
+    const now=Date.now(); const second=(lastEl===r && now-lastAt<=460);
+    e.preventDefault(); e.stopImmediatePropagation();
+    if(second && a){
+      clearTimeout(timer); lastEl=null; lastAt=0;
+      if(a.id==="tapAccessToggle"){setTapReadMode(false,true);return;}
+      accessSpeak("غادي ندخلو دابا"); showTapHint("✓ ضغطتين: فتح");
+      bypass=true; setTimeout(()=>{try{if(a.matches("input,textarea"))a.focus();else a.click();}finally{bypass=false;}},0);
       return;
-
     }
+    lastEl=r; lastAt=now; clearTimeout(timer);
+    timer=setTimeout(()=>{const txt=textOf(r);if(txt){flashReadTarget(r);accessSpeak(txt);showTapHint(a?"🔊 ضغطتين باش تدخل":"🔊 تقرات المعلومة");}},180);
+  }, true);
+  
+  let lastEl=null,lastAt=0,timer=null,bypass=false;
+  function visible(el){if(!el||!el.getBoundingClientRect)return false;const r=el.getBoundingClientRect(),s=getComputedStyle(el);return r.width>0&&r.height>0&&s.display!=="none"&&s.visibility!=="hidden";}
+  function textOf(el){if(!el)return"";let c=el.getAttribute("data-voice");if(c)return cleanAccessText(c);return cleanAccessText(el.innerText||"");}
+  function actionable(t){return t?.closest?.('button,a,input,textarea,select,[role="button"],[onclick],.svc,.mode,.card[onclick],.clickable')||null;}
+  function readable(t){if(!t||!t.closest)return null;const c=t.closest(".card.prod,.card,.return-match,.return-strip,.driver-cost,.driver-dashboard,.svc,.mode");if(c&&visible(c))return c;const d=t.closest('button,a,input,textarea,select,label,[role="button"],[onclick],h1,h2,h3,h4,h5,h6,p,span,strong,b,small,li,td,th,img,i');if(d&&visible(d))return d;let el=t;while(el&&el!==document.body){if(visible(el)&&textOf(el))return el;el=el.parentElement;}return null;}
+})();
 
-    const price =
-    Number(btn.dataset.price);
+/* UI Functions */
+const $=s=>document.querySelector(s),$$=s=>document.querySelectorAll(s);window.currentMode="customer";
 
-    const commission =
-    Math.min(price * 0.10, 100);
+/* INCREASED TOAST TIMEOUT TO 5 SECONDS AS REQUESTED */
+function toast(t){let e=$("#toast");e.textContent=t;e.classList.add("show");setTimeout(()=>e.classList.remove("show"),5000)}
 
-    const net =
-    price - commission;
+function speak(t){if(!speechSynthesis)return;speechSynthesis.cancel();let u=new SpeechSynthesisUtterance(t),v=speechSynthesis.getVoices();u.voice=v.find(x=>/ar-MA/i.test(x.lang))||v.find(x=>/^ar/i.test(x.lang))||null;u.lang=u.voice?.lang||"ar-MA";u.rate=.92;speechSynthesis.speak(u)}
+function go(id){$$(".page").forEach(x=>x.classList.remove("active"));$("#"+id).classList.add("active");$$(".nav button").forEach(x=>x.classList.toggle("active",x.dataset.page===id));scrollTo({top:0,behavior:"smooth"});if(id==="home")setTimeout(()=>map.invalidateSize(),100)}
 
-    const ok = confirm(
-`تأكيد قبول الطلب؟
+function setMode(m){
+  $("#customerMode").classList.toggle("active",m==="customer");
+  $("#driverMode").classList.toggle("active",m==="driver");
+  $("#patronMode").classList.toggle("active",m==="patron");
+  window.currentMode=m;
+  
+  if($("#driverCost")) $("#driverCost").classList.toggle("show",m==="driver");
+  if($("#patronDashboard")) $("#patronDashboard").classList.toggle("show",m==="patron");
 
-ثمن الرحلة: ${price} درهم
-عمولة المنصة: ${commission} درهم
-الصافي التقريبي: ${net} درهم`
-    );
+  const lock=$("#driverGpsLock");
+  if(m==="driver"){
+    lock.classList.add("show");
+    speak("دخلتي كسائق. الجي بي إس ضروري باش تبان للزبناء وتستقبل الطلبات.");
+    enforceDriverGps();
+    setTimeout(showFatigueAlert, 60000); // Demo fatigue alert after 1 min for Driver
+  }else if (m==="patron"){
+    lock.classList.remove("show");
+    unlockDriverFeatures();
+    speak("دخلتي كپاترون. يمكن ليك دابا تتبع وتسيير أسطول الشاحنات ديالك.");
+  }else{
+    lock.classList.remove("show");
+    unlockDriverFeatures();
+    speak("دخلتي كزبون. اختار الشاحنة وسجل الرحلة ديالك بالصوت.");
+  }
+}
 
-    if(ok){
-
-      btn.classList.add("accepted");
-
-      btn.innerHTML =
-      '<i class="fa-solid fa-check"></i> تم قبول الطلب';
-
-      btn.disabled = true;
-
-      notify(
-        "تم قبول الطلب. طريق السلامة."
-      );
-
-    }
-
-  };
-
+/* Offline Mode Listeners */
+window.addEventListener('offline', () => {
+  document.getElementById('offlineBanner').classList.add('show');
+  toast("انقطع الاتصال بالأنترنيت. التطبيق غيخدم أوفلاين.");
+  speak("انقطع الاتصال بالأنترنيت. خدامين دابا أوفلاين.");
+});
+window.addEventListener('online', () => {
+  document.getElementById('offlineBanner').classList.remove('show');
+  toast("رجع الاتصال بالأنترنيت. كاع البيانات تحدثات.");
+  speak("رجع الاتصال بالأنترنيت.");
 });
 
-/* Voice Recorder */
+function calcDriverCost(){
+  const km=Math.max(0,Number($("#tripKm")?.value)||0),use=Math.max(0,Number($("#fuelUse")?.value)||0),diesel=Math.max(0,Number($("#dieselPrice")?.value)||0),toll=Math.max(0,Number($("#tollCost")?.value)||0),revenue=Math.max(0,Number($("#tripRevenue")?.value)||0),other=Math.max(0,Number($("#otherCost")?.value)||0);
+  const fuel=km*use/100*diesel,total=fuel+toll+other,net=revenue-total;
+  const money=n=>Math.round(n).toLocaleString("fr-MA")+" د";
+  $("#fuelCostOut").textContent=money(fuel);$("#totalCostOut").textContent=money(total);$("#netProfitOut").textContent=money(net);
+  $("#netProfitOut").style.color=net<0?"#e53935":"#155EEF";
+}
 
-const mic = $("#micBtn");
+let selected="ديانا";function pickVehicle(el,n){$$(".vehicle").forEach(x=>x.classList.remove("active"));el.classList.add("active");selected=n;speak("اخترتي "+n)}
+let map=L.map("map",{zoomControl:false}).setView([32.2,-6.8],6);L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"&copy; OpenStreetMap"}).addTo(map);
+[["الرباط","1",34.02,-6.84],["كازا","6",33.57,-7.59],["مراكش","26",31.63,-7.98],["طنجة","40",35.76,-5.83],["أكادير","33",30.43,-9.60],["وجدة","48",34.68,-1.91]].forEach(c=>{let ic=L.divIcon({className:"",html:`<div class="city">${c[0]}<strong>${c[1]}</strong></div>`,iconSize:[55,25]});let m=L.marker([c[2],c[3]],{icon:ic}).addTo(map);m.on("click",()=>speak(c[0]+". كود الماتريكيل "+c[1]))});
 
-async function startRec(){
-
-  if(!logged){
-
-    requireAuth();
-
-    return;
-
-  }
-
-  if(!navigator.mediaDevices?.getUserMedia){
-
-    toast(
-      "المتصفح لا يدعم تسجيل الصوت"
-    );
-
-    return;
-
-  }
-
-  try{
-
-    const stream =
-    await navigator.mediaDevices.getUserMedia({
-      audio:true
+/* Ponts Bascules (Weigh Stations) Layer */
+let weighStationLayer = L.layerGroup().addTo(map);
+let weighStationsVisible = false;
+function toggleWeighStations(){
+  weighStationsVisible = !weighStationsVisible;
+  if(weighStationsVisible){
+    const stations = [[33.50,-7.60, "ميزان كازا الجنوبي"], [34.10,-6.80, "ميزان القنيطرة"], [35.70,-5.80, "ميزان طنجة الميناء"]];
+    stations.forEach(s => {
+      let icon = L.divIcon({className:"",html:'<div class="driver-pin" style="background:#e65c00"><i class="fa-solid fa-scale-balanced"></i></div>',iconSize:[28,28]});
+      L.marker([s[0],s[1]],{icon}).bindPopup(s[2]).addTo(weighStationLayer);
     });
-
-    mediaRecorder =
-    new MediaRecorder(stream);
-
-    chunks = [];
-
-    mediaRecorder.ondataavailable = e => {
-
-      chunks.push(e.data);
-
-    };
-
-    mediaRecorder.onstop = () => {
-
-      stream
-      .getTracks()
-      .forEach(t => t.stop());
-
-      $("#transcript").textContent =
-      "تم تسجيل الرسالة الصوتية بنجاح. في النسخة الكاملة يمكن إرسالها للسائقين عبر الخادم.";
-
-      $("#transcript").style.color =
-      "var(--green)";
-
-      $("#ticker").textContent =
-      "🚨 طلب صوتي جديد من سائق متوفر على المسار...";
-
-      toast(
-        "تم حفظ التسجيل محلياً لهذه الجلسة"
-      );
-
-    };
-
-    mediaRecorder.start();
-
-    mic.classList.add("recording");
-
-    $("#pulse").style.display =
-    "block";
-
-    $("#transcript").textContent =
-    "جاري التسجيل... تكلم الآن";
-
-    $("#transcript").style.color =
-    "var(--red)";
-
-    if(radioPlaying){
-      radio.volume = 0.12;
-    }
-
-  }catch(e){
-
-    toast(
-      "خاصك تسمح باستعمال الميكروفون"
-    );
-
+    toast("تم إظهار الميازين على الخريطة");
+    speak("بيّنا ليك أماكن الميازين على الخريطة.");
+  } else {
+    weighStationLayer.clearLayers();
+    toast("تم إخفاء الميازين");
   }
-
 }
 
-function stopRec(){
+let driverGpsReady=false;
+function lockDriverFeatures(){if(window.currentMode!=="driver") return;$$(".vehicles,.voice-box,.services,.smart-banner").forEach(el=>{if(el)el.classList.add("driver-blocked");});}
+function unlockDriverFeatures(){$$(".driver-blocked").forEach(el=>el.classList.remove("driver-blocked"));}
+function enforceDriverGps(){lockDriverFeatures();startGPS(true);}
+function onDriverGpsReady(){driverGpsReady=true;const lock=$("#driverGpsLock");if(lock){lock.classList.add("ok","show");$("#driverGpsMessage").textContent="GPS خدام. دابا تقدر تستقبل الطلبات وتبان للزبناء.";$("#enableDriverGpsBtn").textContent="GPS خدام ✓";}unlockDriverFeatures();if(window.currentMode==="driver"){speak("الجي بي إس خدام. دابا تقدر تبدأ الخدمة وتستقبل الطلبات.");}}
 
-  if(
-    mediaRecorder &&
-    mediaRecorder.state === "recording"
-  ){
+$("#enableDriverGpsBtn").onclick=()=>startGPS(true);
 
-    mediaRecorder.stop();
+let marker,watchId,last;function startGPS(required=false){
+  if(!navigator.geolocation){toast("GPS ما خدامش فهاد المتصفح");if(required)lockDriverFeatures();return;}
+  if(watchId!=null){if(last)map.setView(last,15);if(required&&last)onDriverGpsReady();return;}
+  watchId=navigator.geolocation.watchPosition(p=>{last=[p.coords.latitude,p.coords.longitude];$("#gpsText").textContent="GPS خدام";if(!marker)marker=L.marker(last).addTo(map).bindPopup("راك هنا");else marker.setLatLng(last);map.setView(last,15);if(window.currentMode==="driver")onDriverGpsReady();},()=>{toast("خاصك تعطي الإذن للموقع باش تخدم كسائق");if(window.currentMode==="driver"){driverGpsReady=false;lockDriverFeatures();$("#driverGpsMessage").textContent="GPS ما خدامش. ما تقدرش تستقبل الطلبات.";speak("خاصك تعطي الإذن للجي بي إس باش تخدم كسائق.");}},{enableHighAccuracy:true,maximumAge:3000,timeout:12000});
+}
+const radio=$("#radio"),rb=$("#radioBtn");rb.onclick=async()=>{if(radio.paused){try{await radio.play();rb.innerHTML='<i class="fa-solid fa-pause"></i>';$("#radioState").textContent="الراديو خدام دابا • مساحة إشهارية";speak("شعلنا راديو شَرْجِي.")}catch(e){toast("الراديو ما خدمش دابا")}}else{radio.pause();rb.innerHTML='<i class="fa-solid fa-play"></i>';$("#radioState").textContent="الراديو واقف • ضغط للتشغيل"}};
 
+let rec,chunks=[];$("#micBtn").onclick=async()=>{if(!navigator.mediaDevices?.getUserMedia){toast("الميكروفون ما مدعومش");return}if(rec&&rec.state==="recording"){rec.stop();return}try{let s=await navigator.mediaDevices.getUserMedia({audio:true});chunks=[];rec=new MediaRecorder(s);rec.ondataavailable=e=>chunks.push(e.data);rec.onstop=()=>{$("#transcript").textContent="تسجلات الرحلة بالصوت ✓";s.getTracks().forEach(t=>t.stop());speak("تسجلات الرحلة ديالك.")};rec.start();$("#transcript").textContent="كنسمع ليك دابا... ضغط مرة أخرى باش توقف";$("#micBtn").style.background="#0bbf7b"}catch(e){toast("خاصك تعطي الإذن للميكروفون")}};
+
+function publishTrip(){
+  let isMulti = document.getElementById("multiStopCheck")?.checked;
+  let msg = isMulti ? "تنشر طلب الرحلة متعددة النقط للمزاد." : "تنشر العرض ديالك فالمزاد باش يدخلو السائقين بأثمنة.";
+  toast(msg);speak(msg);
+}
+function openChat(){let t=prompt("رسالة للسائق أو الزبون:");if(t)toast("تسيفطات الرسالة: "+t)}
+
+/* Bidding Logic */
+function submitBid(id){
+  let val = document.getElementById('bid'+id)?.value;
+  if(val){
+    toast("تم تقديم العرض ديالك: " + val + " درهم");
+    speak("حطيتي الثمن ديالك. كنتسناو موافقة الزبون.");
+  } else {
+    toast("المرجو إدخال الثمن");
   }
-
-  mic.classList.remove("recording");
-
-  $("#pulse").style.display =
-  "none";
-
-  if(radioPlaying){
-    radio.volume = 0.45;
-  }
-
 }
 
-mic.addEventListener(
-  "pointerdown",
-  startRec
-);
-
-mic.addEventListener(
-  "pointerup",
-  stopRec
-);
-
-mic.addEventListener(
-  "pointercancel",
-  stopRec
-);
-
-mic.addEventListener(
-  "pointerleave",
-  e => {
-
-    if(e.buttons){
-      stopRec();
-    }
-
-  }
-);
-
-/* Close modals when clicking outside */
-
-["authModal","driverModal"]
-.forEach(id => {
-
-  document
-  .getElementById(id)
-  .addEventListener("click",e => {
-
-    if(e.target.id === id){
-      closeModal(id);
-    }
-
-  });
-
-});
-
-/* Remember demo driver */
-
-const saved =
-localStorage.getItem(
-  "charjiDemoDriver"
-);
-
-if(saved){
-
-  try{
-
-    role = "driver";
-
-    setLogged(
-      "سائق موثوق",
-      "fa-circle-check",
-      "var(--green)"
-    );
-
-  }catch(e){}
-
+/* Document Generation (Bon de Livraison) */
+function generateBonLivraison(route, cargo) {
+  document.getElementById("bonDate").textContent = new Date().toLocaleDateString("ar-MA");
+  document.getElementById("bonRoute").textContent = route;
+  document.getElementById("bonCargo").textContent = cargo;
+  document.getElementById("bonOverlay").classList.add("show");
+  speak("وصل التسليم واجد.");
 }
+function printBon(){
+  window.print();
+  toast("تم طباعة أو حفظ الفاتورة ✓");
+  document.getElementById("bonOverlay").classList.remove("show");
+}
+
+/* Fatigue Alert */
+function showFatigueAlert(){
+  document.getElementById("fatigueAlert").classList.add("show");
+  speak("راك صايغ مدة طويلة. وقف ترتاح شوية باش تحافظ على سلامتك وسلامة الشاحنة.");
+}
+function closeFatigueAlert(){
+  document.getElementById("fatigueAlert").classList.remove("show");
+}
+
+/* Voice Flash */
+let voiceEnabled = localStorage.getItem("charjiVoiceEnabled") !== "0";
+let lastVoiceAt = 0; let lastVoiceText = "";
+function voiceFlash(text){
+  const f=$("#voiceFlash");if(!f) return;
+  f.querySelector("span").textContent=text;f.classList.add("show");
+  clearTimeout(window.__voiceFlashTimer);
+  /* INCREASED VOICE FLASH DURATION TO 4000ms AS REQUESTED */
+  window.__voiceFlashTimer=setTimeout(()=>f.classList.remove("show"),4000);
+}
+function say(text){
+  if(!voiceEnabled || !text) return;
+  const now=Date.now();if(text===lastVoiceText && now-lastVoiceAt<700) return;
+  lastVoiceText=text;lastVoiceAt=now;speak(text);
+  voiceFlash(text.length>42 ? text.slice(0,42)+"..." : text);
+}
+function getVoiceText(el){
+  if(!el) return "";const explicit=el.getAttribute("data-voice");if(explicit) return explicit;
+  if(el.id==="radioBtn") return radio && radio.paused ? "شعل راديو شَرْجِي." : "حبس راديو شَرْجِي.";
+  if(el.id==="voiceToggle") return voiceEnabled ? "الصوت شغال." : "الصوت مطفي.";
+  if(el.id==="micBtn") return rec && rec.state==="recording" ? "وقف التسجيل الصوتي." : "بدا تسجيل الرحلة بصوتك.";
+  if(el.classList.contains("gps")) return "شعل الجي بي إس وورّيني بلاصتي.";
+  if(el.classList.contains("vehicle")){const name=(el.querySelector("b")?.textContent||"المركبة").trim();const rate=(el.querySelector("strong")?.textContent||"").trim();return `اخترتي ${name}. ${rate}.`;}
+  if(el.dataset.page){const m={home:"الرئيسية.",trips:"الرحلات ونظام المزاد.",market:"سوق المهنيين.",community:"مجتمع المهنيين وتبادل الخبرة.",account:"الحساب ديالك والمحفظة."};return m[el.dataset.page] || "";}
+  const visible = (el.innerText || el.getAttribute("aria-label") || "").replace(/\s+/g," ").trim();
+  if(visible) return visible.length>85 ? visible.slice(0,85) : visible;
+  return "";
+}
+
+document.addEventListener("click", e=>{
+  const el=e.target.closest("button,[role='button'],a");
+  if(!el || el.id==="voiceToggle") return;
+  const text=getVoiceText(el);if(text) setTimeout(()=>say(text),40);
+}, true);
+
+if($("#voiceToggle")){
+  const updateVoiceIcon=()=>{$("#voiceToggle").innerHTML = voiceEnabled ? '<i class="fa-solid fa-volume-high"></i>' : '<i class="fa-solid fa-volume-xmark"></i>';$("#voiceToggle").setAttribute("aria-label", voiceEnabled ? "الصوت شغال" : "الصوت مطفي");};
+  updateVoiceIcon();
+  $("#voiceToggle").onclick=()=>{voiceEnabled=!voiceEnabled;localStorage.setItem("charjiVoiceEnabled", voiceEnabled?"1":"0");updateVoiceIcon();if(voiceEnabled){speak("الصوت شغال. أي حاجة تضغط عليها غادي نشرحها ليك.");voiceFlash("الصوت شغال");}else{speechSynthesis.cancel();voiceFlash("الصوت مطفي");}};
+}
+
+let firstVoiceWelcome=false;
+document.addEventListener("pointerdown",()=>{if(firstVoiceWelcome || !voiceEnabled) return;firstVoiceWelcome=true;setTimeout(()=>say("مرحبا بيك ف شَرْجِي برو النسخة الشاملة. أي زر تضغط عليه غادي نشرحو ليك."),180);},{once:true});
+
+let returnSearchEnabled=true;function readReturnOffer(){say("السلام عليكم. كاينة سلعة فطنجة قريبة من مكان تفريغ الحمولة ديالك. عرض الزبون ألف وثلاثمية وخمسين درهم. واش مهتم؟")}function acceptReturnOffer(){say("مزيان. غادي نوصّلوك دابا مع الزبون باش تتفاهمو.");toast("تم الربط مع الزبون ✓");setTimeout(()=>openChat(),500)}function declineReturnOffer(){$("#returnMatch").classList.remove("show");say("ماشي مشكل. غادي نقلب ليك على عرض آخر.");toast("كنقلبو على فرصة أخرى...")}$("#returnToggle").onclick=()=>{returnSearchEnabled=!returnSearchEnabled;$("#returnToggle").textContent=returnSearchEnabled?"شعّال ✓":"مطفي";say(returnSearchEnabled?"خدمة ما ترجعش خاوي شاعلة.":"حبسنا البحث على حمولة الرجوع.")};
+const oldReady=onDriverGpsReady;onDriverGpsReady=function(){oldReady();if(window.currentMode==="driver"&&returnSearchEnabled)setTimeout(()=>{$("#returnMatch").classList.add("show");readReturnOffer()},1600)};
+
+let routeLine=null;const nearbyDrivers=[];
+function addLiveDrivers(){
+  const pts=[[33.60,-7.62],[33.54,-7.56],[34.00,-6.84],[34.06,-6.76],[35.73,-5.80],[31.66,-8.02]];
+  pts.forEach((p,idx)=>{const icon=L.divIcon({className:"",html:'<div class="driver-pin"><i class="fa-solid fa-truck-fast"></i></div>',iconSize:[28,28],iconAnchor:[14,14]});const mk=L.marker(p,{icon,zIndexOffset:400}).addTo(map);mk.bindPopup("سائق متوفر • موثق");nearbyDrivers.push({mk,base:p,phase:idx});});
+  setInterval(()=>{const t=Date.now()/5000;nearbyDrivers.forEach((d,i)=>{const lat=d.base[0]+Math.sin(t+d.phase)*0.008;const lng=d.base[1]+Math.cos(t*.9+d.phase)*0.008;d.mk.setLatLng([lat,lng]);});},1500);
+}
+function drawDemoRoute(){if(routeLine)map.removeLayer(routeLine);const route=[[35.7595,-5.8340],[34.85,-6.15],[34.02,-6.84],[33.5731,-7.5898]];routeLine=L.polyline(route,{color:"#1769ff",weight:5,opacity:.9,className:"route-dash"}).addTo(map);map.fitBounds(routeLine.getBounds(),{padding:[35,35]});}
+function smartSuggest(){drawDemoRoute();toast("اخترنا ليك ديانا 3.5 طن • الثمن المقترح 1,326 درهم");speak("لقينا ليك ديانا ثلاثة فاصلة خمسة طن. الثمن التقريبي ألف وثلاثمية وستة وعشرين درهم.");const v=$$(".vehicle")[0];if(v)pickVehicle(v,"ديانا");}
+
+$("#assistantFab").onclick=()=>{
+  $("#assistantPanel").classList.toggle("show");
+  if($("#assistantPanel").classList.contains("show")){speak("مرحبا. شنو بغيتي ندير ليك؟");}
+};
+function assistantAction(type){$("#assistantPanel").classList.remove("show");if(type==="driver"){startGPS();toast("كنقلبو ليك على أقرب سائق...");speak("كنقلب ليك على أقرب سائق متوفر.");}if(type==="route"){smartSuggest();}if(type==="market"){go("market");speak("ها هو سوق المهنيين.");}if(type==="community"){go("community");speak("ها هو مجتمع المهنيين.");}}
+
+const toolNames={sos:"النجدة SOS",road:"خريطة الطريق",maintenance:"تنبيهات الصيانة",docs:"وثائق الشاحنة",weather:"الطقس والطريق",reports:"بلاغات السائقين",rewards:"نقاط ومكافآت",drive:"وضع القيادة",directory:"دليل الخدمات",ledger:"سجل المصاريف"};
+function openTools(){showToolsHome();$("#toolsOverlay").classList.add("show");document.body.style.overflow="hidden";}
+function closeTools(){$("#toolsOverlay").classList.remove("show");document.body.style.overflow="";}
+function showToolsHome(){$("#toolsHome").classList.remove("hide");$$(".tool-detail").forEach(x=>x.classList.remove("show"));$("#toolBack").style.display="none";$("#toolsTitle").textContent="مركز السائق الذكي";$("#toolsSub").textContent="كل ما يحتاجه السائق فالطريق";}
+function openTool(id,title){$("#toolsHome").classList.add("hide");$$(".tool-detail").forEach(x=>x.classList.toggle("show",x.id==="tool-"+id));$("#toolBack").style.display="block";$("#toolsTitle").textContent=title||toolNames[id];$("#toolsSub").textContent="خدمة عملية داخل شَرْجِي برو";if(id==="maintenance")renderMaintenance();if(id==="docs")renderDocuments();if(id==="rewards")renderPoints();if(id==="ledger")renderLedger();}
+$("#toolsOverlay").addEventListener("click",e=>{if(e.target.id==="toolsOverlay")closeTools()});
+
+function sendSOS(){const phone=$("#emergencyPhone").value.trim();if(!phone){toast("دخل رقم شخص للطوارئ");say("دخل رقم شخص تثق فيه باش نرسلوا ليه الموقع.");return}localStorage.setItem("charjiEmergencyPhone",phone);const share=(lat,lng)=>{const msg=`طلب نجدة من تطبيق شَرْجِي برو. موقعي: https://maps.google.com/?q=${lat},${lng}`;if(navigator.share)navigator.share({title:"طلب نجدة",text:msg}).catch(()=>{});else location.href=`sms:${phone}?body=${encodeURIComponent(msg)}`;toast("وجدنا رسالة النجدة بالموقع ✓");say("رسالة النجدة واجدة. اختار الشخص اللي غادي ترسلها ليه.");};if(last)share(last[0],last[1]);else navigator.geolocation?.getCurrentPosition(p=>share(p.coords.latitude,p.coords.longitude),()=>{toast("شعل GPS باش نشارك الموقع");say("خاصك تشعل الجي بي إس باش نشارك موقعك.")},{enableHighAccuracy:true,timeout:10000});}
+
+function dateStatus(date){if(!date)return {text:"ما تحددش",warn:true};const days=Math.ceil((new Date(date+"T23:59:00")-new Date())/86400000);if(days<0)return {text:"منتهية",warn:true};if(days<=30)return {text:`باقي ${days} يوم`,warn:true};return {text:`باقي ${days} يوم`,warn:false};}
+function saveDateGroup(key,ids){const data={};ids.forEach(id=>data[id]=$("#"+id).value);localStorage.setItem(key,JSON.stringify(data));return data;}
+function loadDateGroup(key,ids){const data=JSON.parse(localStorage.getItem(key)||"{}");ids.forEach(id=>{if($("#"+id))$("#"+id).value=data[id]||""});return data;}
+function statusHtml(items){return items.map(([label,date,icon])=>{const s=dateStatus(date);return `<div class="status-row"><div class="status-icon"><i class="fa-solid ${icon}"></i></div><div><b>${label}</b><small>${date||"دخل التاريخ"}</small></div><span class="status-tag ${s.warn?'warn':''}">${s.text}</span></div>`}).join("")}
+function saveMaintenance(){const d=saveDateGroup("charjiMaintenance",["oilDate","tireDate","brakeDate"]);renderMaintenance(d);toast("تحفظات مواعيد الصيانة ✓");addPoints(5)}
+function renderMaintenance(data){const d=data||loadDateGroup("charjiMaintenance",["oilDate","tireDate","brakeDate"]);$("#maintenanceStatus").innerHTML=statusHtml([["تغيير الزيت",d.oilDate,"fa-oil-can"],["فحص العجلات",d.tireDate,"fa-circle"],["فحص الفرامل",d.brakeDate,"fa-shield"]])}
+function saveDocuments(){const d=saveDateGroup("charjiDocuments",["insuranceDate","inspectionDate","licenseDate"]);renderDocuments(d);toast("تحفظات الوثائق والتنبيهات ✓");addPoints(5)}
+function renderDocuments(data){const d=data||loadDateGroup("charjiDocuments",["insuranceDate","inspectionDate","licenseDate"]);$("#documentsStatus").innerHTML=statusHtml([["التأمين",d.insuranceDate,"fa-file-shield"],["الفحص التقني",d.inspectionDate,"fa-clipboard-check"],["رخصة السياقة",d.licenseDate,"fa-id-card"]])}
+
+let selectedReport="";function selectReport(btn,type){selectedReport=type;$$('.report-types button').forEach(x=>x.classList.remove('selected'));btn.classList.add('selected');say("اختارتي بلاغ "+type)}
+function publishReport(){if(!selectedReport){toast("اختار نوع البلاغ");return}const note=$("#reportNote").value.trim();const report={type:selectedReport,note,time:new Date().toISOString(),location:last};const reports=JSON.parse(localStorage.getItem("charjiReports")||"[]");reports.unshift(report);localStorage.setItem("charjiReports",JSON.stringify(reports.slice(0,20)));addRoadMarker(report);addPoints(20);toast("تنشر البلاغ للسائقين ✓");say("شكرا. تنشر البلاغ ديالك للسائقين القريبين.");$("#reportNote").value="";}
+function addRoadMarker(report){const p=report.location||[33.78,-7.10];const icon=L.divIcon({className:"",html:'<div class="driver-pin" style="background:#e53935"><i class="fa-solid fa-triangle-exclamation"></i></div>',iconSize:[28,28]});L.marker(p,{icon}).addTo(map).bindPopup((report.type||"بلاغ طريق")+(report.note?" • "+report.note:""));}
+
+function getPoints(){return Number(localStorage.getItem("charjiPoints")||120)}
+function addPoints(n){localStorage.setItem("charjiPoints",String(getPoints()+n));renderPoints()}
+function renderPoints(){if($("#pointsTotal"))$("#pointsTotal").textContent=getPoints()}
+function redeemReward(){if(getPoints()<100){toast("خاصك 100 نقطة على الأقل");return}addPoints(-100);toast("مبروك! ربحتي عرض مهني ✓");say("مبروك. بدّلتي مية نقطة بعرض مهني.")}
+
+function toggleDriveMode(){
+  const on=!document.body.classList.contains("drive-mode");document.body.classList.toggle("drive-mode",on);localStorage.setItem("charjiDriveMode",on?"1":"0");
+  if(on&&!voiceEnabled){voiceEnabled=true;localStorage.setItem("charjiVoiceEnabled","1")}
+  $("#driveModeBtn").textContent=on?"إيقاف وضع القيادة":"تشغيل وضع القيادة";toast(on?"وضع القيادة شاعل ✓":"توقف وضع القيادة");say(on?"وضع القيادة شاعل. الأزرار كبار والصوت خدام.":"توقف وضع القيادة.")
+}
+function openServiceMap(lat,lng){closeTools();go("home");setTimeout(()=>{map.setView([lat,lng],15);L.marker([lat,lng]).addTo(map).bindPopup("الخدمة المختارة").openPopup()},150)}
+function saveTripLedger(){
+  if(typeof calcDriverCost==="function")calcDriverCost();
+  const entry={date:new Date().toLocaleDateString("ar-MA"),km:$("#tripKm").value,revenue:$("#tripRevenue").value,cost:$("#totalCostOut").textContent,net:$("#netProfitOut").textContent};
+  const list=JSON.parse(localStorage.getItem("charjiLedger")||"[]");list.unshift(entry);localStorage.setItem("charjiLedger",JSON.stringify(list.slice(0,30)));renderLedger();addPoints(5);toast("تحفظات الرحلة فالسجل ✓")
+}
+function renderLedger(){
+  const list=JSON.parse(localStorage.getItem("charjiLedger")||"[]");
+  $("#ledgerList").innerHTML=list.length?list.map(x=>`<div class="status-row"><div class="status-icon"><i class="fa-solid fa-truck-fast"></i></div><div><b>${x.date} • ${x.km} كم</b><small>المدخول ${x.revenue} د • المصاريف ${x.cost}</small></div><span class="status-tag">${x.net}</span></div>`).join(""):"<p>مازال ما حفظتي حتى رحلة.</p>";
+}
+
+$("#emergencyPhone").value=localStorage.getItem("charjiEmergencyPhone")||"";
+if(localStorage.getItem("charjiDriveMode")==="1"){document.body.classList.add("drive-mode");$("#driveModeBtn").textContent="إيقاف وضع القيادة"}
+JSON.parse(localStorage.getItem("charjiReports")||"[]").forEach(addRoadMarker);
+calcDriverCost();
+addLiveDrivers();
+setTimeout(drawDemoRoute,700);
 
 </script>
+<button id="tapAccessToggle" class="tap-access-btn" type="button"
+  data-voice="خاصية القراءة باللمس شاعلة. ضغطة وحدة تقرا، وضغطتين كيدخلوك للخدمة. ضغط مرتين هنا باش توقف الخاصية.">
+  <i class="fa-solid fa-ear-listen"></i>
+  <span id="tapAccessText">ضغطة تقرا • جوج يفتحو</span>
+</button>
+<div id="tapAccessHint" class="tap-access-hint">🔊 ضغطة وحدة = سمع • جوج ضغطات = دخل</div>
 
-</body>
-</html>
+</body></html>

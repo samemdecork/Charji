@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>شَرْجِي برو (Charji Pro) — النسخة النهائية المكتملة</title>
+<title>شَرْجِي برو (Charji Pro) — النسخة النهائية المعتمدة</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <style>
@@ -19,7 +19,7 @@ button,input,textarea,select{font:inherit; outline:none;}
 .auth-header i { font-size: 50px; color: var(--amber); margin-bottom: 10px; }
 .auth-header h1 { margin: 0; color: var(--navy); font-size: 24px; }
 .auth-tabs { display: flex; gap: 10px; margin-bottom: 20px; }
-.auth-tab { flex: 1; padding: 15px; border: 2px solid var(--line); border-radius: 12px; background: #fff; color: var(--muted); font-weight: bold; cursor: pointer; text-align: center; transition: 0.2s;}
+.auth-tab { flex: 1; padding: 12px; border: 2px solid var(--line); border-radius: 12px; background: #fff; color: var(--muted); font-weight: bold; cursor: pointer; text-align: center; font-size: 11px; transition: 0.2s;}
 .auth-tab.active { border-color: var(--blue); background: #f4f8ff; color: var(--blue); }
 .auth-form { display: none;}
 .auth-form.active { display: block; }
@@ -27,7 +27,9 @@ button,input,textarea,select{font:inherit; outline:none;}
 .form-group label { display: block; font-size: 11px; margin-bottom: 4px; color: var(--navy); font-weight: bold;}
 .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid var(--line); border-radius: 10px; font-size: 11px; background: #f9fbfd;}
 .btn-submit { width: 100%; background: var(--amber); color: #fff; border: 0; border-radius: 12px; padding: 14px; font-size: 13px; font-weight: bold; cursor: pointer; margin-top: 10px;}
-.allo-reg { text-align: center; margin-top: 15px; font-size: 11px; color: var(--blue); font-weight: bold; cursor: pointer; text-decoration: underline;}
+.allo-box { background: #fff7e8; border: 1px dashed var(--amber); padding: 12px; border-radius: 12px; margin-top: 15px; text-align: center;}
+.allo-box b { color: var(--amber); font-size: 11px; display: block; margin-bottom: 5px;}
+.allo-box p { font-size: 9px; color: #555; margin: 0 0 8px; line-height: 1.4;}
 
 /* HEADER & RADIO */
 header{background:var(--navy);color:#fff;padding:13px 14px 12px}
@@ -110,7 +112,13 @@ header{background:var(--navy);color:#fff;padding:13px 14px 12px}
     <div class="form-group"><label>صورة البطاقة الوطنية أو المهنية</label><input type="file" accept="image/*"></div>
     <div class="form-group"><label>وثيقة التأمين</label><input type="file" accept="image/*,.pdf"></div>
     <button class="btn-submit" onclick="loginAs('driver')">تسجيل ودخول كمهني</button>
-    <div class="allo-reg" onclick="toast('تم تسجيل رقمك في شَرْجِي ألو')">ماعندكش سمارتفون؟ تسجل فخدمة "شَرْجِي ألو" 📞</div>
+    
+    <!-- CHARJI ALLO REGISTRATION BOX -->
+    <div class="allo-box">
+      <b>عندك تليفون بوطونات (عادي) وماعندكش سمارتفون؟</b>
+      <p>تسجل دابا فخدمة "شَرْجِي ألو" عبر المعارف فمصلحة الزبناء أو عبر وكالات التحويلات (Cash Plus / Wafacash)، باش تبقى توصل بالكوموندات عبر مكالمة صوتية مباشرة!</p>
+      <button class="btn-primary" style="margin:0; padding:10px; font-size:11px; background:var(--navy);" onclick="toast('✅ تم تسجيل رقمك في خدمة شَرْجِي ألو بنجاح')">تسجيل رقم هاتف عادٍ (بوطونات)</button>
+    </div>
   </div>
 </div>
 
@@ -142,7 +150,7 @@ header{background:var(--navy);color:#fff;padding:13px 14px 12px}
     <div class="live driver-ui" style="background:var(--amber);">طلبات وجهتك<b>4 طلبات</b></div>
   </div>
 
-  <!-- CUSTOMER UNIVERSE -->
+  <!-- CUSTOMER UNIVERSE (OPTIONS FROM SMALL TO BIG + DEBRIS) -->
   <div class="customer-ui">
     <div class="sheet">
       <div class="title"><div><b><i class="fa-solid fa-rotate"></i> عروض "رجوع خاوي" أو "بوكلان"</b></div></div>
@@ -267,7 +275,7 @@ header{background:var(--navy);color:#fff;padding:13px 14px 12px}
   <button onclick="go('account')" data-voice="حسابي"><i class="fa-solid fa-user-gear"></i>حسابي</button>
 </nav>
 
-<!-- FLOATING VOICE TOGGLE (OPTIONAL BY USER) -->
+<!-- FLOATING VOICE TOGGLE (USER CAN TURN ON/OFF) -->
 <button id="voiceToggleFloat" class="voice-toggle-float" onclick="toggleVoiceMode()">
   <i class="fa-solid fa-volume-high"></i>
   <span id="voiceToggleText">الصوت: شغال</span>
@@ -361,7 +369,7 @@ function toast(t) {
   clearTimeout(toast.timer); toast.timer = setTimeout(() => e.classList.remove("show"), 3500);
 }
 
-// --- 3. SPEECH & VOICE TOGGLE ---
+// --- 3. SPEECH & VOICE TOGGLE (USER CAN TURN ON/OFF) ---
 let voiceModeActive = true;
 function toggleVoiceMode() {
   voiceModeActive = !voiceModeActive;
@@ -376,7 +384,7 @@ function toggleVoiceMode() {
     btn.classList.add('off');
     txt.innerText = 'الصوت: مطفي';
     window.speechSynthesis.cancel();
-    toast("تم إطفاء المساعد الصوتي (ضغطة وحدة سريعة)");
+    toast("تم إطفاء المساعد الصوتي (التطبيق خدام بضغطة وحدة سريعة)");
   }
 }
 
@@ -391,7 +399,7 @@ function speakText(t) {
   window.speechSynthesis.speak(u);
 }
 
-// Voice on click for interactive elements if voiceModeActive is true
+// Speak on clicking interactive elements if voiceModeActive is true
 document.addEventListener('click', function(e) {
   const clickable = e.target.closest('button, .vehicle, .card, [data-voice]');
   if(clickable && clickable.getAttribute('data-voice')) {

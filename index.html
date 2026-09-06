@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>شَرْجِي برو (Charji Pro) — النسخة النهائية المعتمدة</title>
+<title>شَرْجِي برو (Charji Pro) — النسخة الكاملة والنهائية (V36)</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <style>
@@ -18,8 +18,8 @@ button,input,textarea,select{font:inherit; outline:none;}
 .auth-header { text-align: center; margin-bottom: 20px; margin-top: 20px;}
 .auth-header i { font-size: 50px; color: var(--amber); margin-bottom: 10px; }
 .auth-header h1 { margin: 0; color: var(--navy); font-size: 24px; }
-.auth-tabs { display: flex; gap: 10px; margin-bottom: 20px; }
-.auth-tab { flex: 1; padding: 12px; border: 2px solid var(--line); border-radius: 12px; background: #fff; color: var(--muted); font-weight: bold; cursor: pointer; text-align: center; font-size: 11px; transition: 0.2s;}
+.auth-tabs { display: flex; gap: 6px; margin-bottom: 20px; }
+.auth-tab { flex: 1; padding: 12px 5px; border: 2px solid var(--line); border-radius: 12px; background: #fff; color: var(--muted); font-weight: bold; cursor: pointer; text-align: center; font-size: 10px; transition: 0.2s;}
 .auth-tab.active { border-color: var(--blue); background: #f4f8ff; color: var(--blue); }
 .auth-form { display: none;}
 .auth-form.active { display: block; }
@@ -51,10 +51,11 @@ header{background:var(--navy);color:#fff;padding:13px 14px 12px}
 /* MAP */
 .map-wrap{margin:10px 12px;height:180px;border-radius:22px;overflow:hidden;position:relative;box-shadow:0 4px 15px #ccd7e2; border: 2px solid #fff;}#map{height:100%;width:100%}.live{position:absolute;z-index:500;top:12px;right:12px;background:rgba(9, 35, 67, 0.9);color:#fff;border-radius:11px;padding:8px 12px;font-size:9px;backdrop-filter:blur(5px);}.live b{font-size:14px;display:block;margin-top:2px;color:var(--amber);}
 
-/* CUSTOMER VS DRIVER UI */
-.customer-ui, .driver-ui { display: none; }
+/* USER MODES */
+.customer-ui, .driver-ui, .patron-ui { display: none; }
 .customer-mode .customer-ui { display: block; }
 .driver-mode .driver-ui { display: block; }
+.patron-mode .patron-ui { display: block; }
 
 .vehicles{display:grid;grid-template-columns:repeat(3, 1fr);gap:8px}.vehicle{border:2px solid var(--line);border-radius:12px;background:#fff;padding:10px 5px;text-align:center;cursor:pointer;}.vehicle.active{border-color:var(--blue);background:#f4f8ff}.vehicle i{font-size:22px;color:var(--navy)}.vehicle b{display:block;font-size:9px;margin-top:6px}
 .mic{width:60px;height:60px;border-radius:50%;border:6px solid #ffe3e6;background:var(--amber);color:#fff;font-size:24px;box-shadow:0 0 0 4px #fff0f1;margin:10px auto;display:grid;place-items:center;cursor:pointer;}
@@ -69,9 +70,14 @@ header{background:var(--navy);color:#fff;padding:13px 14px 12px}
 .order-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px;}
 .wallet-card{background:linear-gradient(135deg, var(--amber), #e65c00);color:#fff;text-align:center;border-radius:18px;padding:20px 15px;margin-bottom:12px;}.wallet-card b{font-size:15px;color:#fff;}.wallet-card .balance{font-size:32px;font-weight:900;margin:10px 0;font-family:monospace;}
 
+/* MARKET & COMMUNITY STYLES */
+.market-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.market-item { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 12px; text-align: center; }
+.market-item i { font-size: 28px; color: var(--navy); margin-bottom: 5px; }
+
 /* NAV */
 .nav{position:fixed;z-index:1200;bottom:0;left:50%;transform:translateX(-50%);width:min(100%,480px);height:66px;background:#fff;border-top:1px solid #d7e1ea;display:flex;justify-content:space-around;padding:0 5px;}
-.nav button{border:0;background:transparent;color:#789;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:9px;font-weight:bold;width:100%;cursor:pointer;}.nav i{font-size:20px}.nav button.active{color:var(--blue)}
+.nav button{border:0;background:transparent;color:#789;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:9px;font-weight:bold;width:100%;cursor:pointer;}.nav i{font-size:18px}.nav button.active{color:var(--blue)}
 
 /* TOAST & VOICE TOGGLE */
 .toast{position:fixed;z-index:6000;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);opacity:0;background:rgba(18,59,143,0.95);color:#fff;border-radius:12px;padding:12px 20px;font-size:12px;transition:0.3s;pointer-events:none;text-align:center;}
@@ -91,12 +97,13 @@ header{background:var(--navy);color:#fff;padding:13px 14px 12px}
   <div class="auth-header">
     <i class="fa-solid fa-truck-fast"></i>
     <h1>شَرْجِي برو</h1>
-    <p style="font-size:12px; color:var(--muted);">التطبيق الشامل للحرايفية والكليان</p>
+    <p style="font-size:12px; color:var(--muted);">التطبيق الشامل للحرايفية، الكليان والشركات</p>
   </div>
 
   <div class="auth-tabs">
-    <div class="auth-tab active" onclick="switchAuthTab('customer')">أنا زبون (كليان)</div>
-    <div class="auth-tab" onclick="switchAuthTab('driver')">أنا سائق (مهني)</div>
+    <div class="auth-tab active" onclick="switchAuthTab('customer')">زبون (كليان)</div>
+    <div class="auth-tab" onclick="switchAuthTab('driver')">سائق (مهني)</div>
+    <div class="auth-tab" onclick="switchAuthTab('patron')">شركة / پاترون</div>
   </div>
 
   <div id="form-customer" class="auth-form active">
@@ -108,31 +115,33 @@ header{background:var(--navy);color:#fff;padding:13px 14px 12px}
   <div id="form-driver" class="auth-form">
     <div class="form-group"><label>الاسم ورقم الهاتف</label><input type="text" placeholder="الاسم ورقم الهاتف"></div>
     <div class="form-group"><label>نوع رخصة السياقة (Permis)</label><select><option>رخصة C (شاحنة)</option><option>رخصة EC (رموك)</option><option>رخصة B (ديانا / طريبورتور)</option></select></div>
-    <div class="form-group"><label>نوع العربة الرئيسية</label><select><option>طريبورتور / هوندا</option><option>ديانا / 3.5 طن</option><option>شاحنة كبيرة</option><option>رموك</option><option>آلات الحفر (طراكس / پيلتوز)</option><option>شاحنة الهدم وشحن الردم</option></select></div>
-    <div class="form-group"><label>صورة البطاقة الوطنية أو المهنية</label><input type="file" accept="image/*"></div>
-    <div class="form-group"><label>وثيقة التأمين</label><input type="file" accept="image/*,.pdf"></div>
+    <div class="form-group"><label>رخصة العربة / آلات الحفر</label><select><option>طريبورتور / هوندا</option><option>ديانا / 3.5 طن</option><option>شاحنة كبيرة</option><option>رموك</option><option>آلات الحفر (طراكس / پيلتوز)</option><option>شاحنة الهدم وشحن الردم</option></select></div>
+    <div class="form-group"><label>صورة البطاقة المهنية</label><input type="file" accept="image/*"></div>
     <button class="btn-submit" onclick="loginAs('driver')">تسجيل ودخول كمهني</button>
-    
-    <!-- CHARJI ALLO REGISTRATION BOX -->
     <div class="allo-box">
-      <b>عندك تليفون بوطونات (عادي) وماعندكش سمارتفون؟</b>
-      <p>تسجل دابا فخدمة "شَرْجِي ألو" عبر المعارف فمصلحة الزبناء أو عبر وكالات التحويلات (Cash Plus / Wafacash)، باش تبقى توصل بالكوموندات عبر مكالمة صوتية مباشرة!</p>
-      <button class="btn-primary" style="margin:0; padding:10px; font-size:11px; background:var(--navy);" onclick="toast('✅ تم تسجيل رقمك في خدمة شَرْجِي ألو بنجاح')">تسجيل رقم هاتف عادٍ (بوطونات)</button>
+      <b>عندك تليفون بوطونات (عادي)؟</b>
+      <p>تسجل دابا فخدمة "شَرْجِي ألو" عبر وكالات التحويلات (Cash Plus / Wafacash) أو مصلحة الزبناء لتلقي الطلبات صوتياً!</p>
     </div>
+  </div>
+
+  <div id="form-patron" class="auth-form">
+    <div class="form-group"><label>اسم الشركة / المقاولة</label><input type="text" placeholder="مثال: تراكس اللوجستيك"></div>
+    <div class="form-group"><label>رقم هاتف المسؤول</label><input type="tel" placeholder="06XXXXXXXX"></div>
+    <button class="btn-submit" onclick="loginAs('patron')">دخول كشركة / پاترون</button>
   </div>
 </div>
 
 <div class="app">
 
-<!-- HEADER WITH RADIO AD -->
+<!-- HEADER -->
 <header>
   <div class="head">
-    <button class="round" onclick="go('account')" data-voice="حسابي وإعدادات"><i class="fa-solid fa-user-gear"></i></button>
+    <button class="round" onclick="go('account')"><i class="fa-solid fa-user-gear"></i></button>
     <div class="brand"><div class="logo"><i class="fa-solid fa-truck-fast"></i></div><div><b id="headerTitle">شَرْجِي برو</b><small id="headerSub">مرحبا بيك</small></div></div>
     <button class="round" onclick="logout()" style="background:#dc3545;" title="تسجيل الخروج"><i class="fa-solid fa-right-from-bracket"></i></button>
   </div>
   <div class="radio-ad">
-    <button class="radio-play" onclick="toast('🔊 راديو شَرْجِي شغال: عروض على زيوت المحركات')" data-voice="تشغيل الراديو الإشهاري"><i class="fa-solid fa-play"></i></button>
+    <button class="radio-play" onclick="toast('🔊 راديو شَرْجِي شغال: عروض على قطع الغيار')"><i class="fa-solid fa-play"></i></button>
     <div class="radio-copy">
       <b>راديو شَرْجِي • إشهار مهني</b>
       <div>عروض خاصة على زيوت المحركات وقطع الغيار</div>
@@ -142,67 +151,38 @@ header{background:var(--navy);color:#fff;padding:13px 14px 12px}
   </div>
 </header>
 
+<!-- HOME / MAIN PAGES -->
 <section id="home" class="page active">
-
   <div class="map-wrap">
     <div id="map"></div>
     <div class="live customer-ui">شاحنات قريبة<b>18 عربة</b></div>
     <div class="live driver-ui" style="background:var(--amber);">طلبات وجهتك<b>4 طلبات</b></div>
+    <div class="live patron-ui" style="background:var(--navy);">الأسطول النشط<b>3 شاحنات</b></div>
   </div>
 
-  <!-- CUSTOMER UNIVERSE (OPTIONS FROM SMALL TO BIG + DEBRIS) -->
+  <!-- CUSTOMER UNIVERSE -->
   <div class="customer-ui">
     <div class="sheet">
-      <div class="title"><div><b><i class="fa-solid fa-rotate"></i> عروض "رجوع خاوي" أو "بوكلان"</b></div></div>
-      <div class="offer-box">
-        <span class="badge">بوكلان</span><b>ياسين • شاحنة كبيرة (بوكلان ذهاب وإياب)</b>
-        <p style="margin:5px 0 0; font-size:10px; color:#555;">راجع من كازا لـ طنجة وعندو رحلة دائرية (بوكلان) بثمن اقتصادي.</p>
-        <button class="btn-primary" style="padding:8px; margin-top:8px; width:auto; font-size:10px;" onclick="toast('جاري الاتصال بياسين')" data-voice="تواصل مع السائق">تواصل مع السائق</button>
-      </div>
-    </div>
-
-    <div class="sheet">
-      <div class="title"><div><b>📦 طلب شاحنة، آلة حفر أو شحن ردم</b></div></div>
+      <div class="title"><div><b>📦 طلب نقل، حفر، هدم أو ردم</b></div></div>
       <div class="input-route">
         <input type="text" placeholder="من (انطلاق)"><i class="fa-solid fa-arrow-left" style="color:var(--muted);"></i><input type="text" placeholder="إلى (وصول)">
       </div>
-      
-      <label style="font-size:10px; color:var(--muted); display:block; margin-bottom:5px;">اختر نوع العربة أو الخدمة المطلوبة:</label>
       <div class="vehicles">
-        <button class="vehicle active" onclick="pickVehicle(this)" data-voice="طريبورتور"><i class="fa-solid fa-motorcycle"></i><b>طريبورتور</b></button>
-        <button class="vehicle" onclick="pickVehicle(this)" data-voice="ديانا 3 طن ونص"><i class="fa-solid fa-truck-pickup"></i><b>ديانا 3.5 طن</b></button>
-        <button class="vehicle" onclick="pickVehicle(this)" data-voice="شاحنة كبيرة"><i class="fa-solid fa-truck"></i><b>شاحنة كبيرة</b></button>
-        <button class="vehicle" onclick="pickVehicle(this)" data-voice="رموك"><i class="fa-solid fa-trailer"></i><b>رموك 20 طن</b></button>
-        <button class="vehicle" onclick="pickVehicle(this)" data-voice="آلات الحفر"><i class="fa-solid fa-tractor"></i><b>آلات الحفر</b></button>
-        <button class="vehicle" onclick="pickVehicle(this)" data-voice="هدم وشحن الردم"><i class="fa-solid fa-dumpster"></i><b>هدم وشحن الردم</b></button>
+        <button class="vehicle active" onclick="pickVehicle(this)"><i class="fa-solid fa-motorcycle"></i><b>طريبورتور</b></button>
+        <button class="vehicle" onclick="pickVehicle(this)"><i class="fa-solid fa-truck-pickup"></i><b>ديانا 3.5 طن</b></button>
+        <button class="vehicle" onclick="pickVehicle(this)"><i class="fa-solid fa-truck"></i><b>شاحنة كبيرة</b></button>
+        <button class="vehicle" onclick="pickVehicle(this)"><i class="fa-solid fa-trailer"></i><b>رموك 20 طن</b></button>
+        <button class="vehicle" onclick="pickVehicle(this)"><i class="fa-solid fa-tractor"></i><b>آلات الحفر</b></button>
+        <button class="vehicle" onclick="pickVehicle(this)"><i class="fa-solid fa-dumpster"></i><b>هدم وردم</b></button>
       </div>
-
-      <div style="text-align:center; margin-top:15px; border-top:1px dashed var(--line); padding-top:12px;">
-        <b style="font-size:11px; color:var(--navy);">سجل التفاصيل بالصوت أو طلب بوكلان (ذهاب وإياب)</b>
-        <button class="mic" onclick="toast('🎙️ جاري تسجيل صوتك...')" data-voice="تسجيل الطلب بالصوت"><i class="fa-solid fa-microphone"></i></button>
-        <label style="font-size:10px; display:block; margin-top:8px; color:var(--navy); font-weight:bold; cursor:pointer;">
-          <input type="checkbox" style="vertical-align: middle;"> 🔄 طلب رحلة دائرية (بوكلان / ذهاب وإياب بثمن اقتصادي)
-        </label>
-        <button class="btn-primary" onclick="toast('✅ تم نشر الطلب بنجاح')" data-voice="نشر الطلب">نشر الطلب</button>
-      </div>
+      <button class="btn-primary" onclick="toast('✅ تم نشر الطلب بنجاح')" style="margin-top:15px;">نشر الطلب للسائقين</button>
     </div>
   </div>
 
   <!-- DRIVER UNIVERSE -->
   <div class="driver-ui">
-    
-    <!-- CHARJI ALLO SIMULATOR -->
-    <div class="sheet" style="border:1px solid #cce5ff; padding:12px;">
-      <div class="title" style="margin-bottom:8px;"><div><b>شَرْجِي ألو (تليفون بوطونات)</b><small>التتبع الآلي للطلبات</small></div><i class="fa-solid fa-phone-volume" style="color:var(--blue); font-size:20px;"></i></div>
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
-        <button class="btn-primary" style="margin:0; font-size:10px; padding:10px;" onclick="simulateAlloCall('new')" data-voice="مكالمة كوموند جديدة">📞 مكالمة كوموند</button>
-        <button class="btn-outline" style="margin:0; font-size:10px; padding:10px;" onclick="simulateAlloCall('return')" data-voice="مكالمة بوكلان او رجوع">📞 مكالمة بوكلان / رجوع</button>
-      </div>
-    </div>
-
-    <!-- UNIFIED SECTION: BOUCLAGE, EMPTY RETURN & DEBRIS -->
     <div class="sheet" style="background: linear-gradient(to right, #fff, #fef4e8); border: 1px solid #ffd48b;">
-      <div class="title"><div><b style="color:var(--amber);"><i class="fa-solid fa-rotate"></i> نشر "رجوع خاوي"، "بوكلان" أو "شحن الردم"</b><small>كلشي مجمع فخانة وحدة</small></div></div>
+      <div class="title"><div><b style="color:var(--amber);"><i class="fa-solid fa-rotate"></i> نشر "رجوع خاوي"، "بوكلان" أو "شحن الردم"</b></div></div>
       <div class="input-route">
         <input type="text" placeholder="من.."><i class="fa-solid fa-arrow-left" style="color:var(--muted);"></i><input type="text" placeholder="إلى..">
       </div>
@@ -213,88 +193,96 @@ header{background:var(--navy);color:#fff;padding:13px 14px 12px}
           <option>نوع الخدمة: شحنة هدم وشحن الردم (Décombres)</option>
         </select>
       </div>
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
-        <button class="btn-primary" style="margin:0; background:var(--amber); font-size:10px;" onclick="toast('🎙️ تم تسجيل رسالتك الصوتية')" data-voice="رسالة صوتية">🎙️ رسالة صوتية</button>
-        <button class="btn-primary" style="margin:0; font-size:10px;" onclick="toast('✅ تم نشر العرض للزبناء')" data-voice="نشر العرض">نشر العرض</button>
-      </div>
+      <button class="btn-primary" style="margin:0; background:var(--amber);" onclick="toast('✅ تم نشر العرض')">نشر التوفر</button>
     </div>
 
-    <div class="page-head" style="padding-top:0;"><b>الطلبات، البوكلانات وخدمات الهدم المتاحة</b></div>
+    <div class="page-head" style="padding-top:0;"><b>الطلبات والبوكلانات المتاحة فجهتك</b></div>
     <div style="padding:0 12px;">
       <div class="order-card">
         <div class="order-header"><b>كازا ← الرباط (مع بوكلان رجوع)</b><span class="order-price">1,400 د.م</span></div>
-        <div class="order-details"><span><i class="fa-solid fa-box"></i> 3.5 طن</span><span><i class="fa-solid fa-rotate"></i> بوكلان مفعل</span></div>
-        <div class="order-actions">
-          <button class="btn-primary" style="margin:0; background:#28a745; font-size:10px;" onclick="acceptTripOrder()" data-voice="قبول الرحلة">قبول الرحلة</button>
-          <button class="btn-primary" style="margin:0; background:var(--navy); font-size:10px;" onclick="toast('اقتراح ثمن')" data-voice="اقتراح ثمن">اقتراح ثمن</button>
-        </div>
-      </div>
-      
-      <div class="order-card" style="border-right-color: var(--blue);">
-        <div class="order-header"><b>ورشة بناء (تمارة)</b><span class="order-price">شحن الردم 800 د.م</span></div>
-        <div class="order-details"><span><i class="fa-solid fa-dumpster"></i> شاحنة هدم وردم</span><span><i class="fa-solid fa-clock"></i> عاجل</span></div>
-        <div class="order-actions">
-          <button class="btn-primary" style="margin:0; background:#28a745; font-size:10px;" onclick="acceptTripOrder()" data-voice="قبول العمل">قبول العمل</button>
-          <button class="btn-primary" style="margin:0; background:var(--navy); font-size:10px;" onclick="toast('تفاصيل الورشة')" data-voice="التفاصيل">التفاصيل</button>
-        </div>
+        <div class="order-actions"><button class="btn-primary" style="margin:0; background:#28a745;" onclick="toast('✅ تم قبول الرحلة')">قبول الرحلة</button></div>
       </div>
     </div>
   </div>
 
+  <!-- PATRON / COMPANY UNIVERSE -->
+  <div class="patron-ui">
+    <div class="sheet" style="background:#fff7e8; border:1px solid #ffd48b;">
+      <div class="title"><div><b>لوحة تحكم الشركة والأُسطول</b><small>إرسال وتوزيع الطلبات للشيافر</small></div><i class="fa-solid fa-building" style="color:var(--amber); font-size:24px;"></i></div>
+      <p style="font-size:11px; margin:5px 0;">مداخيل الأسطول اليومية: <strong style="color:var(--blue); font-size:14px;">8,500 د.م</strong></p>
+      <button class="btn-primary" style="background:var(--amber);" onclick="toast('✅ تم إرسال الطلب للسائق التابع للشركة')">إرسال كوموند جديدة لشيفور</button>
+    </div>
+  </div>
 </section>
 
-<!-- ACCOUNT PAGE (WITH ROLE SWITCHER & VEHICLE EDIT) -->
+<!-- MARKET (سوق الحرايفية) -->
+<section id="market" class="page">
+  <div class="page-head"><b>سوق المهنيين (بياس وشاحنات)</b><small>بيع وشراء معدات الشاحنات</small></div>
+  <div style="padding: 0 12px;">
+    <div class="market-grid">
+      <div class="market-item">
+        <i class="fa-solid fa-battery-three-quarters"></i>
+        <b>باتري 180Ah</b>
+        <p style="font-size:10px; color:var(--blue); font-weight:bold; margin:5px 0;">1,350 د.م</p>
+        <button class="btn-primary" style="padding:6px; font-size:9px;" onclick="toast('تم التواصل مع البائع')">اتصال</button>
+      </div>
+      <div class="market-item">
+        <i class="fa-solid fa-circle"></i>
+        <b>رويضة 22.5</b>
+        <p style="font-size:10px; color:var(--blue); font-weight:bold; margin:5px 0;">2,400 د.م</p>
+        <button class="btn-primary" style="padding:6px; font-size:9px;" onclick="toast('تم التواصل مع البائع')">اتصال</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMMUNITY (مُجتمع الشيافر) -->
+<section id="community" class="page">
+  <div class="page-head"><b>مُجتمع الشيافر وتجمع المهنيين</b><small>نصائح الطريق، الرادارات والميكانيك</small></div>
+  <div style="padding: 0 12px;">
+    <div class="sheet">
+      <b>عبد الله • سطات</b>
+      <p style="font-size:11px; color:#555; margin:5px 0;">إلا حسّيتي الشاحنة كتجر لجهة وحدة فالفريانة، وقف وشوف العجلات والفرانات قبل ما تكمل الطريق.</p>
+      <button class="btn-outline" style="padding:6px; font-size:10px;" onclick="toast('تم الرد على النصيحة')">💬 تعليق</button>
+    </div>
+  </div>
+</section>
+
+<!-- ACCOUNT PAGE -->
 <section id="account" class="page">
   <div class="page-head"><b>إعدادات الحساب والبزطام</b></div>
   <div style="padding: 0 12px;">
-    
-    <div class="driver-ui">
-      <div class="wallet-card">
-        <b>بْزْطَام شَرْجِي (Wallet)</b>
-        <div class="balance"><span id="walletAmount">150</span> د.م</div>
-        <button onclick="rechargeWallet()" style="width:100%; background:#fff; color:var(--amber); border:none; padding:12px; border-radius:10px; font-weight:bold; cursor:pointer;" data-voice="تعبئة الحساب">تعبئة الحساب (CashPlus)</button>
-      </div>
+    <div class="wallet-card driver-ui patron-ui">
+      <b>بْزْطَام شَرْجِي (Wallet)</b>
+      <div class="balance">450 د.م</div>
+      <button onclick="toast('✅ تم الشحن بنجاح')" style="width:100%; background:#fff; color:var(--amber); border:none; padding:10px; border-radius:10px; font-weight:bold; cursor:pointer;">تعبئة الرصيد (CashPlus)</button>
     </div>
-
     <div class="sheet">
-      <b>تبديل نوع الحساب (زبون / سائق)</b>
-      <p style="font-size:10px; color:var(--muted); margin:5px 0 10px;">الانتقال الفوري بين واجهة الكليان وواجهة المهني:</p>
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
-        <button class="btn-primary" style="margin:0; background:var(--navy);" onclick="loginAs('customer')" data-voice="وضع الزبون">وضع الزبون</button>
-        <button class="btn-primary" style="margin:0; background:var(--amber);" onclick="loginAs('driver')" data-voice="وضع السائق">وضع السائق</button>
+      <b>تبديل الحساب (زبون / مهني / پاترون)</b>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:10px;">
+        <button class="btn-primary" style="margin:0; background:var(--navy);" onclick="loginAs('customer')">وضع الزبون</button>
+        <button class="btn-primary" style="margin:0; background:var(--amber);" onclick="loginAs('driver')">وضع السائق</button>
       </div>
-      <button class="btn-outline" style="margin-top:15px; border-color:#dc3545; color:#dc3545;" onclick="logout()" data-voice="تسجيل الخروج">تسجيل الخروج النهائي</button>
+      <button class="btn-outline" style="margin-top:10px; border-color:#dc3545; color:#dc3545;" onclick="logout()">تسجيل الخروج النهائي</button>
     </div>
-
   </div>
 </section>
 
 <!-- BOTTOM NAVIGATION -->
 <nav class="nav">
-  <button onclick="go('home')" class="active" data-voice="الرئيسية"><i class="fa-solid fa-house"></i>الرئيسية</button>
-  <button onclick="go('account')" data-voice="حسابي"><i class="fa-solid fa-user-gear"></i>حسابي</button>
+  <button onclick="go('home')" class="active"><i class="fa-solid fa-house"></i>الرئيسية</button>
+  <button onclick="go('market')"><i class="fa-solid fa-shop"></i>السوق</button>
+  <button onclick="go('community')"><i class="fa-solid fa-users"></i>المجتمع</button>
+  <button onclick="go('account')"><i class="fa-solid fa-user-gear"></i>حسابي</button>
 </nav>
 
-<!-- FLOATING VOICE TOGGLE (USER CAN TURN ON/OFF) -->
+<!-- FLOATING VOICE TOGGLE -->
 <button id="voiceToggleFloat" class="voice-toggle-float" onclick="toggleVoiceMode()">
   <i class="fa-solid fa-volume-high"></i>
   <span id="voiceToggleText">الصوت: شغال</span>
 </button>
 
 <div class="toast" id="toast"></div>
-
-<!-- CHARJI ALLO OVERLAY -->
-<div class="overlay" id="alloOverlay">
-  <div class="call-screen">
-    <div class="call-icon"><i class="fa-solid fa-phone"></i></div>
-    <h2>شَرْجِي كيعيّط ليك...</h2>
-    <p id="alloText">ألو، معاك الروبوت ديال شَرْجِي. كاينة سلعة خاصها تمشي من كازا للرباط.</p>
-    <div class="keypad">
-      <button class="btn-accept" onclick="acceptAlloTrip()" data-voice="موافق"><i class="fa-solid fa-1"></i> موافق (1)</button>
-      <button class="btn-reject" onclick="rejectTrip()" data-voice="لا"><i class="fa-solid fa-2"></i> ممساليش (2)</button>
-    </div>
-  </div>
-</div>
 
 </div>
 
@@ -321,26 +309,33 @@ function switchAuthTab(type) {
   $$('.auth-form').forEach(f => f.classList.remove('active'));
   if(type === 'customer') {
     $$('.auth-tab')[0].classList.add('active'); $('#form-customer').classList.add('active');
-  } else {
+  } else if(type === 'driver') {
     $$('.auth-tab')[1].classList.add('active'); $('#form-driver').classList.add('active');
+  } else {
+    $$('.auth-tab')[2].classList.add('active'); $('#form-patron').classList.add('active');
   }
 }
 
 function loginAs(role, isSilent = false) {
   localStorage.setItem('charjiUserRole', role);
   document.getElementById('authScreen').style.display = 'none';
-  document.body.classList.remove('auth-mode', 'customer-mode', 'driver-mode');
+  document.body.classList.remove('auth-mode', 'customer-mode', 'driver-mode', 'patron-mode');
   
   if(role === 'customer') {
     document.body.classList.add("customer-mode");
     $("#headerTitle").innerText = "شَرْجِي للزبناء";
     $("#headerSub").innerText = "طلب نقل، حفر وهدم";
     if(!isSilent) speakText("مرحبا بك ف شَرْجِي للزبناء.");
-  } else {
+  } else if(role === 'driver') {
     document.body.classList.add("driver-mode");
     $("#headerTitle").innerText = "شَرْجِي للمهنيين";
     $("#headerSub").innerText = "البوكلانات والطلبات";
     if(!isSilent) speakText("مرحبا بك ف شَرْجِي للمهنيين.");
+  } else {
+    document.body.classList.add("patron-mode");
+    $("#headerTitle").innerText = "شَرْجِي للشركات";
+    $("#headerSub").innerText = "تسيير الأسطول والطلبات";
+    if(!isSilent) speakText("مرحبا بك ف شَرْجِي للشركات.");
   }
   setTimeout(() => map.invalidateSize(), 200);
   go('home');
@@ -369,7 +364,7 @@ function toast(t) {
   clearTimeout(toast.timer); toast.timer = setTimeout(() => e.classList.remove("show"), 3500);
 }
 
-// --- 3. SPEECH & VOICE TOGGLE (USER CAN TURN ON/OFF) ---
+// --- 3. SPEECH ---
 let voiceModeActive = true;
 function toggleVoiceMode() {
   voiceModeActive = !voiceModeActive;
@@ -379,12 +374,11 @@ function toggleVoiceMode() {
     btn.classList.remove('off');
     txt.innerText = 'الصوت: شغال';
     toast("تم تفعيل المساعد الصوتي");
-    speakText("المساعد الصوتي شغال.");
   } else {
     btn.classList.add('off');
     txt.innerText = 'الصوت: مطفي';
     window.speechSynthesis.cancel();
-    toast("تم إطفاء المساعد الصوتي (التطبيق خدام بضغطة وحدة سريعة)");
+    toast("تم إطفاء المساعد الصوتي");
   }
 }
 
@@ -397,54 +391,6 @@ function speakText(t) {
   u.lang = u.voice?.lang || "ar-MA";
   u.rate = 0.95; 
   window.speechSynthesis.speak(u);
-}
-
-// Speak on clicking interactive elements if voiceModeActive is true
-document.addEventListener('click', function(e) {
-  const clickable = e.target.closest('button, .vehicle, .card, [data-voice]');
-  if(clickable && clickable.getAttribute('data-voice')) {
-    speakText(clickable.getAttribute('data-voice'));
-  }
-}, true);
-
-// --- 4. WALLET & ALLO ---
-let walletBalance = 150;
-function updateWalletUI() { if($("#walletAmount")) $("#walletAmount").innerText = walletBalance; }
-function rechargeWallet() {
-  walletBalance += 100; updateWalletUI();
-  speakText("تْمّ شَحْن حسابك بْمِيَة دَرْهَم.");
-  toast("✅ تم شحن حسابك بـ 100 درهم بنجاح.");
-}
-
-function acceptTripOrder() {
-  if (walletBalance >= 10) {
-    walletBalance -= 10; updateWalletUI();
-    toast("✅ تم قبول الرحلة. اقتطاع 10 دراهم.");
-    speakText("تم قبول الرحلة بنجاح.");
-  } else {
-    toast("❌ رصيدك غير كافي (خاصك 10 دراهم).");
-  }
-}
-
-function simulateAlloCall(type) {
-  $("#alloOverlay").classList.add("show");
-  if(type === 'new') {
-      $("#alloText").innerText = "ألو، معاك الروبوت ديال شَرْجِي. كاينة سلعة خاصها تمشي من كازا للرباط. الثمن 1200 درهم.";
-      speakText("ألو، معاك الروبوت ديال شارجي. كايند سلعة خاصة تمشي من كازا للرباط.");
-  } else {
-      $("#alloText").innerText = "ألو، البوكلان واجد: كاين كليان باغي يرجع بسلعة من أكادير لكازا. واش قابل؟";
-      speakText("ألو، البوكلان واجد: كاين كليان باغي يرجع بسلعة من أكادير لكازا.");
-  }
-}
-
-function acceptAlloTrip() {
-  $("#alloOverlay").classList.remove("show");
-  acceptTripOrder();
-}
-
-function rejectTrip() {
-  $("#alloOverlay").classList.remove("show");
-  toast("تم رفض الطلب.");
 }
 </script>
 </body>
